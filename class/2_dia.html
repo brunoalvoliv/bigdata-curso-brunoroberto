@@ -1,0 +1,1449 @@
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introdução Big Data - MBA/UFC — DIA 2</title>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#2b3444;
+  --ink:#e6edf3; --ink2:#9fb0c3; --ink3:#6b7c91;
+  --exec:#4a90e2; --tech:#2ecc71; --gold:#f5a623; --danger:#e5484d;
+  --aqua:#50e3c2; --purple:#a371f7; --dot:rgba(255,255,255,.028);
+  --mono:'SF Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
+  --sans:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+/* ---------- TEMA CLARO ---------- */
+body.light{
+  --bg:#f7f9fb; --panel:#ffffff; --panel2:#eaeef3; --line:#c4ccd6;
+  --ink:#0b0e12; --ink2:#3a424c; --ink3:#616a75;
+  --dot:rgba(12,24,44,.055);
+}
+#themeBtn{background:none;border:1px solid var(--line);color:var(--ink2);
+  padding:7px 11px;border-radius:8px;cursor:pointer;font-size:14px;line-height:1}
+#themeBtn:hover{background:var(--panel2)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background-color:var(--bg);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:22px 22px;background-position:-1px -1px;color:var(--ink);font-family:var(--sans);overflow:hidden}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ---- stage ---- */
+#stage{height:100vh;display:flex;flex-direction:column}
+#slideWrap{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;padding:48px 60px 30px;display:none;flex-direction:column;
+  animation:fade .45s ease;overflow:hidden}
+.sfit{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;transform-origin:top left}
+.cover{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 24px;max-width:1040px}
+.cover-kicker{font:700 13px/1 var(--sans);letter-spacing:3px;text-transform:uppercase;color:var(--exec);margin-bottom:20px}
+.cover-title{font-size:74px;line-height:1.02;font-weight:700;letter-spacing:-1.5px;
+  background:linear-gradient(120deg,var(--ink) 30%,var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover-rule{width:118px;height:5px;border-radius:3px;margin:26px 0 18px;background:linear-gradient(90deg,var(--exec),var(--tech))}
+.cover-sub{font-size:22px;font-weight:600;color:var(--ink2)}
+.cover-meta{display:flex;gap:56px;margin-top:42px;flex-wrap:wrap}
+.cover-meta .cm-l{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.cover-meta .cm-v{font-size:18px;font-weight:600;color:var(--ink)}
+.cover-days{margin-top:38px;font-size:13px;letter-spacing:1px;color:var(--ink3);font-family:var(--mono)}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide{animation:none}}
+
+/* ---- header ---- */
+.shead{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-shrink:0}
+.badge{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;
+  font-weight:700;font-size:19px;flex-shrink:0}
+.badge.exec{background:rgba(74,144,226,.15);color:var(--exec);border:1px solid rgba(74,144,226,.4)}
+.badge.tech{background:rgba(46,204,113,.14);color:var(--tech);border:1px solid rgba(46,204,113,.4)}
+.badge.mix{background:rgba(163,113,247,.14);color:var(--purple);border:1px solid rgba(163,113,247,.4)}
+.shead h2{font-size:26px;font-weight:600;letter-spacing:-.3px}
+.shead .kick{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink3);font-weight:600}
+
+/* ---- 2-col ---- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:14px}
+.col-label{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;font-weight:700;
+  padding-bottom:6px;border-bottom:1px solid var(--line)}
+.col-label.e{color:var(--exec)} .col-label.t{color:var(--tech)}
+.full{grid-column:1/-1}
+
+/* ---- content atoms ---- */
+h3.blk{font-size:16px;font-weight:600;margin-top:4px;display:flex;align-items:center;gap:8px}
+p.body{font-size:14.5px;line-height:1.6;color:var(--ink2)}
+ul.list{list-style:none;display:flex;flex-direction:column;gap:7px}
+ul.list li{font-size:14px;line-height:1.5;color:var(--ink2);padding-left:22px;position:relative}
+ul.list li::before{content:'▸';position:absolute;left:0;color:var(--exec);font-weight:700}
+ul.list.t li::before{content:'▸';color:var(--tech)}
+ul.list.check li::before{content:'✓';color:var(--aqua)}
+ul.list.cross li::before{content:'✕';color:var(--danger)}
+.hl{color:var(--ink);font-weight:600}
+
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.stat .n{font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1}
+.stat .l{font-size:12.5px;color:var(--ink3);margin-top:5px}
+.stat.g .n{color:var(--tech)} .stat.b .n{color:var(--exec)}
+.stat.o .n{color:var(--gold)} .stat.a .n{color:var(--aqua)}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card2{background:var(--panel2)}
+
+/* ---- code / terminal ---- */
+pre.code{background:#0a0e14;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  font-family:var(--mono);font-size:12.5px;line-height:1.5;color:#c9d6e5;white-space:pre-wrap;word-break:break-word;overflow-x:hidden}
+.code .cm{color:#6b7c91} .code .kw{color:#a371f7} .code .st{color:#7ee787}
+.code .nm{color:#f5a623} .code .fn{color:#4a90e2}
+
+/* ---- source / verify chip ---- */
+.src{display:inline-flex;align-items:center;gap:6px;font-size:11px;
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.35);color:var(--gold);
+  padding:3px 9px;border-radius:20px;margin-top:6px;cursor:help}
+.src::before{content:'⚠';font-size:11px}
+.fact{border-left:3px solid var(--exec);padding:8px 0 8px 14px;margin:2px 0}
+.fact .ft{font-size:14.5px;color:var(--ink);line-height:1.5}
+
+/* ---- footer nav ---- */
+#foot{position:fixed;left:0;right:0;bottom:0;z-index:60;height:56px;border-top:1px solid var(--line);background:var(--panel);transform:translateY(105%);transition:transform .28s ease;
+  display:flex;align-items:center;padding:0 22px;gap:16px}
+#foot:hover,#foot.show{transform:none}
+#progress{flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+#bar{height:100%;width:5%;background:linear-gradient(90deg,var(--exec),var(--tech));
+  border-radius:3px;transition:width .35s}
+.nbtn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+  width:38px;height:38px;border-radius:9px;font-size:16px;cursor:pointer;transition:.15s}
+.nbtn:hover{border-color:var(--exec);color:var(--exec)}
+.nbtn:disabled{opacity:.3;cursor:default}
+#counter{font-size:13px;color:var(--ink2);min-width:96px;text-align:center;font-variant-numeric:tabular-nums}
+#counter b{color:var(--ink)}
+.brand{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:.5px}
+#tocBtn{background:none;border:1px solid var(--line);color:var(--ink2);padding:7px 12px;
+  border-radius:8px;font-size:12px;cursor:pointer}
+#tocBtn:hover{border-color:var(--exec);color:var(--exec)}
+
+/* ---- TOC overlay ---- */
+#toc{position:absolute;inset:0;background:rgba(6,9,14,.96);z-index:40;display:none;
+  padding:44px 60px;overflow-y:auto}
+#toc.open{display:block}
+#toc h2{font-size:22px;margin-bottom:22px;color:var(--ink)}
+.toc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.toc-item{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:11px 13px;
+  cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:flex-start}
+.toc-item:hover{border-color:var(--exec);transform:translateY(-2px)}
+.toc-item .tn{font-size:11px;font-weight:700;color:var(--ink3);flex-shrink:0}
+.toc-item .tt{font-size:12.5px;line-height:1.35;color:var(--ink2)}
+.toc-close{position:absolute;top:22px;right:26px;background:none;border:none;color:var(--ink2);
+  font-size:26px;cursor:pointer}
+
+/* ---- interactive widgets ---- */
+.widget{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.wlabel{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--tech);
+  font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.wlabel::before{content:'●';font-size:9px;color:var(--tech)}
+
+/* slider */
+input[type=range]{width:100%;accent-color:var(--exec);height:6px;cursor:pointer;margin:8px 0}
+.slider-out{display:flex;justify-content:space-between;font-family:var(--mono);font-size:13px}
+.slider-out .big{font-size:22px;font-weight:700;color:var(--exec)}
+
+/* buttons */
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 15px;
+  border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:.15s}
+.btn:hover{border-color:var(--tech);color:var(--tech)}
+.btn.run{background:rgba(46,204,113,.12);border-color:rgba(46,204,113,.4);color:var(--tech)}
+.btn.on{background:var(--exec);border-color:var(--exec);color:#fff}
+
+/* quiz */
+.quiz-opt{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:12px 15px;
+  margin-bottom:9px;cursor:pointer;transition:.15s;font-size:14px;display:flex;gap:11px;align-items:center}
+.quiz-opt:hover{border-color:var(--exec)}
+.quiz-opt .k{width:24px;height:24px;border-radius:6px;background:var(--panel);border:1px solid var(--line);
+  display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0}
+.quiz-opt.correct{border-color:var(--tech);background:rgba(46,204,113,.12)}
+.quiz-opt.correct .k{background:var(--tech);color:#04150b;border-color:var(--tech)}
+.quiz-opt.wrong{border-color:var(--danger);background:rgba(229,72,77,.1)}
+.quiz-opt.wrong .k{background:var(--danger);color:#fff;border-color:var(--danger)}
+.quiz-fb{font-size:13px;line-height:1.55;padding:11px 14px;border-radius:8px;margin-top:6px;display:none}
+.quiz-fb.show{display:block}
+.quiz-fb.ok{background:rgba(46,204,113,.1);color:#7ee0b0;border:1px solid rgba(46,204,113,.3)}
+.quiz-fb.no{background:rgba(229,72,77,.1);color:#f0a0a2;border:1px solid rgba(229,72,77,.3)}
+
+/* terminal */
+.term{background:#05080d;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-family:var(--mono)}
+.term-bar{background:var(--panel2);padding:8px 13px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)}
+.term-dot{width:11px;height:11px;border-radius:50%}
+.term-title{font-size:12px;color:var(--ink3);margin-left:8px}
+.term-body{padding:14px 16px;font-size:12.5px;line-height:1.7;min-height:150px;max-height:230px;overflow-y:auto}
+.term-body .pr{color:var(--tech)} .term-body .out{color:#c9d6e5}
+.term-body .dim{color:var(--ink3)} .term-body .warn{color:var(--gold)}
+.term-cmds{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+
+/* pipeline / diagram */
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.node{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 14px;
+  text-align:center;min-width:92px}
+.node .t{font-size:13px;font-weight:600;color:var(--ink)}
+.node .s{font-size:11px;color:var(--ink3);margin-top:2px}
+.node.b{border-color:rgba(74,144,226,.5)} .node.g{border-color:rgba(46,204,113,.5)}
+.node.o{border-color:rgba(245,166,35,.5)} .node.a{border-color:rgba(80,227,194,.5)}
+.arrow{color:var(--ink3);font-size:18px}
+
+/* medallion */
+.medal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.layer{border-radius:10px;padding:13px;text-align:center;border:1px solid}
+.layer .ln{font-size:14px;font-weight:700}
+.layer .ld{font-size:11.5px;color:var(--ink2);margin-top:5px;line-height:1.4}
+.layer.raw{background:rgba(107,124,145,.1);border-color:var(--ink3)}
+.layer.raw .ln{color:var(--ink2)}
+.layer.brz{background:rgba(205,127,80,.1);border-color:#cd7f50}
+.layer.brz .ln{color:#e0955f}
+.layer.slv{background:rgba(158,178,196,.12);border-color:#9eb2c4}
+.layer.slv .ln{color:#b8c8d8}
+.layer.gld{background:rgba(245,166,35,.12);border-color:var(--gold)}
+.layer.gld .ln{color:var(--gold)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:5px;font-weight:600;
+  background:var(--panel2);border:1px solid var(--line);color:var(--ink2)}
+
+table.cmp{width:100%;border-collapse:collapse;font-size:13px}
+table.cmp th{text-align:left;padding:9px 11px;background:var(--panel2);color:var(--ink);
+  font-weight:600;border:1px solid var(--line)}
+table.cmp td{padding:8px 11px;border:1px solid var(--line);color:var(--ink2);vertical-align:top}
+table.cmp td:first-child{color:var(--ink3);font-size:12px}
+
+.note{font-size:12px;color:var(--ink3);font-style:italic;margin-top:6px}
+
+/* ---- case study ---- */
+.case-hero{border-radius:12px;padding:16px 18px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(74,144,226,.08),rgba(46,204,113,.05))}
+.case-hero.fail{background:linear-gradient(135deg,rgba(229,72,77,.1),rgba(245,166,35,.05));border-color:rgba(229,72,77,.35)}
+.case-hero.win{background:linear-gradient(135deg,rgba(46,204,113,.1),rgba(80,227,194,.05));border-color:rgba(46,204,113,.35)}
+.case-hero.fraud{background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(229,72,77,.06));border-color:rgba(245,166,35,.35)}
+.case-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.case-tag.fail{background:rgba(229,72,77,.18);color:#f0a0a2}
+.case-tag.win{background:rgba(46,204,113,.18);color:#7ee0b0}
+.case-tag.fraud{background:rgba(245,166,35,.18);color:var(--gold)}
+.case-hero .ch-t{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.case-hero .ch-s{font-size:13px;color:var(--ink2);margin-top:3px}
+.discuss{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--purple);
+  border-radius:0 10px 10px 0;padding:12px 15px}
+.discuss .dq{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--purple);font-weight:700;margin-bottom:8px}
+.discuss ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.discuss li{font-size:13.5px;line-height:1.5;color:var(--ink2);padding-left:20px;position:relative}
+.discuss li::before{content:'?';position:absolute;left:0;color:var(--purple);font-weight:700}
+.upd{display:inline-flex;align-items:center;gap:6px;font-size:11px;
+  background:rgba(163,113,247,.12);border:1px dashed rgba(163,113,247,.5);color:#c4a5f7;
+  padding:4px 10px;border-radius:7px;margin-top:8px}
+.upd::before{content:'✎';font-size:11px}
+.lesson{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px}
+.lesson .li-ico{font-size:18px;flex-shrink:0}
+.lesson .li-tx{font-size:13px;line-height:1.5;color:var(--ink2)}
+.lesson .li-tx b{color:var(--ink)}
+
+/* ---- tool cards ---- */
+.tool{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);
+  border-radius:11px;padding:13px 15px;text-decoration:none;transition:.15s}
+.tool:hover{border-color:var(--exec);transform:translateY(-2px);background:var(--panel2)}
+.tool .ti-ico{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.tool .ti-body{flex:1;min-width:0}
+.tool .ti-name{font-size:15px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:7px}
+.tool .ti-name .ext{font-size:11px;color:var(--ink3)}
+.tool:hover .ti-name{color:var(--exec)}
+.tool .ti-desc{font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.45}
+.tool .ti-url{font-size:11px;color:var(--exec);font-family:var(--mono);margin-top:5px;word-break:break-all}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ico-hdfs{background:rgba(74,144,226,.15);color:var(--exec)}
+.ico-sqoop{background:rgba(245,166,35,.15);color:var(--gold)}
+.ico-hive{background:rgba(46,204,113,.15);color:var(--tech)}
+.ico-spark{background:rgba(229,72,77,.15);color:var(--danger)}
+.ico-bi{background:rgba(163,113,247,.15);color:var(--purple)}
+.ico-aqua{background:rgba(80,227,194,.15);color:var(--aqua)}
+a.srclink{color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(245,166,35,.5)}
+a.srclink:hover{color:#ffc95c;border-bottom-style:solid}
+
+/* ---- install tutorial ---- */
+.winnote{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;background:rgba(74,144,226,.1);
+  border:1px solid rgba(74,144,226,.35);color:var(--exec);padding:5px 11px;border-radius:7px;margin-top:8px}
+.winnote::before{content:'🪟';font-size:12px}
+.oswrap .os-btn{opacity:.6}
+.oswrap .os-btn.on{opacity:1;background:var(--exec);border-color:var(--exec);color:#fff}
+.os-pane{display:none}
+.os-pane.active{display:block}
+.step-num{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--panel2);
+  border:1px solid var(--line);color:var(--ink2);font-size:11px;font-weight:700;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px}
+.step{display:flex;gap:9px;align-items:flex-start;margin-bottom:9px}
+.step .st-tx{font-size:13px;color:var(--ink2);line-height:1.5}
+.verify-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;
+  border-bottom:1px solid var(--line);font-size:13px}
+.verify-row:last-child{border-bottom:none}
+.verify-row code{font-family:var(--mono);color:var(--tech);font-size:12px}
+.verify-row .vok{color:var(--ink3);font-size:11.5px}
+kbd{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 7px;
+  font-family:var(--mono);font-size:12px;color:var(--ink2)}
+
+/* ---- SVG visuals (offline) ---- */
+.viz{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:9px}
+.viz.plain{background:none;border:none;padding:0}
+.viz svg{width:100%;height:auto;display:block;overflow:visible}
+.viz.compact svg{max-width:168px;margin:0 auto}
+.viz figcaption{font-size:11px;color:var(--ink3);text-align:center;line-height:1.4}
+.viz .vtitle{font-size:11px;text-transform:uppercase;letter-spacing:1.1px;font-weight:700;color:var(--ink3)}
+.iconrow{display:flex;flex-wrap:wrap;gap:10px}
+.ichip{display:flex;align-items:center;gap:9px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.ichip svg{width:22px;height:22px;flex-shrink:0}
+.ichip .il{font-size:12.5px;font-weight:600;color:var(--ink2)}
+.viz .grow{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0)}
+.slide.active .viz .grow{animation:vgrow .55s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes vgrow{to{transform:scaleY(1)}}
+.viz .ring{stroke-dasharray:var(--circ);stroke-dashoffset:var(--circ)}
+.slide.active .viz .ring{animation:vring .7s ease forwards}
+@keyframes vring{to{stroke-dashoffset:var(--off)}}
+@media (prefers-reduced-motion:reduce){
+  .viz .grow{transform:none;animation:none}
+  .viz .ring{stroke-dashoffset:var(--off);animation:none}}
+/* chip de fonte confirmada (verde ✓) vs .src amarelo (⚠ verificar) */
+.cite{display:inline-flex;align-items:center;gap:6px;font-size:11px;line-height:1.35;
+  background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.35);color:#7ee0b0;
+  padding:3px 9px;border-radius:20px;margin-top:6px;text-decoration:none;cursor:pointer}
+.cite::before{content:'✓';font-weight:700}
+.cite:hover{border-color:var(--tech);color:#a5f0c8}
+/* ---- slide de PAUSA / HORA DO LAB ---- */
+.badge.lab{background:rgba(245,166,35,.15);color:var(--gold);border:1px solid rgba(245,166,35,.45)}
+.labstop{flex:1;display:flex;flex-direction:column;gap:14px;border-radius:14px;padding:22px 26px;
+  background:linear-gradient(135deg,rgba(163,113,247,.12),rgba(245,166,35,.07));
+  border:1px solid rgba(163,113,247,.4)}
+.ls-badge{display:inline-flex;align-self:flex-start;gap:9px;align-items:center;
+  font-size:12px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#c4a5f7;
+  background:rgba(163,113,247,.15);border:1px solid rgba(163,113,247,.5);padding:7px 14px;border-radius:22px}
+.ls-badge::before{content:'⏸';font-size:13px}
+.ls-title{font-size:25px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.ls-meta{display:flex;flex-wrap:wrap;gap:10px}
+.ls-meta span{font-size:12.5px;color:var(--ink2);background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;padding:6px 11px;display:inline-flex;gap:6px;align-items:center}
+.ls-meta code{font-family:var(--mono);color:var(--gold);font-size:12px}
+.ls-cta{margin-top:auto;font-size:14px;line-height:1.5;color:var(--ink);
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);border-left:3px solid var(--gold);
+  border-radius:0 9px 9px 0;padding:12px 15px}
+.ls-cta b{color:var(--gold)}
+.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lab-card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+.lc-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px}
+.lc-n{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold)}
+.lc-top code{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.lc-title{font-size:14.5px;font-weight:600;color:var(--ink)}
+.lc-goal{font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:4px}
+</style>
+</head><body>
+<div id="stage">
+  <div id="slideWrap"></div>
+  <div id="toc">
+    <button class="toc-close" onclick="toggleToc()">✕</button>
+    <h2 id="tocTitle">DIA 2 — Transformação &amp; Análise</h2>
+    <div class="toc-grid" id="tocGrid"></div>
+  </div>
+  <div id="foot">
+    <span class="brand">INTRODUÇÃO BIG DATA · FEAAC/UFC · Alexandre Moreira</span>
+    <button id="tocBtn" onclick="toggleToc()">☰ Índice</button>
+    <button id="themeBtn" onclick="toggleTheme()" title="Alternar tema claro/escuro">🌙</button>
+    <button class="nbtn" id="prev" onclick="go(-1)">‹</button>
+    <div id="progress"><div id="bar"></div></div>
+    <button class="nbtn" id="next" onclick="go(1)">›</button>
+    <span id="counter"><b>1</b> / 1</span>
+  </div>
+</div>
+<script>
+const SRC = (txt) => `<span class="src" title="Número plausível para ensino — confirme na fonte antes de apresentar">${txt}</span>`;
+function CITE(txt,url){return url
+  ? `<a class="cite" href="${url}" target="_blank" rel="noopener" title="Fonte verificada">${txt} ↗</a>`
+  : `<span class="cite" title="Fonte verificada">${txt}</span>`;}
+
+/* ===== MOTOR VISUAL — SVG inline, offline, tema escuro ===== */
+var VC={exec:'#4a90e2',tech:'#2ecc71',gold:'#f5a623',aqua:'#50e3c2',purple:'#a371f7',
+  danger:'#e5484d',ink:'#e6edf3',ink2:'#9fb0c3',ink3:'#6b7c91',line:'#2b3444',panel:'#161b22',panel2:'#1c2230'};
+var ICON={
+  db:'<ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6"/>',
+  cluster:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  spark:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  transfer:'<path d="M4 8h13m0 0-3.5-3.5M17 8l-3.5 3.5"/><path d="M20 16H7m0 0 3.5-3.5M7 16l3.5 3.5"/>',
+  hive:'<path d="M8 3h8l4 7-4 7H8l-4-7z"/><path d="M9.5 8.5h5l2.2 3.5-2.2 3.5h-5L7.3 12z" opacity=".45"/>',
+  chart:'<path d="M4 20V4"/><path d="M4 20h16"/><rect x="7" y="12" width="3" height="5" rx=".6"/><rect x="12" y="8" width="3" height="9" rx=".6"/><rect x="17" y="5" width="3" height="12" rx=".6"/>',
+  shield:'<path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/>',
+  block:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11M15 9v11"/>',
+  layers:'<path d="M12 3 3 8l9 5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 16l9 5 9-5"/>',
+  filter:'<path d="M3 5h18l-7 8v6l-4-2v-4z"/>',
+  join:'<circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  python:'<path d="M12 3c-3 0-4 1.5-4 3.5V9h4.5M12 3c2.2 0 3.5.7 3.5 2.5V11c0 2-1.3 3-3.5 3H9c-2.2 0-3.5 1-3.5 3v2C5.5 20.5 7 21 9 21"/>'
+};
+function icon(n,c,s){c=c||'currentColor';s=s||22;
+  return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]||''}</svg>`;}
+function iconRow(items){return `<div class="iconrow">${items.map(t=>`<span class="ichip">${icon(t.i,t.color||VC.ink2)}<span class="il">${t.label}</span></span>`).join('')}</div>`;}
+function barsV(data,opt){opt=opt||{};var W=opt.w||360,H=opt.h||156,pl=30,pb=24,pt=22;
+  var max=opt.max||Math.max.apply(null,data.map(function(d){return d.value;}));
+  var iw=W-pl-8,gap=iw/data.length,bw=Math.min(opt.bw||46,gap*0.6);
+  var g='<line x1="'+pl+'" y1="'+(H-pb)+'" x2="'+W+'" y2="'+(H-pb)+'" stroke="'+VC.line+'"/>';
+  data.forEach(function(d,i){var h=Math.max(2,(d.value/max)*(H-pb-pt));
+    var x=pl+i*gap+(gap-bw)/2,y=H-pb-h,c=d.color||VC.exec;
+    g+='<rect class="grow" x="'+x+'" y="'+y+'" width="'+bw+'" height="'+h+'" rx="4" fill="'+c+'" style="animation-delay:'+(i*0.08)+'s"/>';
+    g+='<text x="'+(x+bw/2)+'" y="'+(y-6)+'" fill="'+VC.ink+'" font-size="12.5" font-weight="700" text-anchor="middle">'+(d.top!=null?d.top:d.value)+'</text>';
+    g+='<text x="'+(x+bw/2)+'" y="'+(H-pb+15)+'" fill="'+VC.ink3+'" font-size="11" text-anchor="middle">'+d.label+'</text>';});
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(opt.aria||'gráfico de barras')+'">'+g+'</svg>';}
+function donut(frac,label,sub,color){color=color||VC.exec;
+  var r=46,circ=2*Math.PI*r,off=circ*(1-Math.max(0,Math.min(1,frac)));
+  return '<svg viewBox="0 0 120 120" role="img" aria-label="'+(label||'')+' '+(sub||'')+'">'
+    +'<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="'+VC.line+'" stroke-width="11"/>'
+    +'<circle class="ring" cx="60" cy="60" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="11" stroke-linecap="round" transform="rotate(-90 60 60)" style="--circ:'+circ.toFixed(1)+'px;--off:'+off.toFixed(1)+'px"/>'
+    +'<text x="60" y="58" fill="'+VC.ink+'" font-size="24" font-weight="800" text-anchor="middle">'+label+'</text>'
+    +'<text x="60" y="76" fill="'+VC.ink3+'" font-size="10.5" text-anchor="middle">'+(sub||'')+'</text></svg>';}
+
+/* ---- pausas de laboratório ---- */
+function labBreak(c){return `<div class="labstop">
+  <div class="ls-badge">Hora do lab · pare a apresentação</div>
+  <h2 class="ls-title">${c.title}</h2>
+  <div class="ls-meta"><span>⏱ ${c.time}</span><span>📄 <code>${c.file}</code></span><span>🔀 ${c.rotas}</span>${c.prereq?`<span>🔗 ${c.prereq}</span>`:''}</div>
+  <div class="cols" style="flex:1">
+    <div class="col"><div class="col-label e">🎯 Objetivo</div><p class="body">${c.goal}</p>
+      <div class="col-label e" style="margin-top:8px">O que você vai entregar</div>
+      <ul class="list check">${c.deliver.map(function(d){return '<li>'+d+'</li>';}).join('')}</ul></div>
+    <div class="col"><div class="col-label t">Passos principais</div>
+      <ul class="list t">${c.steps.map(function(s){return '<li>'+s+'</li>';}).join('')}</ul>
+      <div class="ls-cta"><b>Abram o arquivo do lab e sigam juntos.</b> Retomo a apresentação quando todos concluírem o checklist do lab.</div></div>
+  </div></div>`;}
+function labBreakSet(c){return `<div class="labstop">
+  <div class="ls-badge">Hora dos labs · pare a apresentação</div>
+  <h2 class="ls-title">${c.heading}</h2>
+  <div class="ls-meta"><span>⏱ ${c.time}</span><span>🔀 ${c.rotas}</span>${c.prereq?`<span>🔗 ${c.prereq}</span>`:''}</div>
+  <div class="lab-grid" style="flex:1;align-content:start">
+    ${c.labs.map(function(l){return '<div class="lab-card"><div class="lc-top"><span class="lc-n">Lab '+l.n+'</span><code>'+l.file+'</code></div><div class="lc-title">'+l.title+'</div><div class="lc-goal">'+l.goal+'</div></div>';}).join('')}
+  </div>
+  <div class="ls-cta"><b>Façam os labs na ordem, seguindo o roteiro de cada arquivo.</b> Retomo a apresentação quando a turma concluir o bloco.</div></div>`;}
+
+const slides = [
+{kick:"Capa", title:"Introdução Big Data", badge:"mix", cover:true, html:`
+<div class="cover">
+  <div class="cover-kicker">Big Data</div>
+  <h1 class="cover-title">Introdução<br>Big Data</h1>
+  <div class="cover-rule"></div>
+  <div class="cover-sub">MBA · FEAAC/UFC</div>
+  <div class="cover-meta">
+    <div><span class="cm-l">Facilitador</span><span class="cm-v">Alexandre Moreira</span></div>
+    <div><span class="cm-l">Módulo</span><span class="cm-v">DIA 2 · Transformação &amp; Análise</span></div>
+  </div>
+  <div class="cover-days">HDFS · MapReduce · Sqoop · Hive · Spark · BI</div>
+</div>`},
+/* ---------- 01 CAPA ---------- */
+{kick:"Abertura · DIA 2", title:"Transformação & Análise com Hive", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Onde paramos</div>
+    <p class="body">Ontem os dados chegaram: <span class="hl">9.993 clientes</span> e <span class="hl">100 mil transações</span> replicados 3× no HDFS. Hoje eles viram <span class="hl">informação</span> — você escreve SQL, o Hive traduz em processamento distribuído.</p>
+    <div class="stat-row">
+      <div class="stat b"><div class="n">7</div><div class="l">módulos · 8 horas</div></div>
+      <div class="stat g"><div class="n">6</div><div class="l">labs práticos (HQL)</div></div>
+    </div>
+    <div class="fact"><div class="ft">Meta do dia: dados brutos → <span class="hl">Bronze → Silver → Gold</span>, prontos para virar dashboard amanhã.</div></div>
+    ${iconRow([{i:'hive',label:'Hive',color:VC.tech},{i:'filter',label:'Partições',color:VC.exec},{i:'layers',label:'Medallion',color:VC.gold},{i:'block',label:'Parquet',color:VC.aqua}])}
+  </div>
+  <div class="col">
+    <div class="col-label t">A jornada de hoje</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:10px">
+      <div class="node b"><div class="t">Hive Fundamentals</div><div class="s">SQL sobre HDFS</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node g"><div class="t">Tabelas & Partições</div><div class="s">Managed · External · MSCK</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node o"><div class="t">Bronze → Silver → Gold</div><div class="s">limpeza · joins · KPIs</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node a"><div class="t">Performance & EDA</div><div class="s">tuning · 5 análises</div></div>
+    </div>
+    <p class="note">Mesma navegação de ontem: ← → ou ☰ Índice.</p>
+  </div>
+</div>`},
+
+/* ---------- 02 POR QUE HIVE ---------- */
+{kick:"Motivação", title:"Por que não programar MapReduce direto", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O problema de ontem</div>
+    <p class="body">Contar fraudes por tipo em Java/MapReduce puro exigia <span class="hl">~50 linhas de código</span>, duas classes (Mapper e Reducer) e compilação. Cada nova pergunta = novo programa.</p>
+    <div class="fact"><div class="ft">Equipes de dados raramente são times de engenharia Java. A barreira de entrada do MapReduce puro <span class="hl">trava a análise</span>.</div></div>
+    <div class="col-label e" style="margin-top:6px">A resposta do Hive</div>
+    <ul class="list check">
+      <li>Você escreve <span class="hl">SQL</span>, que já conhece</li>
+      <li>Hive traduz para MapReduce/Tez por baixo</li>
+      <li>Nova pergunta = nova query, não novo deploy</li>
+    </ul>
+    ${iconRow([{i:'cluster',label:'Java · ~50 linhas',color:VC.danger},{i:'hive',label:'HQL · 4 linhas',color:VC.tech}])}
+  </div>
+  <div class="col">
+    <div class="col-label t">De código a SQL</div>
+    <pre class="code"><span class="cm">-- isto substitui ~50 linhas de Java:</span>
+<span class="kw">SELECT</span> transaction_type,
+       <span class="fn">COUNT</span>(*) <span class="kw">AS</span> fraudes
+<span class="kw">FROM</span> transactions
+<span class="kw">WHERE</span> is_fraud = <span class="nm">true</span>
+<span class="kw">GROUP BY</span> transaction_type;</pre>
+    <div class="stat-row">
+      <div class="stat"><div class="n" style="color:var(--danger)">~50</div><div class="l">linhas Java (MapReduce puro)</div></div>
+      <div class="stat g"><div class="n">4</div><div class="l">linhas de HQL</div></div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 03 ARQUITETURA HIVE ---------- */
+{kick:"Hive", title:"Como o Hive funciona por dentro", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">As 3 peças</div>
+    <div class="card"><h3 class="blk" style="color:var(--exec)">🧭 Driver</h3>
+      <p class="body">Recebe seu HQL, planeja a execução, coordena tudo.</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--gold)">📖 Metastore</h3>
+      <p class="body">Guarda o <span class="hl">catálogo</span>: quais tabelas existem, schema, onde ficam no HDFS. Sem ele, Hive não sabe nada.</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--tech)">⚙️ Execution Engine</h3>
+      <p class="body">Traduz seu SQL em jobs MapReduce (ou Tez/Spark) e roda no cluster.</p></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">O fluxo de uma query</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div class="node b"><div class="t">Você digita HQL</div><div class="s">SELECT ... GROUP BY ...</div></div>
+      <div class="arrow" style="text-align:center">↓ consulta</div>
+      <div class="node o"><div class="t">Metastore</div><div class="s">"tabela X está em /hdfs/gold/x"</div></div>
+      <div class="arrow" style="text-align:center">↓ planeja</div>
+      <div class="node g"><div class="t">Execution Engine</div><div class="s">gera jobs MapReduce</div></div>
+      <div class="arrow" style="text-align:center">↓ executa</div>
+      <div class="node a"><div class="t">HDFS</div><div class="s">lê blocos, processa, devolve</div></div>
+    </div>
+    <p class="note">O Metastore geralmente roda sobre um banco relacional (Derby para testes, MySQL/Postgres em produção).</p>
+  </div>
+</div>`},
+
+/* ---------- 04 TERMINAL HIVE ---------- */
+{kick:"Hive · Lab", title:"Terminal Hive (simulado)", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Primeiros comandos</div>
+    <p class="body">Mesma ideia de ontem — <span class="hl">terminal simulado</span>, clique e veja a saída. No lab real, é o mesmo <kbd>hive</kbd> ou <kbd>beeline</kbd> do cluster.</p>
+    <ul class="list t">
+      <li><kbd>SHOW TABLES</kbd> — o que já existe</li>
+      <li><kbd>DESCRIBE</kbd> — schema de uma tabela</li>
+      <li><kbd>SELECT COUNT(*)</kbd> — conferir volume</li>
+      <li><kbd>MSCK REPAIR</kbd> — registrar partições novas</li>
+    </ul>
+  </div>
+  <div class="col">
+    <div class="col-label t">hive · sandbox</div>
+    <div class="term">
+      <div class="term-bar"><span class="term-dot" style="background:#e5484d"></span>
+        <span class="term-dot" style="background:#f5a623"></span>
+        <span class="term-dot" style="background:#2ecc71"></span>
+        <span class="term-title">bigdata@cluster:~ (hive)</span></div>
+      <div class="term-body" id="termOut2"><span class="dim">Clique em um comando abaixo ↓</span></div>
+    </div>
+    <div class="term-cmds">
+      <button class="btn" data-cmd="show">SHOW TABLES</button>
+      <button class="btn" data-cmd="desc">DESCRIBE</button>
+      <button class="btn" data-cmd="count">SELECT COUNT(*)</button>
+      <button class="btn" data-cmd="repair">MSCK REPAIR</button>
+      <button class="btn" data-cmd="clear">clear</button>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 05 FERRAMENTAS DO DIA + DUCKDB SEM ADMIN ---------- */
+{kick:"Ferramentas", title:"O que vamos usar hoje", badge:"tech", html:`
+<div style="display:flex;flex-direction:column;gap:12px;flex:1">
+  <p class="body full">Mesmo stack de ontem, agora com o Hive em primeiro plano. Clique para abrir a documentação oficial.</p>
+  <div class="tool-grid">
+    <a class="tool" href="https://hive.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-hive">🗄️</div>
+      <div class="ti-body"><div class="ti-name">Apache Hive <span class="ext">↗</span></div>
+        <div class="ti-desc">SQL sobre o HDFS. O protagonista de hoje.</div>
+        <div class="ti-url">hive.apache.org</div></div>
+    </a>
+    <a class="tool" href="https://parquet.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-aqua">📦</div>
+      <div class="ti-body"><div class="ti-name">Apache Parquet <span class="ext">↗</span></div>
+        <div class="ti-desc">Formato colunar — o motor da performance (slide de tuning).</div>
+        <div class="ti-url">parquet.apache.org</div></div>
+    </a>
+  </div>
+  <div class="widget" style="margin-top:2px">
+    <div class="wlabel">🔓 Plano B sem admin — testar sozinho em casa/sala sem privilégio</div>
+    <p class="body">Se a sala não tem acesso admin para instalar o cluster completo, o <span class="hl">DuckDB</span> reproduz a sensação do Hive: SQL direto sobre arquivos, zero setup, roda com <kbd>pip install</kbd> de usuário.</p>
+    <pre class="code">pip install duckdb --user
+python3 -c "
+import duckdb
+duckdb.sql(<span class="st">'SELECT transaction_type, COUNT(*) FROM read_csv_auto(\\'transactions_synthetic.csv\\') GROUP BY 1'</span>).show()
+"</pre>
+    <p class="note">Não é Hive de verdade (sem HDFS, sem Metastore) — mas ensina a lógica de "SQL sobre arquivo" sem precisar de cluster nem admin.</p>
+  </div>
+</div>`},
+
+/* ---------- 06 MANAGED VS EXTERNAL ---------- */
+{kick:"Tabelas Hive", title:"Managed vs External — a decisão que evita desastre", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Managed Table</div>
+    <div class="card" style="border-color:rgba(229,72,77,.4)">
+      <h3 class="blk" style="color:var(--danger)">⚠️ Hive é dono do dado</h3>
+      <p class="body">Hive controla os arquivos. <kbd>DROP TABLE</kbd> apaga a tabela <span class="hl">E os dados no HDFS</span>, sem aviso.</p>
+    </div>
+    <div class="col-label e" style="margin-top:8px">External Table</div>
+    <div class="card" style="border-color:rgba(46,204,113,.4)">
+      <h3 class="blk" style="color:var(--tech)">✅ Hive só empresta</h3>
+      <p class="body">Hive lê os dados, mas não é dono. <kbd>DROP TABLE</kbd> remove só o <span class="hl">metadado</span> — os arquivos continuam no HDFS.</p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Quando usar cada uma</div>
+    <table class="cmp">
+      <tr><th>Cenário</th><th>Tipo recomendado</th></tr>
+      <tr><td>Dado raw, vindo do Sqoop</td><td>External (não arrisca perder a fonte)</td></tr>
+      <tr><td>Tabela temporária de cálculo</td><td>Managed (Hive limpa sozinho)</td></tr>
+      <tr><td>Gold layer compartilhada com BI</td><td>External (múltiplas ferramentas leem)</td></tr>
+    </table>
+    <pre class="code"><span class="kw">CREATE EXTERNAL TABLE</span> raw_transactions (
+  transaction_id <span class="nm">INT</span>,
+  customer_id <span class="nm">INT</span>,
+  amount <span class="nm">FLOAT</span>,
+  is_fraud <span class="nm">BOOLEAN</span>
+)
+<span class="kw">ROW FORMAT DELIMITED FIELDS TERMINATED BY</span> <span class="st">','</span>
+<span class="kw">LOCATION</span> <span class="st">'/user/bigdata/raw/transactions'</span>;</pre>
+  </div>
+</div>`},
+
+/* ---------- 07 MEDALLION INTERATIVO ---------- */
+{kick:"Arquitetura", title:"Medallion — clique em cada camada", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">As 4 camadas</div>
+    <div class="medal" id="medGrid" style="grid-template-columns:1fr 1fr">
+      <div class="layer raw mbtn" data-m="0" style="cursor:pointer"><div class="ln">RAW</div><div class="ld">como chegou</div></div>
+      <div class="layer brz mbtn" data-m="1" style="cursor:pointer"><div class="ln">BRONZE</div><div class="ld">limpo</div></div>
+      <div class="layer slv mbtn" data-m="2" style="cursor:pointer"><div class="ln">SILVER</div><div class="ld">enriquecido</div></div>
+      <div class="layer gld mbtn" data-m="3" style="cursor:pointer"><div class="ln">GOLD</div><div class="ld">agregado</div></div>
+    </div>
+    <p class="note">Clique numa camada para ver a query HQL que faz a transformação.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">SQL da camada</div>
+    <div class="widget" id="medDetail" style="min-height:220px">
+      <div class="wlabel" id="medTitle">Selecione uma camada</div>
+      <pre class="code" id="medCode" style="min-height:140px">-- clique numa camada ao lado</pre>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 08 PARTIÇÕES CONCEITO ---------- */
+{kick:"Partições", title:"Particionar — não escaneie o que não precisa", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O problema</div>
+    <p class="body">Pergunta: "fraudes de <span class="hl">janeiro de 2024</span>". Sem partição, o Hive lê os <span class="hl">730 dias inteiros</span> pra achar 31.</p>
+    <div class="col-label e" style="margin-top:6px">A solução</div>
+    <p class="body">Particionar por <kbd>ano/mês</kbd> organiza os dados em <span class="hl">pastas separadas no HDFS</span>. A query só toca a pasta certa.</p>
+    <div class="fact"><div class="ft">Partição é uma <span class="hl">pasta física</span>, não um índice — é organização de arquivo, não mágica.</div></div>
+    <figure class="viz">
+      <div class="vtitle">Dias lidos para "fraudes de jan/2024"</div>
+      ${barsV([{label:'Sem partição',value:730,color:VC.danger,top:'730d'},{label:'Com partição',value:31,color:VC.tech,top:'31d'}],{aria:'Sem partição lê 730 dias; com partição lê 31 dias',bw:70})}
+    </figure>
+  </div>
+  <div class="col">
+    <div class="col-label t">Estrutura no HDFS</div>
+    <pre class="code">/user/bigdata/silver/transactions/
+├── year=2023/
+│   ├── month=01/  <span class="cm"># só esta pasta é lida</span>
+│   ├── month=02/
+│   └── ...
+└── year=2024/
+    ├── month=01/  ← <span class="fn">WHERE year=2024 AND month=1</span>
+    └── ...</pre>
+    <pre class="code"><span class="kw">CREATE TABLE</span> silver_transactions (...)
+<span class="kw">PARTITIONED BY</span> (year <span class="nm">INT</span>, month <span class="nm">INT</span>);</pre>
+  </div>
+</div>`},
+
+/* ---------- 09 SIMULADOR PARTITION PRUNING ---------- */
+{kick:"Partições · Lab", title:"Simulador — quanto você economiza", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Ajuste o filtro</div>
+    <div class="widget">
+      <div class="wlabel">Buscar transações de 1 mês específico</div>
+      <div class="term-cmds">
+        <button class="btn on" id="ppOff">Sem partição</button>
+        <button class="btn" id="ppOn">Com partição (ano/mês)</button>
+      </div>
+      <div class="slider-out" style="margin-top:14px">
+        <span>Dias escaneados</span><span class="big" id="ppDays">730</span>
+      </div>
+      <div class="slider-out">
+        <span>Tempo estimado</span><span class="big" id="ppTime" style="color:var(--danger)">~48s</span>
+      </div>
+      <p class="note" id="ppMsg">Sem partição, o Hive varre os 730 dias completos da tabela.</p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Por que isso importa</div>
+    ${SRC("Números ilustrativos — a proporção real depende do volume e do cluster")}
+    <div class="fact"><div class="ft">Ganhos de <span class="hl">várias vezes</span> em tempo de resposta são comuns ao filtrar por partição em tabelas com histórico longo.</div></div>
+    <ul class="list check">
+      <li>Menos I/O = menos disco lido = mais rápido</li>
+      <li>Cluster livre para outras queries simultâneas</li>
+      <li>Custo de nuvem menor (menos processamento)</li>
+    </ul>
+    <pre class="code"><span class="cm">-- registrar partições existentes no HDFS</span>
+<span class="kw">MSCK REPAIR TABLE</span> silver_transactions;</pre>
+  </div>
+</div>`},
+];
+/* ---------- 10 BUCKETS ---------- */
+slides.push(
+{kick:"Partições", title:"Buckets — quando particionar não basta", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O problema do partition demais</div>
+    <p class="body">Particionar por <kbd>customer_id</kbd> (9.993 valores) criaria <span class="hl">9.993 pastas minúsculas</span> — o NameNode sofre, e cada pasta tem quase nada dentro.</p>
+    <div class="col-label e" style="margin-top:6px">A solução: bucketing</div>
+    <p class="body">Em vez de uma pasta por valor, o Hive aplica <span class="hl">hash(coluna) % N</span> e distribui as linhas em <kbd>N</kbd> arquivos de tamanho parecido.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Sintaxe</div>
+    <pre class="code"><span class="kw">CREATE TABLE</span> silver_transactions (...)
+<span class="kw">PARTITIONED BY</span> (year <span class="nm">INT</span>, month <span class="nm">INT</span>)
+<span class="kw">CLUSTERED BY</span> (customer_id) <span class="kw">INTO</span> <span class="nm">16</span> <span class="kw">BUCKETS</span>;</pre>
+    <table class="cmp">
+      <tr><th>Técnica</th><th>Quando usar</th></tr>
+      <tr><td>Partição</td><td>Coluna com <span class="hl">poucos valores</span> (ano, mês, segmento)</td></tr>
+      <tr><td>Bucket</td><td>Coluna com <span class="hl">muitos valores</span> (customer_id) — melhora JOINs</td></tr>
+    </table>
+  </div>
+</div>`},
+
+/* ---------- 11 QUIZ 1 ---------- */
+{kick:"Checkpoint", title:"Quiz — Hive & Partições", badge:"mix", html:`
+<div style="margin-bottom:16px">${iconRow([{i:'hive',label:'Hive · managed vs external',color:VC.tech},{i:'filter',label:'Partições · MSCK REPAIR',color:VC.exec}])}</div>
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Pergunta 1</div>
+    <p class="body" style="margin-bottom:10px">Você rodou <kbd>DROP TABLE</kbd> numa tabela <span class="hl">Managed</span> por engano. O que acontece com os arquivos no HDFS?</p>
+    <div id="q1">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> Nada, ficam intactos</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">B</span> São apagados junto com o metadado</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> Vão para uma lixeira automática</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Hive pede confirmação antes</div>
+    </div>
+    <div class="quiz-fb" id="q1fb"></div>
+  </div>
+  <div class="col">
+    <div class="col-label e">Pergunta 2</div>
+    <p class="body" style="margin-bottom:10px">Qual comando faz o Hive "descobrir" partições que já existem como pastas no HDFS mas ainda não estão registradas?</p>
+    <div id="q2">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> REFRESH TABLE</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">B</span> MSCK REPAIR TABLE</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> ALTER TABLE SYNC</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> UPDATE PARTITIONS</div>
+    </div>
+    <div class="quiz-fb" id="q2fb"></div>
+  </div>
+</div>`},
+
+/* ---------- PAUSA · LABS 3 e 4 ---------- */
+{kick:"Laboratório", title:"Mão na massa — Labs 3 e 4", badge:"lab", html:labBreakSet({
+  heading:"Labs 3 e 4 — Hive: tabelas e partições",
+  time:"40 + 35 min", rotas:"cluster (Hive) ou sem admin (DuckDB)", prereq:"Labs 1 e 2 (dados no /raw)",
+  labs:[
+    {n:3,title:"Hive: Managed vs External",file:"labs/lab03 - hive.md",goal:"Criar tabelas sobre o HDFS e comprovar na prática o que o <kbd>DROP TABLE</kbd> faz em cada tipo."},
+    {n:4,title:"Partições por ano/mês",file:"labs/lab04 - particoes.md",goal:"Particionar a tabela e medir o ganho de tempo de uma busca com vs. sem partição (o gráfico que acabamos de ver)."}]
+})},
+
+/* ---------- 12 BRONZE LAYER ---------- */
+{kick:"Transformação", title:"Bronze — limpar sem inventar", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O que a Bronze resolve</div>
+    <ul class="list check">
+      <li>Remove duplicatas (mesmo <kbd>transaction_id</kbd> duas vezes)</li>
+      <li>Corrige tipos (texto "150.5" → FLOAT real)</li>
+      <li>Descarta linhas impossíveis (amount ≤ 0)</li>
+      <li><span class="hl">Não</span> inventa dado nem faz join ainda</li>
+    </ul>
+    <div class="fact"><div class="ft">Regra de ouro: Bronze é sobre <span class="hl">confiabilidade</span>, não sobre negócio. Enriquecimento vem na Silver.</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">HQL — Lab 5</div>
+    <pre class="code"><span class="kw">INSERT INTO</span> bronze_transactions
+<span class="kw">SELECT DISTINCT</span>
+  transaction_id, customer_id,
+  <span class="fn">CAST</span>(amount <span class="kw">AS</span> <span class="nm">FLOAT</span>) <span class="kw">AS</span> amount,
+  transaction_type, status,
+  <span class="fn">CAST</span>(is_fraud <span class="kw">AS</span> <span class="nm">BOOLEAN</span>) <span class="kw">AS</span> is_fraud
+<span class="kw">FROM</span> raw_transactions
+<span class="kw">WHERE</span> amount <span class="kw">></span> <span class="nm">0</span>
+  <span class="kw">AND</span> customer_id <span class="kw">IS NOT NULL</span>;</pre>
+  </div>
+</div>`},
+
+/* ---------- 13 SILVER LAYER ---------- */
+{kick:"Transformação", title:"Silver — enriquecer com contexto", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O que a Silver resolve</div>
+    <ul class="list check">
+      <li><span class="hl">JOIN</span> transações com dados do cliente (segmento, score)</li>
+      <li>Calcula colunas derivadas (dia da semana, faixa de valor)</li>
+      <li>Ainda é <span class="hl">granular</span> — 1 linha = 1 transação</li>
+    </ul>
+    <p class="note">É aqui que "uma transação de R$ 500" vira "uma transação de R$ 500 de um cliente High-Risk".</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">HQL — Lab 6</div>
+    <pre class="code"><span class="kw">INSERT INTO</span> silver_transactions
+<span class="kw">SELECT</span>
+  t.transaction_id, t.customer_id, t.amount,
+  t.transaction_type, t.is_fraud,
+  c.segment, c.credit_score,
+  <span class="fn">YEAR</span>(t.timestamp) <span class="kw">AS</span> year,
+  <span class="fn">MONTH</span>(t.timestamp) <span class="kw">AS</span> month
+<span class="kw">FROM</span> bronze_transactions t
+<span class="kw">JOIN</span> bronze_customers c
+  <span class="kw">ON</span> t.customer_id = c.customer_id;</pre>
+  </div>
+</div>`},
+
+/* ---------- 14 GOLD LAYER — HQL BUILDER ---------- */
+{kick:"Transformação", title:"Gold — monte seu KPI", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Ligue as métricas</div>
+    <div class="widget">
+      <div class="wlabel">Agregações por segmento</div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="gd" data-k="count" checked style="accent-color:var(--tech)"> Contagem de transações</label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="gd" data-k="sum" checked style="accent-color:var(--tech)"> Soma do valor (amount)</label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="gd" data-k="fraud" style="accent-color:var(--tech)"> Contagem de fraudes</label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="gd" data-k="avg" style="accent-color:var(--tech)"> Ticket médio</label>
+      </div>
+    </div>
+    <p class="note">Gold já é a tabela que o BI vai consumir amanhã — cada linha é 1 segmento, não 1 transação.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">HQL gerado</div>
+    <pre class="code" id="gdOut"></pre>
+  </div>
+</div>`},
+
+/* ---------- 15 PERFORMANCE: MAPJOIN ---------- */
+{kick:"Performance", title:"MAPJOIN — broadcast da tabela pequena", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O problema do JOIN normal</div>
+    <p class="body">Juntar <span class="hl">100 mil transações</span> com <span class="hl">10 mil clientes</span> exige embaralhar (shuffle) as duas tabelas pela rede — caro.</p>
+    <div class="col-label e" style="margin-top:6px">A saída: MAPJOIN</div>
+    <p class="body">Se uma tabela é <span class="hl">pequena</span> (cabe na memória), o Hive manda uma cópia inteira para <span class="hl">cada mapper</span> — nada de shuffle.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Antes e depois</div>
+    <div class="widget">
+      <div class="term-cmds">
+        <button class="btn on" id="mjOff">JOIN normal</button>
+        <button class="btn" id="mjOn">MAPJOIN (broadcast)</button>
+      </div>
+      <div style="margin-top:14px" id="mjBody">
+        <div class="stat"><div class="n" style="color:var(--danger)" id="mjTime">shuffle pela rede</div><div class="l" id="mjLabel">ambas as tabelas embaralhadas</div></div>
+      </div>
+    </div>
+    <pre class="code"><span class="kw">SELECT</span> <span class="cm">/*+ MAPJOIN(c) */</span> t.*, c.segment
+<span class="kw">FROM</span> silver_transactions t
+<span class="kw">JOIN</span> bronze_customers c <span class="kw">ON</span> t.customer_id = c.customer_id;</pre>
+  </div>
+</div>`},
+
+/* ---------- 16 PERFORMANCE: PARQUET ---------- */
+{kick:"Performance", title:"Formato colunar — Parquet vs texto", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Por que colunar ganha</div>
+    <p class="body">CSV guarda <span class="hl">linha por linha</span>. Se sua query só precisa de <kbd>amount</kbd>, o Hive ainda lê tudo. Parquet guarda <span class="hl">coluna por coluna</span> — lê só o que precisa, e comprime melhor.</p>
+    <div class="fact"><div class="ft">Ganhos de compressão de <span class="hl">várias vezes</span> em relação a texto puro são comuns com Parquet, dependendo dos dados.</div>${SRC("Fator de compressão varia por tipo de dado — meça no seu dataset")}</div>
+    <figure class="viz">
+      <div class="vtitle">Mesmo dataset · tamanho em disco (ilustrativo)</div>
+      ${barsV([{label:'CSV (texto)',value:7.8,color:VC.ink3,top:'7.8 MB'},{label:'Parquet',value:1.6,color:VC.tech,top:'~1.6 MB'}],{aria:'CSV 7,8 MB contra Parquet cerca de 1,6 MB',bw:70})}
+    </figure>
+  </div>
+  <div class="col">
+    <div class="col-label t">Simulador de tamanho</div>
+    <div class="widget">
+      <div class="wlabel">transactions_synthetic.csv (7.8 MB)</div>
+      <input type="range" id="pqSlide" min="0" max="1" value="0" step="1">
+      <div class="slider-out"><span id="pqFmt">CSV (texto)</span><span class="big" id="pqSize">7.8 MB</span></div>
+      <p class="note" id="pqMsg">Formato de texto: fácil de ler, mas sem compressão colunar.</p>
+    </div>
+    <pre class="code"><span class="kw">CREATE TABLE</span> gold_fraud_risk (...)
+<span class="kw">STORED AS PARQUET</span>;</pre>
+  </div>
+</div>`},
+
+/* ---------- 17 QUIZ 2 ---------- */
+{kick:"Checkpoint", title:"Quiz — Transformação & Performance", badge:"mix", html:`
+<div style="margin-bottom:16px">${iconRow([{i:'layers',label:'Bronze → Silver → Gold',color:VC.gold},{i:'join',label:'MAPJOIN · Parquet',color:VC.tech}])}</div>
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Pergunta 3</div>
+    <p class="body" style="margin-bottom:10px">Em qual camada você faz o <span class="hl">JOIN</span> entre transações e clientes?</p>
+    <div id="q3">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> Bronze</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">B</span> Silver</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> Gold</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Raw</div>
+    </div>
+    <div class="quiz-fb" id="q3fb"></div>
+  </div>
+  <div class="col">
+    <div class="col-label e">Pergunta 4</div>
+    <p class="body" style="margin-bottom:10px">MAPJOIN funciona bem quando uma das tabelas é...</p>
+    <div id="q4">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> Particionada por data</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">B</span> Pequena o bastante para caber na memória</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> Armazenada em CSV</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Ordenada por chave primária</div>
+    </div>
+    <div class="quiz-fb" id="q4fb"></div>
+  </div>
+</div>`},
+
+/* ---------- PAUSA · LABS 5, 6 e 7 ---------- */
+{kick:"Laboratório", title:"Mão na massa — Labs 5, 6 e 7", badge:"lab", html:labBreakSet({
+  heading:"Labs 5, 6 e 7 — o pipeline Medallion",
+  time:"~2h (40 + 40 + 35 min)", rotas:"cluster (Hive) ou sem admin (DuckDB)", prereq:"Lab 3 concluído",
+  labs:[
+    {n:5,title:"Bronze — limpar sem inventar",file:"labs/lab05 - bronze.md",goal:"Remover duplicatas, corrigir tipos e descartar linhas impossíveis — sem lógica de negócio ainda."},
+    {n:6,title:"Silver — enriquecer com contexto",file:"labs/lab06 - silver.md",goal:"Fazer o JOIN entre transações e clientes, criando a base analítica enriquecida."},
+    {n:7,title:"Gold — agregações e KPIs",file:"labs/lab07 - gold.md",goal:"Montar a tabela que o BI consome amanhã: uma linha por segmento, com os KPIs prontos."}]
+})},
+
+/* ---------- 18 EDA OVERVIEW ---------- */
+{kick:"Análise", title:"5 perguntas de negócio para a Gold layer", badge:"exec", html:`
+<div style="display:flex;flex-direction:column;gap:12px;flex:1">
+  <p class="body full">Com Bronze/Silver/Gold prontos, a Análise Exploratória (EDA) transforma tabela em <span class="hl">pergunta respondida</span>. Cinco delas guiam o Lab 8 — veja cada uma no próximo slide.</p>
+  <div class="tool-grid">
+    <div class="card"><h3 class="blk">1️⃣ Segmentação por score</h3><p class="body">Como o risco varia entre Premium/Standard/High-Risk?</p></div>
+    <div class="card"><h3 class="blk">2️⃣ Análise de risco</h3><p class="body">Quais tipos de transação concentram mais fraude?</p></div>
+    <div class="card"><h3 class="blk">3️⃣ Padrões temporais</h3><p class="body">Fraude tem hora ou dia do mês preferido?</p></div>
+    <div class="card"><h3 class="blk">4️⃣ Cohort analysis</h3><p class="body">Clientes antigos se comportam diferente dos novos?</p></div>
+  </div>
+  <div class="card card2" style="text-align:center"><h3 class="blk" style="justify-content:center">5️⃣ Cross-sell</h3><p class="body">Quem tem perfil para produtos adicionais?</p></div>
+</div>`},
+
+/* ---------- 19 EDA PICKER ---------- */
+{kick:"Análise · Lab", title:"Escolha uma pergunta, veja o SQL", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Clique numa pergunta</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn edabtn" data-e="0" style="text-align:left">1️⃣ Segmentação por score</button>
+      <button class="btn edabtn" data-e="1" style="text-align:left">2️⃣ Análise de risco por tipo</button>
+      <button class="btn edabtn" data-e="2" style="text-align:left">3️⃣ Padrões temporais</button>
+      <button class="btn edabtn" data-e="3" style="text-align:left">4️⃣ Cohort analysis</button>
+      <button class="btn edabtn" data-e="4" style="text-align:left">5️⃣ Cross-sell</button>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Query + insight</div>
+    <div class="widget" id="edaBox" style="min-height:230px">
+      <pre class="code" id="edaSql" style="min-height:110px">-- selecione uma pergunta ao lado</pre>
+      <div class="fact" id="edaInsight" style="display:none"></div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- PAUSA · LAB 8 (EDA) ---------- */
+{kick:"Laboratório", title:"Mão na massa — Lab 8", badge:"lab", html:labBreak({
+  title:"Lab 8 — EDA: 5 perguntas de negócio",
+  time:"50 min", file:"labs/lab08 - eda.md",
+  rotas:"cluster (Hive) ou sem admin (DuckDB)", prereq:"Silver e Gold prontas (Labs 6-7)",
+  goal:"Rodar as 5 análises exploratórias que acabamos de ver, registrando o <span class='hl'>insight de negócio</span> de cada uma — não só o número.",
+  deliver:[
+    "As 5 consultas executadas sobre a Silver/Gold",
+    "Um insight de negócio anotado por análise",
+    "A base pronta para virar dashboard no DIA 3"],
+  steps:[
+    "Abrir o roteiro das 5 perguntas",
+    "Rodar cada consulta na sua rota (Hive ou DuckDB)",
+    "Anotar o que o número significa para o negócio",
+    "Escolher o insight mais forte para o painel de amanhã"]
+})},
+);
+/* ---------- 20 CASO — dado sujo ---------- */
+slides.push(
+{kick:"Caso", title:"O tempo que ninguém vê: limpar dados", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <span class="case-tag fail">Padrão da indústria</span>
+    <div class="case-hero fail">
+      <div class="ch-t">"80% do tempo é limpeza"</div>
+      <div class="ch-s">Pesquisa clássica da <span class="hl">CrowdFlower (2016)</span>: cientistas de dados gastam <span class="hl">~60%</span> do tempo limpando e organizando dados e 19% coletando — cerca de <span class="hl">80%</span> só em preparação, antes de qualquer análise.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">🧹</span><div class="li-tx">Sem uma camada <b>Bronze</b> disciplinada, cada analista limpa os mesmos dados <b>do zero</b>, cada vez.</div></div>
+    <div class="lesson"><span class="li-ico">♻️</span><div class="li-tx">Medallion existe exatamente para <b>fazer a limpeza uma vez</b> e reaproveitar.</div></div>
+    ${CITE("Forbes / CrowdFlower Data Science Report 2016","https://www.forbes.com/sites/gilpress/2016/03/23/data-preparation-most-time-consuming-least-enjoyable-data-science-task-survey-says/")}
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho com o DIA 2</div>
+    <ul class="list t">
+      <li>Bronze = a limpeza feita <span class="hl">uma vez</span>, versionada</li>
+      <li>Silver/Gold reaproveitam sem repetir esforço</li>
+      <li>Testes de qualidade (nulls, ranges) pertencem à Bronze</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Quem na sua organização hoje limpa a mesma planilha repetidamente?</li>
+        <li>Uma camada Bronze institucional economizaria quanto tempo?</li>
+        <li>Vale investir tempo de projeto só em qualidade de dado?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 21 CASO LOCAL — cruzamento de bases ---------- */
+{kick:"Caso · Ceará", title:"Cruzar bases para achar padrão", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Âncora sólida (fato estável)</div>
+    <div class="case-hero win">
+      <div class="ch-t">Analytics no setor público</div>
+      <div class="ch-s">Cruzar <span class="hl">folha de pagamento, contratos e licitações</span> em uma única camada Silver revela padrões que, isolados, passam despercebidos.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">🔗</span><div class="li-tx">É literalmente um <b>JOIN</b> — a mesma técnica do slide de Silver Layer, aplicada a bases públicas.</div></div>
+    <div class="lesson"><span class="li-ico">📊</span><div class="li-tx">A Gold layer vira <b>painel de indicadores de risco</b> — o que o DIA 3 transforma em dashboard.</div></div>
+    <span class="upd">[PREENCHER] uma iniciativa real de cruzamento de bases</span>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho técnico com hoje</div>
+    <ul class="list t">
+      <li>Bronze: padroniza cada base (folha, contratos) separadamente</li>
+      <li>Silver: <kbd>JOIN</kbd> por CPF/CNPJ ou entidade comum</li>
+      <li>Gold: <kbd>GROUP BY</kbd> indicadores de risco por órgão/fornecedor</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Que bases da sua organização têm uma chave comum para JOIN?</li>
+        <li>Como garantir LGPD ao cruzar bases sensíveis?</li>
+        <li>Um "score de risco" por fornecedor seria útil aqui?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 22 RESUMO ---------- */
+{kick:"Fechamento", title:"O que você domina agora", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Os pilares do DIA 2</div>
+    <ul class="list check">
+      <li><span class="hl">Hive:</span> SQL sobre HDFS, sem escrever Java</li>
+      <li><span class="hl">Managed vs External:</span> saber quem é dono do dado</li>
+      <li><span class="hl">Partições/Buckets:</span> não escanear o que não precisa</li>
+      <li><span class="hl">Medallion:</span> Bronze limpa, Silver enriquece, Gold agrega</li>
+      <li><span class="hl">Performance:</span> MAPJOIN + Parquet aceleram tudo</li>
+    </ul>
+    <div class="fact"><div class="ft">Resultado concreto: a Gold layer está pronta — 5 perguntas de negócio já têm resposta em SQL.</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Entregue hoje</div>
+    <div class="stat-row">
+      <div class="stat b"><div class="n">3</div><div class="l">camadas: Bronze, Silver, Gold</div></div>
+      <div class="stat g"><div class="n">5</div><div class="l">queries EDA respondidas</div></div>
+    </div>
+    <div class="card card2"><h3 class="blk">🏠 A casa, revisitada</h3>
+      <p class="body">Ontem: fundação. Hoje: <span class="hl">paredes e cômodos</span> (Hive organiza o espaço). Amanhã: acabamento — BI e apresentação.</p></div>
+  </div>
+</div>`},
+
+/* ---------- 23 PREVIEW DIA 3 ---------- */
+{kick:"Próximo", title:"Amanhã: Spark, BI e storytelling", badge:"mix", html:`
+<div style="display:flex;flex-direction:column;gap:14px;flex:1">
+  <p class="body full">A Gold layer de hoje vira <span class="hl">dashboard e decisão</span> amanhã. De SQL declarativo para exploração interativa com Spark.</p>
+  <div class="cols" style="flex:1">
+    <div class="col">
+      <div class="col-label e">O que vem no DIA 3</div>
+      <ul class="list t">
+        <li>Export da Gold layer (Sqoop / CSV / Spark JDBC)</li>
+        <li>Spark SQL — queries interativas em memória</li>
+        <li>Dashboard com 4 visualizações (Superset/Metabase)</li>
+        <li>Preview de Machine Learning (previsão de aprovação)</li>
+        <li>Storytelling: 15-20 min contexto → insight → ação</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="col-label t">Pergunta que abre amanhã</div>
+      <div class="card card2" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <pre class="code"><span class="cm">-- a mesma pergunta de hoje, agora em Spark:</span>
+df = spark.sql(<span class="st">"SELECT * FROM gold_fraud_risk"</span>)
+df.groupBy(<span class="st">"segment"</span>).agg(
+    F.sum(<span class="st">"fraud_value"</span>)
+).show()</pre>
+        <p class="note" style="margin-top:10px">Mesma lógica SQL — 10 a 100× mais rápido, porque roda em memória. Até amanhã! 🚀</p>
+      </div>
+    </div>
+  </div>
+</div>`}
+);
+
+/* =========================================================================
+   RENDER + NAVEGAÇÃO (idêntico à engine do DIA 1)
+   ========================================================================= */
+let cur=0;
+const wrap=document.getElementById('slideWrap');
+const tocGrid=document.getElementById('tocGrid');
+
+function badgeLabel(b){return b==='exec'?'EXEC':b==='tech'?'TECH':b==='lab'?'LAB':'MIX';}
+
+function buildSlides(){
+  slides.forEach((s,i)=>{
+    const el=document.createElement('section');
+    el.className='slide'; el.id='slide'+i;
+    el.innerHTML=`<div class="sfit">${s.cover?'':`
+      <div class="shead">
+        <div class="badge ${s.badge}">${String(i+1).padStart(2,'0')}</div>
+        <div><div class="kick">${s.kick} · ${badgeLabel(s.badge)}</div><h2>${s.title}</h2></div>
+      </div>`}${s.html}</div>`;
+    wrap.appendChild(el);
+
+    const t=document.createElement('div');
+    t.className='toc-item';
+    t.innerHTML=`<span class="tn">${String(i+1).padStart(2,'0')}</span><span class="tt">${s.title}</span>`;
+    t.onclick=()=>{show(i);toggleToc();};
+    tocGrid.appendChild(t);
+  });
+}
+
+function show(i){
+  document.getElementById('slide'+cur)?.classList.remove('active');
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  document.getElementById('slide'+cur).classList.add('active');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('counter').innerHTML=`<b>${cur+1}</b> / ${slides.length}`;
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+  wireWidgets(cur);
+}
+function go(d){show(cur+d);}
+function toggleToc(){document.getElementById('toc').classList.toggle('open');}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')go(1);
+  if(e.key==='ArrowLeft')go(-1);
+  if(e.key==='Escape')document.getElementById('toc').classList.remove('open');
+});
+
+wrap.addEventListener('click',e=>{
+  const b=e.target.closest('.os-btn');
+  if(!b)return;
+  const group=b.closest('.oswrap')||b.parentElement;
+  group.querySelectorAll('.os-btn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  const pane=group.parentElement.querySelectorAll('.os-pane');
+  pane.forEach(p=>p.classList.toggle('active',p.dataset.os===b.dataset.os));
+});
+
+/* =========================================================================
+   WIDGETS ESPECÍFICOS DO DIA 2
+   ========================================================================= */
+function wireWidgets(i){
+  // ---- Terminal Hive (slide índice 3) ----
+  const out=document.getElementById('termOut2');
+  if(out){
+    const responses={
+      show:`<div><span class="pr">hive&gt;</span> <span class="out">SHOW TABLES;</span></div>
+<div class="out">bronze_customers</div>
+<div class="out">bronze_transactions</div>
+<div class="out">silver_transactions</div>
+<div class="out">gold_fraud_risk</div>
+<div class="dim">4 rows selected</div>`,
+      desc:`<div><span class="pr">hive&gt;</span> <span class="out">DESCRIBE silver_transactions;</span></div>
+<div class="out">transaction_id    int</div>
+<div class="out">customer_id       int</div>
+<div class="out">amount            float</div>
+<div class="out">segment           string</div>
+<div class="dim">year, month   <span class="warn"># partition keys</span></div>`,
+      count:`<div><span class="pr">hive&gt;</span> <span class="out">SELECT COUNT(*) FROM silver_transactions;</span></div>
+<div class="dim">...MapReduce job iniciado...</div>
+<div class="out">100000</div>
+<div class="dim">Time taken: 8.2 seconds</div>`,
+      repair:`<div><span class="pr">hive&gt;</span> <span class="out">MSCK REPAIR TABLE silver_transactions;</span></div>
+<div class="out">Partitions not in metastore:</div>
+<div class="out">  year=2023/month=01 ... year=2024/month=12</div>
+<div class="dim">Repair: added 24 partitions</div>`,
+      clear:`<span class="dim">Clique em um comando abaixo ↓</span>`
+    };
+    document.querySelectorAll('.btn[data-cmd]').forEach(b=>{
+      b.onclick=()=>{ out.innerHTML=responses[b.dataset.cmd]; out.scrollTop=out.scrollHeight; };
+    });
+  }
+
+  // ---- Medallion interativo (slide índice 6) ----
+  const medData=[
+    {t:'RAW — como chegou',code:`<span class="cm">-- nenhuma transformação ainda</span>
+<span class="kw">CREATE EXTERNAL TABLE</span> raw_transactions (...)
+<span class="kw">LOCATION</span> <span class="st">'/user/bigdata/raw/transactions'</span>;`},
+    {t:'BRONZE — limpeza',code:`<span class="kw">INSERT INTO</span> bronze_transactions
+<span class="kw">SELECT DISTINCT</span> *
+<span class="kw">FROM</span> raw_transactions
+<span class="kw">WHERE</span> amount <span class="kw">></span> <span class="nm">0</span>;`},
+    {t:'SILVER — enriquecimento',code:`<span class="kw">INSERT INTO</span> silver_transactions
+<span class="kw">SELECT</span> t.*, c.segment
+<span class="kw">FROM</span> bronze_transactions t
+<span class="kw">JOIN</span> bronze_customers c
+  <span class="kw">ON</span> t.customer_id = c.customer_id;`},
+    {t:'GOLD — agregação',code:`<span class="kw">INSERT INTO</span> gold_fraud_risk
+<span class="kw">SELECT</span> segment,
+  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> total,
+  <span class="fn">SUM</span>(amount) <span class="kw">AS</span> valor
+<span class="kw">FROM</span> silver_transactions
+<span class="kw">GROUP BY</span> segment;`}
+  ];
+  document.querySelectorAll('.mbtn').forEach(btn=>{
+    btn.onclick=()=>{
+      const d=medData[+btn.dataset.m];
+      document.getElementById('medTitle').textContent=d.t;
+      document.getElementById('medCode').innerHTML=d.code;
+    };
+  });
+
+  // ---- Partition pruning simulador (slide índice 8) ----
+  const ppOff=document.getElementById('ppOff'), ppOn=document.getElementById('ppOn');
+  if(ppOff){
+    const setPP=on=>{
+      ppOff.classList.toggle('on',!on); ppOn.classList.toggle('on',on);
+      document.getElementById('ppDays').textContent = on ? '31' : '730';
+      document.getElementById('ppDays').style.color = on ? 'var(--tech)' : 'var(--ink)';
+      document.getElementById('ppTime').textContent = on ? '~2s' : '~48s';
+      document.getElementById('ppTime').style.color = on ? 'var(--tech)' : 'var(--danger)';
+      document.getElementById('ppMsg').textContent = on
+        ? 'Com WHERE year=2024 AND month=1, o Hive lê só a pasta da partição — o resto nem é tocado.'
+        : 'Sem partição, o Hive varre os 730 dias completos da tabela.';
+    };
+    ppOff.onclick=()=>setPP(false); ppOn.onclick=()=>setPP(true);
+  }
+
+  // ---- Quizzes (slides índice 10 & 16) ----
+  function wireQuiz(qid,fbid,okMsg,noMsg){
+    const box=document.getElementById(qid); if(!box)return;
+    const fb=document.getElementById(fbid);
+    box.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.onclick=()=>{
+        if(box.dataset.done)return;
+        box.dataset.done='1';
+        const ok=opt.dataset.ok==='1';
+        opt.classList.add(ok?'correct':'wrong');
+        if(!ok){ box.querySelector('[data-ok="1"]').classList.add('correct'); }
+        fb.className='quiz-fb show '+(ok?'ok':'no');
+        fb.innerHTML=ok?okMsg:noMsg;
+      };
+    });
+  }
+  wireQuiz('q1','q1fb','✓ Isso mesmo. Managed table = Hive é dono; DROP apaga tudo.',
+    '✕ Numa Managed table, o DROP apaga metadado E arquivos no HDFS — sem lixeira.');
+  wireQuiz('q2','q2fb','✓ MSCK REPAIR TABLE varre o diretório e registra as partições no Metastore.',
+    '✕ É o MSCK REPAIR TABLE — sincroniza pastas do HDFS com o catálogo do Hive.');
+  wireQuiz('q3','q3fb','✓ Silver é onde o JOIN acontece — Bronze só limpa, Gold só agrega.',
+    '✕ O JOIN é da Silver: Bronze ainda não conhece o cliente, Gold já está agregada demais.');
+  wireQuiz('q4','q4fb','✓ MAPJOIN funciona quando a tabela pequena cabe inteira na memória de cada mapper.',
+    '✕ O critério é tamanho: a tabela precisa caber na memória para ser "broadcast".');
+
+  // ---- Gold layer builder (slide índice 13) ----
+  const gdOut=document.getElementById('gdOut');
+  if(gdOut){
+    const build=()=>{
+      const on=k=>document.querySelector(`.gd[data-k="${k}"]`)?.checked;
+      let cols=['  segment'];
+      if(on('count')) cols.push(`  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> total_transacoes`);
+      if(on('sum')) cols.push(`  <span class="fn">SUM</span>(amount) <span class="kw">AS</span> valor_total`);
+      if(on('fraud')) cols.push(`  <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> is_fraud <span class="kw">THEN</span> <span class="nm">1</span> <span class="kw">ELSE</span> <span class="nm">0</span> <span class="kw">END</span>) <span class="kw">AS</span> qtd_fraudes`);
+      if(on('avg')) cols.push(`  <span class="fn">AVG</span>(amount) <span class="kw">AS</span> ticket_medio`);
+      gdOut.innerHTML = `<span class="kw">INSERT INTO</span> gold_fraud_risk\n<span class="kw">SELECT</span>\n${cols.join(',\n')}\n<span class="kw">FROM</span> silver_transactions\n<span class="kw">GROUP BY</span> segment;`;
+    };
+    document.querySelectorAll('.gd').forEach(c=>c.onchange=build);
+    build();
+  }
+
+  // ---- MAPJOIN toggle (slide índice 14) ----
+  const mjOff=document.getElementById('mjOff'), mjOn=document.getElementById('mjOn');
+  if(mjOff){
+    const setMJ=on=>{
+      mjOff.classList.toggle('on',!on); mjOn.classList.toggle('on',on);
+      document.getElementById('mjTime').textContent = on ? 'broadcast em memória' : 'shuffle pela rede';
+      document.getElementById('mjTime').style.color = on ? 'var(--tech)' : 'var(--danger)';
+      document.getElementById('mjLabel').textContent = on
+        ? 'tabela de clientes copiada para cada mapper — sem rede'
+        : 'ambas as tabelas embaralhadas';
+    };
+    mjOff.onclick=()=>setMJ(false); mjOn.onclick=()=>setMJ(true);
+  }
+
+  // ---- Parquet slider (slide índice 15) ----
+  const pq=document.getElementById('pqSlide');
+  if(pq){
+    const upd=()=>{
+      const on=+pq.value===1;
+      document.getElementById('pqFmt').textContent = on ? 'Parquet (colunar)' : 'CSV (texto)';
+      document.getElementById('pqSize').textContent = on ? '~1.6 MB' : '7.8 MB';
+      document.getElementById('pqSize').style.color = on ? 'var(--tech)' : 'var(--ink)';
+      document.getElementById('pqMsg').textContent = on
+        ? 'Parquet comprime por coluna e permite ler só os campos necessários.'
+        : 'Formato de texto: fácil de ler, mas sem compressão colunar.';
+    };
+    pq.oninput=upd; upd();
+  }
+
+  // ---- EDA picker (slide índice 18) ----
+  const edaData=[
+    {sql:`<span class="kw">SELECT</span> segment,
+  <span class="fn">AVG</span>(credit_score) <span class="kw">AS</span> score_medio,
+  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> clientes
+<span class="kw">FROM</span> silver_transactions
+<span class="kw">GROUP BY</span> segment;`,
+     insight:'Insight esperado: High-Risk deve concentrar os menores scores — valida a segmentação original do dataset.'},
+    {sql:`<span class="kw">SELECT</span> transaction_type,
+  <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> is_fraud <span class="kw">THEN</span> <span class="nm">1</span> <span class="kw">ELSE</span> <span class="nm">0</span> <span class="kw">END</span>) <span class="kw">AS</span> fraudes,
+  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> total
+<span class="kw">FROM</span> silver_transactions
+<span class="kw">GROUP BY</span> transaction_type;</span>`,
+     insight:'Insight esperado: saques e transferências tendem a concentrar taxa de fraude maior que compras.'},
+    {sql:`<span class="kw">SELECT</span> <span class="fn">DAY</span>(timestamp) <span class="kw">AS</span> dia,
+  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> transacoes
+<span class="kw">FROM</span> silver_transactions
+<span class="kw">WHERE</span> is_fraud = <span class="nm">true</span>
+<span class="kw">GROUP BY</span> <span class="fn">DAY</span>(timestamp)
+<span class="kw">ORDER BY</span> transacoes <span class="kw">DESC</span>;`,
+     insight:'Insight esperado: picos de fraude tendem a acompanhar os picos de volume (fim de mês) do dataset.'},
+    {sql:`<span class="kw">SELECT</span>
+  <span class="fn">DATEDIFF</span>(<span class="fn">NOW</span>(), c.created_at) <span class="kw">/</span> <span class="nm">365</span> <span class="kw">AS</span> anos_cliente,
+  <span class="fn">AVG</span>(t.amount) <span class="kw">AS</span> ticket_medio
+<span class="kw">FROM</span> silver_transactions t
+<span class="kw">JOIN</span> bronze_customers c <span class="kw">USING</span>(customer_id)
+<span class="kw">GROUP BY</span> <span class="nm">1</span>;`,
+     insight:'Insight esperado: clientes mais antigos costumam ter ticket médio maior — sinal de confiança acumulada.'},
+    {sql:`<span class="kw">SELECT</span> customer_id
+<span class="kw">FROM</span> silver_transactions
+<span class="kw">WHERE</span> segment = <span class="st">'Premium'</span>
+  <span class="kw">AND</span> transaction_type = <span class="st">'compra'</span>
+<span class="kw">GROUP BY</span> customer_id
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(*) <span class="kw">></span> <span class="nm">10</span>;`,
+     insight:'Insight esperado: clientes Premium com alta frequência de compra são candidatos naturais a cross-sell.'}
+  ];
+  document.querySelectorAll('.edabtn').forEach(btn=>{
+    btn.onclick=()=>{
+      document.querySelectorAll('.edabtn').forEach(x=>x.classList.remove('on'));
+      btn.classList.add('on');
+      const d=edaData[+btn.dataset.e];
+      document.getElementById('edaSql').innerHTML=d.sql;
+      const ins=document.getElementById('edaInsight');
+      ins.style.display='block';
+      ins.innerHTML=`<div class="ft">💡 ${d.insight}</div>`;
+    };
+  });
+}
+
+buildSlides();
+document.getElementById('tocTitle').textContent='DIA 2 — Transformação & Análise · '+slides.length+' slides';
+show(0);
+</script>
+
+<!-- copy-to-clipboard nos blocos de código -->
+<style>
+.code-wrap{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;display:inline-flex;align-items:center;gap:5px;
+  padding:4px 8px;font:600 11px/1 var(--mono,monospace);color:#c9d6e5;
+  background:rgba(255,255,255,.06);border:1px solid var(--line,#2a3441);border-radius:7px;
+  cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s;z-index:2}
+.code-wrap:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:rgba(255,255,255,.12)}
+.copy-btn.ok{color:#7ee787;border-color:#2ea04366}
+</style>
+<script>
+(function(){
+  function label(b,txt,cls){b.querySelector('span').textContent=txt;b.className='copy-btn'+(cls?' '+cls:'');}
+  function addBtns(root){
+    (root||document).querySelectorAll('pre.code').forEach(function(pre){
+      if(pre.parentElement.classList.contains('code-wrap'))return;
+      var wrap=document.createElement('div');wrap.className='code-wrap';
+      pre.parentNode.insertBefore(wrap,pre);wrap.appendChild(pre);
+      var b=document.createElement('button');b.className='copy-btn';b.type='button';
+      b.innerHTML='<span>📋 copiar</span>';
+      b.addEventListener('click',function(){
+        var t=pre.innerText.replace(/\s+$/,'');
+        navigator.clipboard.writeText(t).then(function(){
+          label(b,'✓ copiado','ok');setTimeout(function(){label(b,'📋 copiar');},1400);
+        }).catch(function(){label(b,'erro');setTimeout(function(){label(b,'📋 copiar');},1400);});
+      });
+      wrap.appendChild(b);
+    });
+  }
+  addBtns();
+  new MutationObserver(function(m){m.forEach(function(x){if(x.addedNodes.length)addBtns();});})
+    .observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<!-- alternador de tema claro/escuro -->
+<script>
+function toggleTheme(){
+  var l=document.body.classList.toggle('light');
+  try{localStorage.setItem('deckTheme',l?'light':'dark');}catch(e){}
+  var b=document.getElementById('themeBtn'); if(b)b.textContent=l?'☀️':'🌙';
+}
+(function(){try{
+  if(localStorage.getItem('deckTheme')==='light'){
+    document.body.classList.add('light');
+    var b=document.getElementById('themeBtn'); if(b)b.textContent='☀️';
+  }
+}catch(e){}})();
+</script>
+
+
+<!-- auto-fit de conteúdo + barra inferior com auto-hide -->
+<script>
+function fitSlide(){
+  var s=document.querySelector('.slide.active'); if(!s) return;
+  var f=s.querySelector('.sfit'); if(!f) return;
+  f.style.transform='none'; f.style.width='';
+  var availH=f.clientHeight, availW=f.clientWidth;
+  var needH=f.scrollHeight, needW=f.scrollWidth, sc=1;
+  if(needH>availH+1) sc=Math.min(sc, availH/needH);
+  if(needW>availW+1) sc=Math.min(sc, availW/needW);
+  if(sc<1){ sc=Math.max(0.5, sc);
+    f.style.width=(100/sc)+'%'; f.style.transform='scale('+sc+')'; }
+}
+(function(){
+  var wrap=document.getElementById('slideWrap');
+  if(wrap){
+    new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        var t=muts[i].target;
+        if(t.classList && t.classList.contains('active')){ requestAnimationFrame(fitSlide); break; }
+      }
+    }).observe(wrap,{attributes:true,attributeFilter:['class'],subtree:true});
+    wrap.addEventListener('click',function(){ requestAnimationFrame(fitSlide); });
+  }
+  window.addEventListener('resize',function(){ requestAnimationFrame(fitSlide); });
+  window.addEventListener('load',function(){ requestAnimationFrame(fitSlide); });
+  requestAnimationFrame(fitSlide);
+  var foot=document.getElementById('foot');
+  if(foot) document.addEventListener('mousemove',function(e){
+    foot.classList.toggle('show', e.clientY > window.innerHeight-72);
+  });
+})();
+</script>
+
+</body>
+</html>

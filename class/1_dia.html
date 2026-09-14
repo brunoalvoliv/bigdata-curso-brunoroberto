@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introdução Big Data - MBA/UFC — DIA 1</title>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#2b3444;
+  --ink:#e6edf3; --ink2:#9fb0c3; --ink3:#6b7c91;
+  --exec:#4a90e2; --tech:#2ecc71; --gold:#f5a623; --danger:#e5484d;
+  --aqua:#50e3c2; --purple:#a371f7; --dot:rgba(255,255,255,.028);
+  --mono:'SF Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
+  --sans:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+/* ---------- TEMA CLARO ---------- */
+body.light{
+  --bg:#f7f9fb; --panel:#ffffff; --panel2:#eaeef3; --line:#c4ccd6;
+  --ink:#0b0e12; --ink2:#3a424c; --ink3:#616a75;
+  --dot:rgba(12,24,44,.055);
+}
+#themeBtn{background:none;border:1px solid var(--line);color:var(--ink2);
+  padding:7px 11px;border-radius:8px;cursor:pointer;font-size:14px;line-height:1}
+#themeBtn:hover{background:var(--panel2)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background-color:var(--bg);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:22px 22px;background-position:-1px -1px;color:var(--ink);font-family:var(--sans);overflow:hidden}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ---- stage ---- */
+#stage{height:100vh;display:flex;flex-direction:column}
+#slideWrap{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;padding:48px 60px 30px;display:none;flex-direction:column;
+  animation:fade .45s ease;overflow:hidden}
+.sfit{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;transform-origin:top left}
+.cover{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 24px;max-width:1040px}
+.cover-kicker{font:700 13px/1 var(--sans);letter-spacing:3px;text-transform:uppercase;color:var(--exec);margin-bottom:20px}
+.cover-title{font-size:74px;line-height:1.02;font-weight:700;letter-spacing:-1.5px;
+  background:linear-gradient(120deg,var(--ink) 30%,var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover-rule{width:118px;height:5px;border-radius:3px;margin:26px 0 18px;background:linear-gradient(90deg,var(--exec),var(--tech))}
+.cover-sub{font-size:22px;font-weight:600;color:var(--ink2)}
+.cover-meta{display:flex;gap:56px;margin-top:42px;flex-wrap:wrap}
+.cover-meta .cm-l{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.cover-meta .cm-v{font-size:18px;font-weight:600;color:var(--ink)}
+.cover-days{margin-top:38px;font-size:13px;letter-spacing:1px;color:var(--ink3);font-family:var(--mono)}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide{animation:none}}
+
+/* ---- header ---- */
+.shead{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-shrink:0}
+.badge{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;
+  font-weight:700;font-size:19px;flex-shrink:0}
+.badge.exec{background:rgba(74,144,226,.15);color:var(--exec);border:1px solid rgba(74,144,226,.4)}
+.badge.tech{background:rgba(46,204,113,.14);color:var(--tech);border:1px solid rgba(46,204,113,.4)}
+.badge.mix{background:rgba(163,113,247,.14);color:var(--purple);border:1px solid rgba(163,113,247,.4)}
+.shead h2{font-size:26px;font-weight:600;letter-spacing:-.3px}
+.shead .kick{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink3);font-weight:600}
+
+/* ---- 2-col ---- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:14px}
+.col-label{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;font-weight:700;
+  padding-bottom:6px;border-bottom:1px solid var(--line)}
+.col-label.e{color:var(--exec)} .col-label.t{color:var(--tech)}
+.full{grid-column:1/-1}
+
+/* ---- content atoms ---- */
+h3.blk{font-size:16px;font-weight:600;margin-top:4px;display:flex;align-items:center;gap:8px}
+p.body{font-size:14.5px;line-height:1.6;color:var(--ink2)}
+ul.list{list-style:none;display:flex;flex-direction:column;gap:7px}
+ul.list li{font-size:14px;line-height:1.5;color:var(--ink2);padding-left:22px;position:relative}
+ul.list li::before{content:'▸';position:absolute;left:0;color:var(--exec);font-weight:700}
+ul.list.t li::before{content:'▸';color:var(--tech)}
+ul.list.check li::before{content:'✓';color:var(--aqua)}
+ul.list.cross li::before{content:'✕';color:var(--danger)}
+.hl{color:var(--ink);font-weight:600}
+
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.stat .n{font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1}
+.stat .l{font-size:12.5px;color:var(--ink3);margin-top:5px}
+.stat.g .n{color:var(--tech)} .stat.b .n{color:var(--exec)}
+.stat.o .n{color:var(--gold)} .stat.a .n{color:var(--aqua)}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card2{background:var(--panel2)}
+
+/* ---- code / terminal ---- */
+pre.code{background:#0a0e14;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  font-family:var(--mono);font-size:12.5px;line-height:1.5;color:#c9d6e5;white-space:pre-wrap;word-break:break-word;overflow-x:hidden}
+.code .cm{color:#6b7c91} .code .kw{color:#a371f7} .code .st{color:#7ee787}
+.code .nm{color:#f5a623} .code .fn{color:#4a90e2}
+
+/* ---- source / verify chip ---- */
+.src{display:inline-flex;align-items:center;gap:6px;font-size:11px;
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.35);color:var(--gold);
+  padding:3px 9px;border-radius:20px;margin-top:6px;cursor:help}
+.src::before{content:'⚠';font-size:11px}
+.fact{border-left:3px solid var(--exec);padding:8px 0 8px 14px;margin:2px 0}
+.fact .ft{font-size:14.5px;color:var(--ink);line-height:1.5}
+
+/* ---- footer nav ---- */
+#foot{position:fixed;left:0;right:0;bottom:0;z-index:60;height:56px;border-top:1px solid var(--line);background:var(--panel);transform:translateY(105%);transition:transform .28s ease;
+  display:flex;align-items:center;padding:0 22px;gap:16px}
+#foot:hover,#foot.show{transform:none}
+#progress{flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+#bar{height:100%;width:5%;background:linear-gradient(90deg,var(--exec),var(--tech));
+  border-radius:3px;transition:width .35s}
+.nbtn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+  width:38px;height:38px;border-radius:9px;font-size:16px;cursor:pointer;transition:.15s}
+.nbtn:hover{border-color:var(--exec);color:var(--exec)}
+.nbtn:disabled{opacity:.3;cursor:default}
+#counter{font-size:13px;color:var(--ink2);min-width:96px;text-align:center;font-variant-numeric:tabular-nums}
+#counter b{color:var(--ink)}
+.brand{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:.5px}
+#tocBtn{background:none;border:1px solid var(--line);color:var(--ink2);padding:7px 12px;
+  border-radius:8px;font-size:12px;cursor:pointer}
+#tocBtn:hover{border-color:var(--exec);color:var(--exec)}
+
+/* ---- TOC overlay ---- */
+#toc{position:absolute;inset:0;background:rgba(6,9,14,.96);z-index:40;display:none;
+  padding:44px 60px;overflow-y:auto}
+#toc.open{display:block}
+#toc h2{font-size:22px;margin-bottom:22px;color:var(--ink)}
+.toc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.toc-item{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:11px 13px;
+  cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:flex-start}
+.toc-item:hover{border-color:var(--exec);transform:translateY(-2px)}
+.toc-item .tn{font-size:11px;font-weight:700;color:var(--ink3);flex-shrink:0}
+.toc-item .tt{font-size:12.5px;line-height:1.35;color:var(--ink2)}
+.toc-close{position:absolute;top:22px;right:26px;background:none;border:none;color:var(--ink2);
+  font-size:26px;cursor:pointer}
+
+/* ---- interactive widgets ---- */
+.widget{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.wlabel{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--tech);
+  font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.wlabel::before{content:'●';font-size:9px;color:var(--tech)}
+
+/* slider */
+input[type=range]{width:100%;accent-color:var(--exec);height:6px;cursor:pointer;margin:8px 0}
+.slider-out{display:flex;justify-content:space-between;font-family:var(--mono);font-size:13px}
+.slider-out .big{font-size:22px;font-weight:700;color:var(--exec)}
+
+/* buttons */
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 15px;
+  border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:.15s}
+.btn:hover{border-color:var(--tech);color:var(--tech)}
+.btn.run{background:rgba(46,204,113,.12);border-color:rgba(46,204,113,.4);color:var(--tech)}
+.btn.on{background:var(--exec);border-color:var(--exec);color:#fff}
+
+/* quiz */
+.quiz-opt{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:12px 15px;
+  margin-bottom:9px;cursor:pointer;transition:.15s;font-size:14px;display:flex;gap:11px;align-items:center}
+.quiz-opt:hover{border-color:var(--exec)}
+.quiz-opt .k{width:24px;height:24px;border-radius:6px;background:var(--panel);border:1px solid var(--line);
+  display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0}
+.quiz-opt.correct{border-color:var(--tech);background:rgba(46,204,113,.12)}
+.quiz-opt.correct .k{background:var(--tech);color:#04150b;border-color:var(--tech)}
+.quiz-opt.wrong{border-color:var(--danger);background:rgba(229,72,77,.1)}
+.quiz-opt.wrong .k{background:var(--danger);color:#fff;border-color:var(--danger)}
+.quiz-fb{font-size:13px;line-height:1.55;padding:11px 14px;border-radius:8px;margin-top:6px;display:none}
+.quiz-fb.show{display:block}
+.quiz-fb.ok{background:rgba(46,204,113,.1);color:#7ee0b0;border:1px solid rgba(46,204,113,.3)}
+.quiz-fb.no{background:rgba(229,72,77,.1);color:#f0a0a2;border:1px solid rgba(229,72,77,.3)}
+
+/* terminal */
+.term{background:#05080d;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-family:var(--mono)}
+.term-bar{background:var(--panel2);padding:8px 13px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)}
+.term-dot{width:11px;height:11px;border-radius:50%}
+.term-title{font-size:12px;color:var(--ink3);margin-left:8px}
+.term-body{padding:14px 16px;font-size:12.5px;line-height:1.7;min-height:150px;max-height:230px;overflow-y:auto}
+.term-body .pr{color:var(--tech)} .term-body .out{color:#c9d6e5}
+.term-body .dim{color:var(--ink3)} .term-body .warn{color:var(--gold)}
+.term-cmds{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+
+/* pipeline / diagram */
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.node{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 14px;
+  text-align:center;min-width:92px}
+.node .t{font-size:13px;font-weight:600;color:var(--ink)}
+.node .s{font-size:11px;color:var(--ink3);margin-top:2px}
+.node.b{border-color:rgba(74,144,226,.5)} .node.g{border-color:rgba(46,204,113,.5)}
+.node.o{border-color:rgba(245,166,35,.5)} .node.a{border-color:rgba(80,227,194,.5)}
+.arrow{color:var(--ink3);font-size:18px}
+
+/* medallion */
+.medal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.layer{border-radius:10px;padding:13px;text-align:center;border:1px solid}
+.layer .ln{font-size:14px;font-weight:700}
+.layer .ld{font-size:11.5px;color:var(--ink2);margin-top:5px;line-height:1.4}
+.layer.raw{background:rgba(107,124,145,.1);border-color:var(--ink3)}
+.layer.raw .ln{color:var(--ink2)}
+.layer.brz{background:rgba(205,127,80,.1);border-color:#cd7f50}
+.layer.brz .ln{color:#e0955f}
+.layer.slv{background:rgba(158,178,196,.12);border-color:#9eb2c4}
+.layer.slv .ln{color:#b8c8d8}
+.layer.gld{background:rgba(245,166,35,.12);border-color:var(--gold)}
+.layer.gld .ln{color:var(--gold)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:5px;font-weight:600;
+  background:var(--panel2);border:1px solid var(--line);color:var(--ink2)}
+
+table.cmp{width:100%;border-collapse:collapse;font-size:13px}
+table.cmp th{text-align:left;padding:9px 11px;background:var(--panel2);color:var(--ink);
+  font-weight:600;border:1px solid var(--line)}
+table.cmp td{padding:8px 11px;border:1px solid var(--line);color:var(--ink2);vertical-align:top}
+table.cmp td:first-child{color:var(--ink3);font-size:12px}
+
+.note{font-size:12px;color:var(--ink3);font-style:italic;margin-top:6px}
+
+/* ---- case study ---- */
+.case-hero{border-radius:12px;padding:16px 18px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(74,144,226,.08),rgba(46,204,113,.05))}
+.case-hero.fail{background:linear-gradient(135deg,rgba(229,72,77,.1),rgba(245,166,35,.05));border-color:rgba(229,72,77,.35)}
+.case-hero.win{background:linear-gradient(135deg,rgba(46,204,113,.1),rgba(80,227,194,.05));border-color:rgba(46,204,113,.35)}
+.case-hero.fraud{background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(229,72,77,.06));border-color:rgba(245,166,35,.35)}
+.case-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.case-tag.fail{background:rgba(229,72,77,.18);color:#f0a0a2}
+.case-tag.win{background:rgba(46,204,113,.18);color:#7ee0b0}
+.case-tag.fraud{background:rgba(245,166,35,.18);color:var(--gold)}
+.case-hero .ch-t{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.case-hero .ch-s{font-size:13px;color:var(--ink2);margin-top:3px}
+.discuss{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--purple);
+  border-radius:0 10px 10px 0;padding:12px 15px}
+.discuss .dq{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--purple);font-weight:700;margin-bottom:8px}
+.discuss ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.discuss li{font-size:13.5px;line-height:1.5;color:var(--ink2);padding-left:20px;position:relative}
+.discuss li::before{content:'?';position:absolute;left:0;color:var(--purple);font-weight:700}
+.upd{display:inline-flex;align-items:center;gap:6px;font-size:11px;
+  background:rgba(163,113,247,.12);border:1px dashed rgba(163,113,247,.5);color:#c4a5f7;
+  padding:4px 10px;border-radius:7px;margin-top:8px}
+.upd::before{content:'✎';font-size:11px}
+.lesson{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px}
+.lesson .li-ico{font-size:18px;flex-shrink:0}
+.lesson .li-tx{font-size:13px;line-height:1.5;color:var(--ink2)}
+.lesson .li-tx b{color:var(--ink)}
+
+/* ---- tool cards ---- */
+.tool{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);
+  border-radius:11px;padding:13px 15px;text-decoration:none;transition:.15s}
+.tool:hover{border-color:var(--exec);transform:translateY(-2px);background:var(--panel2)}
+.tool .ti-ico{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.tool .ti-body{flex:1;min-width:0}
+.tool .ti-name{font-size:15px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:7px}
+.tool .ti-name .ext{font-size:11px;color:var(--ink3)}
+.tool:hover .ti-name{color:var(--exec)}
+.tool .ti-desc{font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.45}
+.tool .ti-url{font-size:11px;color:var(--exec);font-family:var(--mono);margin-top:5px;word-break:break-all}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ico-hdfs{background:rgba(74,144,226,.15);color:var(--exec)}
+.ico-sqoop{background:rgba(245,166,35,.15);color:var(--gold)}
+.ico-hive{background:rgba(46,204,113,.15);color:var(--tech)}
+.ico-spark{background:rgba(229,72,77,.15);color:var(--danger)}
+.ico-bi{background:rgba(163,113,247,.15);color:var(--purple)}
+.ico-aqua{background:rgba(80,227,194,.15);color:var(--aqua)}
+a.srclink{color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(245,166,35,.5)}
+a.srclink:hover{color:#ffc95c;border-bottom-style:solid}
+
+/* ---- install tutorial ---- */
+.winnote{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;background:rgba(74,144,226,.1);
+  border:1px solid rgba(74,144,226,.35);color:var(--exec);padding:5px 11px;border-radius:7px;margin-top:8px}
+.winnote::before{content:'🪟';font-size:12px}
+.oswrap .os-btn{opacity:.6}
+.oswrap .os-btn.on{opacity:1;background:var(--exec);border-color:var(--exec);color:#fff}
+.os-pane{display:none}
+.os-pane.active{display:block}
+.tshoot{margin-top:11px;padding:9px 12px;border-radius:8px;background:rgba(245,166,35,.08);
+  border:1px solid rgba(245,166,35,.32);font-size:11.5px;line-height:1.55}
+.tshoot .tt{font-weight:700;color:var(--gold);font-size:12px}
+.tshoot ul{margin:6px 0 0;padding-left:16px;list-style:none}
+.tshoot li{margin:4px 0;position:relative}
+.tshoot li::before{content:'▹';position:absolute;left:-15px;color:var(--gold)}
+.tshoot code{background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;font-size:11px}
+.step-num{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--panel2);
+  border:1px solid var(--line);color:var(--ink2);font-size:11px;font-weight:700;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px}
+.step{display:flex;gap:9px;align-items:flex-start;margin-bottom:9px}
+.step .st-tx{font-size:13px;color:var(--ink2);line-height:1.5}
+.verify-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;
+  border-bottom:1px solid var(--line);font-size:13px}
+.verify-row:last-child{border-bottom:none}
+.verify-row code{font-family:var(--mono);color:var(--tech);font-size:12px}
+.verify-row .vok{color:var(--ink3);font-size:11.5px}
+kbd{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 7px;
+  font-family:var(--mono);font-size:12px;color:var(--ink2)}
+
+/* ---- SVG visuals (offline) ---- */
+.viz{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:9px}
+.viz.plain{background:none;border:none;padding:0}
+.viz svg{width:100%;height:auto;display:block;overflow:visible}
+.viz.compact svg{max-width:168px;margin:0 auto}
+/* chip de fonte confirmada (verde ✓) — contrasta com o .src amarelo (⚠ verificar) */
+.cite{display:inline-flex;align-items:center;gap:6px;font-size:11px;line-height:1.35;
+  background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.35);color:#7ee0b0;
+  padding:3px 9px;border-radius:20px;margin-top:6px;text-decoration:none;cursor:pointer}
+.cite::before{content:'✓';font-weight:700}
+.cite:hover{border-color:var(--tech);color:#a5f0c8}
+/* ---- slide de PAUSA / HORA DO LAB ---- */
+.badge.lab{background:rgba(245,166,35,.15);color:var(--gold);border:1px solid rgba(245,166,35,.45)}
+.labstop{flex:1;display:flex;flex-direction:column;gap:14px;border-radius:14px;padding:22px 26px;
+  background:linear-gradient(135deg,rgba(163,113,247,.12),rgba(245,166,35,.07));
+  border:1px solid rgba(163,113,247,.4)}
+.ls-badge{display:inline-flex;align-self:flex-start;gap:9px;align-items:center;
+  font-size:12px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#c4a5f7;
+  background:rgba(163,113,247,.15);border:1px solid rgba(163,113,247,.5);padding:7px 14px;border-radius:22px}
+.ls-badge::before{content:'⏸';font-size:13px}
+.ls-title{font-size:25px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.ls-meta{display:flex;flex-wrap:wrap;gap:10px}
+.ls-meta span{font-size:12.5px;color:var(--ink2);background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;padding:6px 11px;display:inline-flex;gap:6px;align-items:center}
+.ls-meta code{font-family:var(--mono);color:var(--gold);font-size:12px}
+.ls-cta{margin-top:auto;font-size:14px;line-height:1.5;color:var(--ink);
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);border-left:3px solid var(--gold);
+  border-radius:0 9px 9px 0;padding:12px 15px}
+.ls-cta b{color:var(--gold)}
+.viz figcaption{font-size:11px;color:var(--ink3);text-align:center;line-height:1.4}
+.viz .vtitle{font-size:11px;text-transform:uppercase;letter-spacing:1.1px;
+  font-weight:700;color:var(--ink3)}
+/* icon chips */
+.iconrow{display:flex;flex-wrap:wrap;gap:10px}
+.ichip{display:flex;align-items:center;gap:9px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.ichip svg{width:22px;height:22px;flex-shrink:0}
+.ichip .il{font-size:12.5px;font-weight:600;color:var(--ink2)}
+/* animated reveal for bars/rings, re-triggers when slide becomes active */
+.viz .grow{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0)}
+.slide.active .viz .grow{animation:vgrow .55s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes vgrow{to{transform:scaleY(1)}}
+.viz .ring{stroke-dasharray:var(--circ);stroke-dashoffset:var(--circ)}
+.slide.active .viz .ring{animation:vring .7s ease forwards}
+@keyframes vring{to{stroke-dashoffset:var(--off)}}
+@media (prefers-reduced-motion:reduce){
+  .viz .grow{transform:none;animation:none}
+  .viz .ring{stroke-dashoffset:var(--off);animation:none}}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="slideWrap"></div>
+  <div id="toc">
+    <button class="toc-close" onclick="toggleToc()">✕</button>
+    <h2 id="tocTitle">DIA 1 — Fundamentos &amp; Ingestão</h2>
+    <div class="toc-grid" id="tocGrid"></div>
+  </div>
+  <div id="foot">
+    <span class="brand">INTRODUÇÃO BIG DATA · FEAAC/UFC · Alexandre Moreira</span>
+    <button id="tocBtn" onclick="toggleToc()">☰ Índice</button>
+    <button id="themeBtn" onclick="toggleTheme()" title="Alternar tema claro/escuro">🌙</button>
+    <button class="nbtn" id="prev" onclick="go(-1)">‹</button>
+    <div id="progress"><div id="bar"></div></div>
+    <button class="nbtn" id="next" onclick="go(1)">›</button>
+    <span id="counter"><b>1</b> / 20</span>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   DECK ENGINE — data-driven. Cada slide é um objeto {kick,title,badge,html}.
+   Fatos com números carregam o selo .src ("⚠ VERIFICAR + fonte provável").
+   ========================================================================= */
+const SRC = (txt) => `<span class="src" title="Número plausível para ensino — confirme na fonte antes de apresentar">${txt}</span>`;
+const SRC2 = (t) => `<span class="src" title="Número plausível para ensino — confirme na fonte antes de apresentar">${t}</span>`;
+/* fonte confirmada por pesquisa (ago/2026) — chip verde com link opcional */
+function CITE(txt,url){return url
+  ? `<a class="cite" href="${url}" target="_blank" rel="noopener" title="Fonte verificada">${txt} ↗</a>`
+  : `<span class="cite" title="Fonte verificada">${txt}</span>`;}
+
+/* =========================================================================
+   MOTOR VISUAL — SVG inline, offline, no tema escuro do deck.
+   Funções globais (declarations) → acessíveis nos dois blocos de slides.
+   ========================================================================= */
+var VC = {exec:'#4a90e2',tech:'#2ecc71',gold:'#f5a623',aqua:'#50e3c2',
+  purple:'#a371f7',danger:'#e5484d',ink:'#e6edf3',ink2:'#9fb0c3',
+  ink3:'#6b7c91',line:'#2b3444',panel:'#161b22',panel2:'#1c2230'};
+
+/* ---- ícones geométricos (viewBox 24, traço em currentColor) ---- */
+var ICON = {
+  db:'<ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6"/>',
+  cluster:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  spark:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  transfer:'<path d="M4 8h13m0 0-3.5-3.5M17 8l-3.5 3.5"/><path d="M20 16H7m0 0 3.5-3.5M7 16l3.5 3.5"/>',
+  hive:'<path d="M8 3h8l4 7-4 7H8l-4-7z"/><path d="M9.5 8.5h5l2.2 3.5-2.2 3.5h-5L7.3 12z" opacity=".45"/>',
+  chart:'<path d="M4 20V4"/><path d="M4 20h16"/><rect x="7" y="12" width="3" height="5" rx=".6"/><rect x="12" y="8" width="3" height="9" rx=".6"/><rect x="17" y="5" width="3" height="12" rx=".6"/>',
+  shield:'<path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/>',
+  block:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11M15 9v11"/>',
+  python:'<path d="M12 3c-3 0-4 1.5-4 3.5V9h4.5M12 3c2.2 0 3.5.7 3.5 2.5V11c0 2-1.3 3-3.5 3H9c-2.2 0-3.5 1-3.5 3v2C5.5 20.5 7 21 9 21"/><circle cx="9.5" cy="6" r=".6" fill="currentColor" stroke="none"/>',
+  gauge:'<path d="M4 15a8 8 0 0 1 16 0"/><path d="M12 15l4-4"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/>'
+};
+function icon(name,color,size){color=color||'currentColor';size=size||22;
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[name]||''}</svg>`;}
+function iconRow(items){/* items:[{i,label,color}] */
+  return `<div class="iconrow">${items.map(t=>`<span class="ichip">${icon(t.i,t.color||VC.ink2)}<span class="il">${t.label}</span></span>`).join('')}</div>`;}
+
+/* ---- gráfico de barras verticais ---- */
+function barsV(data,opt){opt=opt||{};
+  var W=opt.w||360,H=opt.h||156,pl=30,pb=24,pt=22;
+  var max=opt.max||Math.max.apply(null,data.map(function(d){return d.value;}));
+  var iw=W-pl-8,gap=iw/data.length,bw=Math.min(opt.bw||46,gap*0.6);
+  var g='<line x1="'+pl+'" y1="'+(H-pb)+'" x2="'+W+'" y2="'+(H-pb)+'" stroke="'+VC.line+'"/>';
+  data.forEach(function(d,i){
+    var h=Math.max(2,(d.value/max)*(H-pb-pt));
+    var x=pl+i*gap+(gap-bw)/2,y=H-pb-h,c=d.color||VC.exec;
+    g+='<rect class="grow" x="'+x+'" y="'+y+'" width="'+bw+'" height="'+h+'" rx="4" fill="'+c+'" style="animation-delay:'+(i*0.08)+'s"/>';
+    g+='<text x="'+(x+bw/2)+'" y="'+(y-6)+'" fill="'+VC.ink+'" font-size="12.5" font-weight="700" text-anchor="middle">'+(d.top!=null?d.top:d.value)+'</text>';
+    g+='<text x="'+(x+bw/2)+'" y="'+(H-pb+15)+'" fill="'+VC.ink3+'" font-size="11" text-anchor="middle">'+d.label+'</text>';
+  });
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(opt.aria||'gráfico de barras')+'">'+g+'</svg>';}
+
+/* ---- donut / ring com número central ---- */
+function donut(frac,label,sub,color){color=color||VC.exec;
+  var r=46,cx=60,cy=60,circ=2*Math.PI*r,off=circ*(1-Math.max(0,Math.min(1,frac)));
+  return '<svg viewBox="0 0 120 120" role="img" aria-label="'+(label||'')+' '+(sub||'')+'">'
+    +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+VC.line+'" stroke-width="11"/>'
+    +'<circle class="ring" cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="11" stroke-linecap="round" transform="rotate(-90 60 60)" style="--circ:'+circ.toFixed(1)+'px;--off:'+off.toFixed(1)+'px"/>'
+    +'<text x="60" y="58" fill="'+VC.ink+'" font-size="24" font-weight="800" text-anchor="middle">'+label+'</text>'
+    +'<text x="60" y="76" fill="'+VC.ink3+'" font-size="10.5" text-anchor="middle">'+(sub||'')+'</text></svg>';}
+
+/* ---- rede de nós decorativa (hero) ---- */
+function heroNet(){
+  var pts=[[30,60],[95,30],[110,95],[175,55],[210,105],[250,45],[290,80]];
+  var edges=[[0,1],[1,2],[2,3],[1,3],[3,4],[3,5],[5,6],[4,6]];
+  var cols=[VC.exec,VC.tech,VC.gold,VC.aqua,VC.purple];
+  var e=edges.map(function(p){return '<line x1="'+pts[p[0]][0]+'" y1="'+pts[p[0]][1]+'" x2="'+pts[p[1]][0]+'" y2="'+pts[p[1]][1]+'" stroke="'+VC.line+'" stroke-width="1.5"/>';}).join('');
+  var n=pts.map(function(p,i){var c=cols[i%cols.length];
+    return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(i%3?5:8)+'" fill="'+c+'" opacity="'+(i%3?0.7:1)+'"><animate attributeName="r" values="'+(i%3?5:8)+';'+(i%3?6.5:10)+';'+(i%3?5:8)+'" dur="'+(2.5+i*0.3)+'s" repeatCount="indefinite"/></circle>';}).join('');
+  return '<svg viewBox="0 0 320 140" class="hero" role="img" aria-label="Dados conectados em rede">'+e+n+'</svg>';}
+
+/* ---- diagrama de arquitetura Hadoop (ingestão→storage→processamento) ---- */
+function hadoopArch(){
+  function box(x,y,w,h,c,t,s){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="8" fill="'+c+'22" stroke="'+c+'"/>'
+    +'<text x="'+(x+w/2)+'" y="'+(y+h/2-3)+'" fill="'+VC.ink+'" font-size="12.5" font-weight="700" text-anchor="middle">'+t+'</text>'
+    +'<text x="'+(x+w/2)+'" y="'+(y+h/2+13)+'" fill="'+VC.ink3+'" font-size="10" text-anchor="middle">'+s+'</text>';}
+  var a='<svg viewBox="0 0 360 190" role="img" aria-label="Arquitetura Hadoop: ingestão, armazenamento e processamento">';
+  a+=box(10,78,80,44,VC.gold,'Sqoop','ingestão');
+  a+='<path d="M92 100h24" stroke="'+VC.ink3+'" stroke-width="1.6" marker-end="url(#ah)"/>';
+  a+=box(120,20,150,44,VC.exec,'HDFS','armazenamento 3× réplica');
+  a+=box(120,80,150,44,VC.tech,'MapReduce','processamento paralelo');
+  a+='<line x1="195" y1="64" x2="195" y2="80" stroke="'+VC.ink3+'" stroke-width="1.6"/>';
+  a+=box(120,140,150,40,VC.purple,'YARN','orquestra os recursos');
+  a+='<line x1="195" y1="124" x2="195" y2="140" stroke="'+VC.ink3+'" stroke-width="1.6"/>';
+  a+='<path d="M272 100h24" stroke="'+VC.ink3+'" stroke-width="1.6" marker-end="url(#ah)"/>';
+  a+=box(300,78,50,44,VC.aqua,'Hive','SQL');
+  a+='<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0l6 3-6 3z" fill="'+VC.ink3+'"/></marker></defs>';
+  return a+'</svg>';}
+
+/* ---- slide de pausa para laboratório ---- */
+function labBreak(c){
+  return `<div class="labstop">
+    <div class="ls-badge">Hora do lab · pare a apresentação</div>
+    <h2 class="ls-title">${c.title}</h2>
+    <div class="ls-meta"><span>⏱ ${c.time}</span><span>📄 <code>${c.file}</code></span><span>🔀 ${c.rotas}</span>${c.prereq?`<span>🔗 ${c.prereq}</span>`:''}</div>
+    <div class="cols" style="flex:1">
+      <div class="col">
+        <div class="col-label e">🎯 Objetivo</div>
+        <p class="body">${c.goal}</p>
+        <div class="col-label e" style="margin-top:8px">O que você vai entregar</div>
+        <ul class="list check">${c.deliver.map(function(d){return '<li>'+d+'</li>';}).join('')}</ul>
+      </div>
+      <div class="col">
+        <div class="col-label t">Passos principais</div>
+        <ul class="list t">${c.steps.map(function(s){return '<li>'+s+'</li>';}).join('')}</ul>
+        <div class="ls-cta"><b>Abram o arquivo do lab e sigam juntos.</b> Retomo a apresentação quando todos concluírem o checklist do lab.</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+const slides = [
+{kick:"Capa", title:"Introdução Big Data", badge:"mix", cover:true, html:`
+<div class="cover">
+  <div class="cover-kicker">Big Data</div>
+  <h1 class="cover-title">Introdução<br>Big Data</h1>
+  <div class="cover-rule"></div>
+  <div class="cover-sub">MBA · FEAAC/UFC</div>
+  <div class="cover-meta">
+    <div><span class="cm-l">Facilitador</span><span class="cm-v">Alexandre Moreira</span></div>
+    <div><span class="cm-l">Módulo</span><span class="cm-v">DIA 1 · Fundamentos &amp; Ingestão</span></div>
+  </div>
+  <div class="cover-days">HDFS · MapReduce · Sqoop · Hive · Spark · BI</div>
+</div>`},
+/* ---------- 01 CAPA ---------- */
+{kick:"Abertura", title:"Introdução Big Data - MBA/UFC", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O curso</div>
+    <h3 class="blk">🎓 Introdução Big Data - MBA/UFC</h3>
+    <p class="body">Três dias transformando <span class="hl">dados brutos</span> em <span class="hl">decisões de negócio</span>. Hoje: a fundação — como os dados chegam, ficam seguros e são processados em escala.</p>
+    <div class="stat-row">
+      <div class="stat b"><div class="n">3</div><div class="l">dias · 24 horas</div></div>
+      <div class="stat g"><div class="n">100k</div><div class="l">transações no dataset</div></div>
+    </div>
+    <div class="fact"><div class="ft">Caso-guia: uma instituição financeira precisa detectar fraude <span class="hl">antes</span> que a transação se complete — não no relatório do dia seguinte.</div></div>
+    <figure class="viz plain" style="margin-top:2px">${heroNet()}</figure>
+  </div>
+  <div class="col">
+    <div class="col-label t">A jornada</div>
+    ${iconRow([{i:'block',label:'HDFS',color:VC.exec},{i:'cluster',label:'MapReduce',color:VC.tech},{i:'transfer',label:'Sqoop',color:VC.gold},{i:'hive',label:'Hive',color:VC.aqua},{i:'spark',label:'Spark',color:VC.danger}])}
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:10px">
+      <div class="node b"><div class="t">DIA 1 · Fundamentos</div><div class="s">HDFS · MapReduce · Sqoop</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node g"><div class="t">DIA 2 · Transformação</div><div class="s">Hive · Partições · EDA</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node o"><div class="t">DIA 3 · Insights &amp; BI</div><div class="s">Spark · Dashboards · ML</div></div>
+    </div>
+    <p class="note">Navegue com as setas ‹ › do rodapé ou as teclas ← → do teclado. Clique em <kbd>☰ Índice</kbd> para pular para qualquer slide.</p>
+  </div>
+</div>`},
+
+/* ---------- 01b ESCALAS DE DADOS ---------- */
+{kick:"Fundamentos", title:"As escalas de dados — de byte a zettabyte", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Cada degrau é ×1000</div>
+    <table class="cmp">
+      <tr><th>Unidade</th><th>Ordem</th><th>Comparação tangível</th></tr>
+      <tr><td>KB</td><td>10³ B</td><td>Um parágrafo de texto</td></tr>
+      <tr><td>MB</td><td>10⁶ B</td><td>Uma foto de celular · 1 min de MP3</td></tr>
+      <tr><td>GB</td><td>10⁹ B</td><td>~30 min de vídeo HD · um pen drive</td></tr>
+      <tr><td>TB</td><td>10¹² B</td><td>~500 h de vídeo HD · disco de um notebook</td></tr>
+      <tr><td>PB</td><td>10¹⁵ B</td><td>~11 mil filmes em 4K · Biblioteca do Congresso ≈ 20 PB</td></tr>
+      <tr><td>EB</td><td>10¹⁸ B</td><td>1 milhão de TB — escala de nuvens e governos</td></tr>
+      <tr><td>ZB</td><td>10²¹ B</td><td>Escala do dado gerado no mundo inteiro</td></tr>
+    </table>
+    <p class="note">Sistema decimal (×1000). Em base 2 (KiB, MiB…) cada salto é de 1024.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Onde cada coisa vive</div>
+    <div class="stat-row">
+      <div class="stat b"><div class="n">~100 GB</div><div class="l">o dataset deste curso (faixa GB–TB)</div></div>
+      <div class="stat g"><div class="n">~181 ZB</div><div class="l">dados gerados no mundo em 2025</div></div>
+    </div>
+    <div class="fact"><div class="ft">Do seu notebook ao mundo há um salto de cerca de <span class="hl">um trilhão de vezes</span> (GB → ZB). É por isso que "guardar em uma máquina só" deixa de funcionar — e o Hadoop existe.</div></div>
+    ${iconRow([{i:'db',label:'GB–TB · uma máquina',color:VC.exec},{i:'cluster',label:'PB+ · cluster distribuído',color:VC.tech}])}
+    <div class="col-label t" style="margin-top:8px">Referências para comparação</div>
+    <div>${CITE("HowToGeek — GB, TB e PB na prática","https://www.howtogeek.com/353116/how-big-are-gigabytes-terabytes-and-petabytes/")} ${CITE("IDC / Statista — Global Datasphere","https://www.statista.com/statistics/871513/worldwide-data-created/")}</div>
+  </div>
+</div>`},
+
+/* ---------- 02 POR QUE AGORA (notícias) ---------- */
+{kick:"Contexto de mercado", title:"Por que Big Data, por que agora", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O cenário (dados de mercado)</div>
+    <div class="fact"><div class="ft">O volume de dados gerado no mundo chega a <span class="hl">~181 zettabytes em 2025</span> — mais que 5× o de 2018.</div>${CITE("IDC Data Age / Statista — Global Datasphere","https://www.statista.com/statistics/871513/worldwide-data-created/")}</div>
+    <div class="fact"><div class="ft">Golpes e fraudes financeiras causaram <span class="hl">R$ 10,1 bilhões</span> de prejuízo no Brasil em 2024 — alta de 17% sobre 2023.</div>${CITE("Febraban, 2024","https://www.poder360.com.br/poder-economia/golpes-causaram-prejuizo-de-r-101-bi-em-2024-diz-febraban/")}</div>
+    <div class="fact"><div class="ft">Empresas orientadas a dados relatam decisões mais rápidas e maior competitividade.</div>${CITE("McKinsey — The age of analytics","https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-age-of-analytics-competing-in-a-data-driven-world")}</div>
+    <figure class="viz">
+      <div class="vtitle">Dados gerados no mundo · zettabytes/ano</div>
+      ${barsV([{label:'2018',value:33,color:VC.ink3},{label:'2020',value:64,color:VC.exec},{label:'2022',value:101,color:VC.exec},{label:'2025',value:181,color:VC.tech}],{aria:'Crescimento do volume global de dados em zettabytes por ano'})}
+      <figcaption>${CITE("IDC Global Datasphere / Statista","https://www.statista.com/statistics/871513/worldwide-data-created/")}</figcaption>
+    </figure>
+  </div>
+  <div class="col">
+    <div class="col-label t">O que muda na prática</div>
+    <table class="cmp">
+      <tr><th>Antes</th><th>Com Big Data</th></tr>
+      <tr><td>Relatório noturno</td><td>Sinal em tempo real</td></tr>
+      <tr><td>1 servidor, 1 disco</td><td>Cluster distribuído</td></tr>
+      <tr><td>Amostra pequena</td><td>População inteira</td></tr>
+      <tr><td>Fraude vista depois</td><td>Fraude barrada antes</td></tr>
+    </table>
+    <div class="widget" style="margin-top:6px">
+      <div class="wlabel">Como ler os selos deste deck</div>
+      <p class="body">Números com <span class="cite" style="margin:0">fonte</span> foram verificados e trazem o link. Os com <span class="src" style="margin:0">VERIFICAR</span> são plausíveis para ensino — <span class="hl">confirme na fonte</span> antes de apresentar a stakeholders.</p>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 03b DATA WAREHOUSE vs DATA LAKE ---------- */
+{kick:"Fundamentos", title:"Data Warehouse vs Data Lake", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Duas formas de guardar dados</div>
+    <div class="card"><h3 class="blk" style="color:var(--gold)">🏛️ Data Warehouse</h3>
+      <p class="body">Dados já <span class="hl">limpos, estruturados e modelados</span> para responder perguntas de negócio. O schema é definido <span class="hl">na entrada</span> (schema-on-write). É o "produto engarrafado e rotulado".</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--exec)">🌊 Data Lake</h3>
+      <p class="body">Todo dado <span class="hl">bruto</span>, em qualquer formato (tabela, JSON, log, imagem), barato de guardar. A estrutura só é aplicada <span class="hl">na leitura</span> (schema-on-read). É a "água do reservatório".</p></div>
+    <div class="fact"><div class="ft">No nosso stack: o <span class="hl">HDFS (raw/bronze)</span> é o data lake; a <span class="hl">camada Gold no Hive</span> faz o papel de warehouse. O Medallion é a ponte entre os dois.</div>${CITE("AWS — o que é um data lake","https://aws.amazon.com/what-is/data-lake/")}</div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Comparação</div>
+    <table class="cmp">
+      <tr><th>Dimensão</th><th>Warehouse</th><th>Data Lake</th></tr>
+      <tr><td>Dados</td><td>Estruturados, curados</td><td>Brutos, qualquer formato</td></tr>
+      <tr><td>Schema</td><td>Na escrita</td><td>Na leitura</td></tr>
+      <tr><td>Custo de storage</td><td>Maior</td><td>Menor</td></tr>
+      <tr><td>Usuário típico</td><td>Analista / BI</td><td>Engenheiro / cientista de dados</td></tr>
+      <tr><td>A pergunta</td><td>"Já sei o que medir"</td><td>"Ainda não sei o que vou perguntar"</td></tr>
+    </table>
+    ${iconRow([{i:'db',label:'Warehouse · Gold/Hive',color:VC.gold},{i:'layers',label:'Data Lake · HDFS raw',color:VC.exec}])}
+    <p class="note">Tendência atual: <span class="hl">Lakehouse</span> (Delta Lake, Iceberg) une os dois — dado bruto barato + tabelas confiáveis no mesmo lugar.</p>
+  </div>
+</div>`},
+
+/* ==========================================================
+   BLOCO DE CASOS REAIS — para comentar em aula
+   Casos históricos célebres (fatos estáveis, pré-2024).
+   Cada um tem selo [ATUALIZAR] p/ trocar por notícia recente.
+   ========================================================== */
+
+/* ---------- CASO 1 · Equifax (vazamento) ---------- */
+{kick:"Caso · Vazamento de dados", title:"Equifax — quando o dado vaza", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <span class="case-tag fraud">Vazamento · Governança</span>
+    <div class="case-hero fraud">
+      <div class="ch-t">Equifax · 2017</div>
+      <div class="ch-s">Uma das maiores agências de crédito dos EUA expôs dados pessoais de <span class="hl">~147 milhões</span> de pessoas (nomes, CPFs/SSN, datas de nascimento).</div>
+    </div>
+    <figure class="viz compact" style="align-items:center">
+      ${donut(0.58,'147M','pessoas',VC.danger)}
+      <figcaption>≈ 60% dos adultos dos EUA tiveram dados pessoais expostos</figcaption>
+    </figure>
+    <div class="lesson"><span class="li-ico">🔓</span><div class="li-tx">A brecha explorou uma <b>vulnerabilidade conhecida e não corrigida</b> (Apache Struts). O patch existia havia meses.</div></div>
+    <div class="lesson"><span class="li-ico">🇧🇷</span><div class="li-tx">Paralelo brasileiro: o <b>megavazamento de ~223 milhões de CPFs</b> (2021) — dados atribuídos à base da Serasa Experian (que contestou) e investigado pela ANPD. Maior da história do país.</div></div>
+    ${CITE("Tecnoblog — megavazamento de 223 mi de CPFs","https://tecnoblog.net/especiais/megavazamento-de-223-milhoes-de-cpfs-um-ano-se-passou-e-ainda-ha-perguntas-sem-resposta/")}
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho técnico com o DIA 1</div>
+    <ul class="list t">
+      <li>Dado sensível em escala exige <span class="hl">criptografia em repouso</span> (HDFS encryption zones)</li>
+      <li>Governança = patch, auditoria e <span class="hl">quem acessa o quê</span> (visto em “Dado sensível pede cuidado”)</li>
+      <li>Volume não é só oportunidade — é <span class="hl">superfície de risco</span></li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>De quem é a responsabilidade: TI, jurídico ou direção?</li>
+        <li>Coletar menos dados teria reduzido o dano?</li>
+        <li>Como a LGPD mudaria esse caso no Brasil?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- CASO 2 · Netflix (Big Data que deu certo) ---------- */
+{kick:"Caso · Big Data que deu certo", title:"Netflix — dados que viram receita", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <span class="case-tag win">Sucesso · ROI</span>
+    <div class="case-hero win">
+      <div class="ch-t">Netflix · recomendação</div>
+      <div class="ch-s">A empresa credita ao seu motor de recomendação uma fatia enorme do que as pessoas assistem — dados guiam desde a interface até <span class="hl">quais séries produzir</span>.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">🎯</span><div class="li-tx">Cada clique, pausa e re-assistir vira sinal. O padrão coletivo prevê o gosto individual.</div></div>
+    <div class="lesson"><span class="li-ico">📉</span><div class="li-tx">Menos rotatividade de assinantes (churn) = receita retida. Recomendação boa <b>segura o cliente</b>.</div></div>
+    <span class="upd">[ATUALIZAR] troque por caso BR — ex.: banco/varejo que usa recomendação ou score</span>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho técnico com o curso</div>
+    <ul class="list t">
+      <li>É exatamente o pipeline <span class="hl">Raw → Bronze → Silver → Gold</span> em produção</li>
+      <li>Recomendação é <span class="hl">ML</span> — o preview do DIA 3</li>
+      <li>Escala de eventos por segundo = o "Velocity" dos 4 Vs</li>
+    </ul>
+    <figure class="viz compact" style="align-items:center">
+      ${donut(0.8,'~80%','recomend.',VC.danger)}
+      <figcaption>Fatia do consumo guiada pelo motor de recomendação ${SRC2("Ordem de grandeza citada pela Netflix — confirme antes de apresentar")}</figcaption>
+    </figure>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Onde no negócio de vocês há "sinais" desperdiçados?</li>
+        <li>Qual seria o "Gold layer" (KPI) do seu caso?</li>
+        <li>Personalização ajuda ou vira bolha/manipulação?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- CASO 3 · Target (analytics + ética) ---------- */
+{kick:"Caso · Analytics preditivo", title:"Target — prever é poder (e risco)", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <span class="case-tag win">Sucesso técnico · Dilema ético</span>
+    <div class="case-hero fraud">
+      <div class="ch-t">Target · marketing preditivo</div>
+      <div class="ch-s">O varejista americano ficou famoso por um caso (amplamente reportado) em que <span class="hl">padrões de compra</span> permitiam inferir eventos pessoais sensíveis dos clientes antes deles anunciarem.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">🧮</span><div class="li-tx">Correlações em dados de compra previam comportamento futuro com precisão surpreendente.</div></div>
+    <div class="lesson"><span class="li-ico">⚖️</span><div class="li-tx">Tecnicamente brilhante, <b>eticamente delicado</b>: "podemos" não é o mesmo que "devemos".</div></div>
+    <span class="upd">[ATUALIZAR] par com exemplo recente de uso (ou abuso) de dados de consumo</span>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho técnico com o curso</div>
+    <ul class="list t">
+      <li>É <span class="hl">EDA + correlação</span> — o Lab 8 do DIA 2</li>
+      <li>Feature engineering: transformar compras em <span class="hl">sinais preditivos</span></li>
+      <li>O limite entre insight útil e invasão é <span class="hl">decisão de negócio</span>, não técnica</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Onde traçar a linha entre personalizar e invadir?</li>
+        <li>A LGPD exigiria consentimento explícito aqui?</li>
+        <li>Quem audita o que o modelo infere sobre as pessoas?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- CASO 4 · Healthcare.gov (falha de projeto) ---------- */
+{kick:"Caso · Falha de projeto", title:"Healthcare.gov — escala mal planejada", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <span class="case-tag fail">Falha · O que NÃO fazer</span>
+    <div class="case-hero fail">
+      <div class="ch-t">Healthcare.gov · 2013</div>
+      <div class="ch-s">O portal de saúde do governo dos EUA <span class="hl">caiu no lançamento</span>: milhões de acessos simultâneos derrubaram um sistema que não foi projetado para aquela escala.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">🧩</span><div class="li-tx">Muitos sistemas integrados sem teste de carga ponta a ponta. Cada peça "funcionava" isolada.</div></div>
+    <div class="lesson"><span class="li-ico">⏱️</span><div class="li-tx"><b>Não testar em escala real</b> antes do go-live foi a raiz do problema.</div></div>
+    <span class="upd">[ATUALIZAR] par com falha recente de sistema público BR em alta demanda</span>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho técnico com o DIA 1</div>
+    <ul class="list t">
+      <li>Por que arquitetura <span class="hl">distribuída</span> importa: escala horizontal vs 1 servidor</li>
+      <li>É a lição do HDFS/MapReduce: <span class="hl">projete para o volume real</span></li>
+      <li>Conecta às “armadilhas comuns” de “Armadilhas comuns (e como evitar)”</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Como estimar carga antes de um lançamento?</li>
+        <li>Vale lançar em fases (rollout gradual)?</li>
+        <li>Que teste faltou — e de quem era a responsabilidade?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- CASO 5 · Fraude em cartões (caso-guia) ---------- */
+{kick:"Caso · Fraude financeira", title:"Detecção de fraude — o nosso caso", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <span class="case-tag fraud">Fraude · Tempo real</span>
+    <div class="case-hero fraud">
+      <div class="ch-t">Cartões de crédito · o caso-guia do curso</div>
+      <div class="ch-s">Bandeiras e bancos processam <span class="hl">bilhões de transações</span> e precisam decidir em <span class="hl">milissegundos</span> se cada uma é legítima — exatamente o dataset que usamos.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">🚦</span><div class="li-tx">Modelos avaliam risco em tempo real: aprovar, recusar ou pedir verificação extra.</div></div>
+    <div class="lesson"><span class="li-ico">🎯</span><div class="li-tx">Desafio central: pegar fraude <b>sem irritar o cliente legítimo</b> (falso positivo custa caro).</div></div>
+    <div class="lesson"><span class="li-ico">💰</span><div class="li-tx">No Brasil, golpes e fraudes financeiras somaram <b>R$ 10,1 bilhões</b> em 2024 (+17% vs. 2023) — o prejuízo real que modelos como este tentam conter.</div></div>
+    ${CITE("Febraban, 2024","https://www.poder360.com.br/poder-economia/golpes-causaram-prejuizo-de-r-101-bi-em-2024-diz-febraban/")}
+  </div>
+  <div class="col">
+    <div class="col-label t">Isso é literalmente o curso</div>
+    <ul class="list check">
+      <li>Ingestão das transações → <span class="hl">Sqoop + HDFS</span> (hoje)</li>
+      <li>Limpeza e enriquecimento → <span class="hl">Hive</span> (DIA 2)</li>
+      <li>Modelo de risco + dashboard → <span class="hl">Spark ML + BI</span> (DIA 3)</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>O que dói mais: liberar fraude ou barrar cliente bom?</li>
+        <li>Quais sinais indicam risco numa transação?</li>
+        <li>Como explicar ao cliente por que foi recusado?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ==========================================================
+   BLOCO CASOS NO BRASIL — âncora regulatória (sólida) +
+   campo [PREENCHER] para o incidente específico (fonte oficial).
+   ========================================================== */
+
+/* ---------- BR 1 · LGPD & ANPD ---------- */
+{kick:"Caso · Brasil", title:"LGPD & ANPD — a régua brasileira", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Âncora sólida (fato estável)</div>
+    <div class="case-hero fraud">
+      <div class="ch-t">Lei 13.709/2018 · LGPD</div>
+      <div class="ch-s">Regula o tratamento de dados pessoais no Brasil. A <span class="hl">ANPD</span> é a autoridade que fiscaliza e pode aplicar sanções.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">⚖️</span><div class="li-tx">Exige <b>base legal</b> para tratar dado pessoal — consentimento, obrigação legal, interesse público, etc.</div></div>
+    <div class="lesson"><span class="li-ico">🔔</span><div class="li-tx">Incidente com dado pessoal deve ser <b>comunicado à ANPD</b> e aos titulares afetados. A ANPD já saiu da fase só de orientação: aplica <b>multas</b> (primeira em 2023) e o teto legal é de <b>R$ 50 milhões</b> por infração.</div></div>
+    ${CITE("Mayer Brown — primeiras sanções da ANPD","https://www.mayerbrown.com/pt/insights/publications/2024/02/anpd-applies-first-sanctions-of-2024")} <a class="srclink" href="https://www.gov.br/anpd" target="_blank" rel="noopener">ANPD ↗</a>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho com o DIA 1</div>
+    <ul class="list t">
+      <li>CPF, nome e e-mail do dataset = <span class="hl">dado pessoal</span> sob a LGPD</li>
+      <li>Por isso o curso usa dados <span class="hl">sintéticos</span> — nada real exposto</li>
+      <li>A governança de “Dado sensível pede cuidado” é o “como cumprir” na prática</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Qual a base legal para tratar dados sensíveis na sua organização?</li>
+        <li>Dado anonimizado ainda é dado pessoal?</li>
+        <li>Quem responde por um vazamento: o órgão ou o fornecedor?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- BR 2 · Pix / fraude financeira ---------- */
+{kick:"Caso · Brasil", title:"Pix — velocidade e o alvo da fraude", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Âncora sólida (fato estável)</div>
+    <div class="case-hero fraud">
+      <div class="ch-t">Pix · Banco Central</div>
+      <div class="ch-s">Sistema de pagamentos instantâneos do BC. Transferência em <span class="hl">segundos, 24/7</span> — adoção massiva no Brasil.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">⚡</span><div class="li-tx">A instantaneidade é ótima para o usuário e <b>atraente para o golpista</b>: dinheiro sai rápido e é difícil reverter.</div></div>
+    <div class="lesson"><span class="li-ico">🛡️</span><div class="li-tx">Respostas do ecossistema: mecanismo especial de devolução (MED), limites noturnos e regras antifraude.</div></div>
+    <div class="lesson"><span class="li-ico">📊</span><div class="li-tx"><b>24 milhões de brasileiros</b> foram vítimas de golpes via Pix e boletos em 12 meses (jul/24–jun/25); o BC registrou <b>~4,7 mi de casos</b> de fraude no Pix em 2024.</div></div>
+    ${CITE("Febraban / Banco Central","https://finsidersbrasil.com.br/eventos/golpes-com-pix-dao-prejuizos-de-quase-r-3-bi-em-dois-anos-diz-febraban/")}
+  </div>
+  <div class="col">
+    <div class="col-label t">Isso É o caso-guia do curso</div>
+    <ul class="list check">
+      <li>Transações instantâneas = os 4 Vs (Volume + Velocity) na veia</li>
+      <li>Detecção precisa ser <span class="hl">tempo real</span>, não batch noturno</li>
+      <li>Mesmo dilema: barrar golpe sem travar transação legítima</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Dá para detectar golpe em segundos sem irritar o cliente?</li>
+        <li>Que sinais denunciam uma conta "laranja"?</li>
+        <li>De quem é o prejuízo quando a vítima autoriza o Pix?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- BR 3 · setor público ---------- */
+{kick:"Caso · Ceará", title:"Dados no setor público", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Âncora sólida (fato estável)</div>
+    <div class="case-hero win">
+      <div class="ch-t">Setor público · interesse coletivo</div>
+      <div class="ch-s">O setor público atua na defesa de <span class="hl">interesses difusos e coletivos</span> — o que inclui proteção de dados e combate a fraudes contra o erário.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">🏛️</span><div class="li-tx">Cruzar bases públicas (folha, contratos, licitações) revela <b>padrões e anomalias</b> — o coração da análise de dados.</div></div>
+    <div class="lesson"><span class="li-ico">🔎</span><div class="li-tx">Big Data vira ferramenta de <b>fiscalização proativa</b>, não só reativa.</div></div>
+    <span class="upd">[PREENCHER] uma iniciativa real de analytics no setor público</span>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho com o curso inteiro</div>
+    <ul class="list t">
+      <li>Ingestão de bases oficiais → <span class="hl">Sqoop/HDFS</span> (hoje)</li>
+      <li>Cruzamento e limpeza → <span class="hl">Hive</span> (DIA 2)</li>
+      <li>Painel de indicadores de risco → <span class="hl">BI</span> (DIA 3)</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Que bases públicas poderiam ser cruzadas?</li>
+        <li>Onde está o limite entre fiscalizar e vigiar?</li>
+        <li>Como garantir a LGPD numa investigação orientada a dados?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- BR 4 · Transparência & LAI ---------- */
+{kick:"Caso · Brasil", title:"Dados abertos — o outro lado da moeda", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Âncora sólida (fato estável)</div>
+    <div class="case-hero win">
+      <div class="ch-t">Lei 12.527/2011 · Acesso à Informação</div>
+      <div class="ch-s">Garante ao cidadão acesso a dados públicos. Portais de <span class="hl">transparência</span> publicam gastos, contratos e folha.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">📂</span><div class="li-tx">Dado aberto é <b>matéria-prima de análise</b>: qualquer um pode auditar o gasto público.</div></div>
+    <div class="lesson"><span class="li-ico">⚖️</span><div class="li-tx">Tensão saudável: <b>transparência (LAI)</b> de um lado, <b>privacidade (LGPD)</b> do outro. Nome de servidor é público; CPF, não.</div></div>
+    <span class="upd">[PREENCHER] uso de dados abertos no CE — <a class="srclink" href="https://portaldatransparencia.gov.br" target="_blank" rel="noopener">Transparência ↗</a> · <a class="srclink" href="https://www.tce.ce.gov.br" target="_blank" rel="noopener">TCE-CE ↗</a></span>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho técnico</div>
+    <ul class="list t">
+      <li>Dados abertos costumam vir em <span class="hl">CSV/JSON</span> — o "Variety" dos 4 Vs</li>
+      <li>Ingestão e padronização é o mesmo pipeline Bronze→Silver→Gold</li>
+      <li>Um bom dashboard transforma planilha crua em <span class="hl">controle social</span></li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Onde LAI e LGPD entram em conflito no dia a dia?</li>
+        <li>Transparência total sempre é boa? Há dado que não deve abrir?</li>
+        <li>Como um painel público aumenta a confiança na instituição?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 03 OS 4 Vs (interativo) ---------- */
+{kick:"Fundamentos", title:"Os 4 Vs do Big Data", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Clique em cada V</div>
+    <div id="vGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="card card2 vbtn" data-v="0" style="cursor:pointer">
+        <h3 class="blk" style="color:var(--exec)">📦 Volume</h3><p class="note" style="margin:0">Quanto</p></div>
+      <div class="card card2 vbtn" data-v="1" style="cursor:pointer">
+        <h3 class="blk" style="color:var(--tech)">⚡ Velocity</h3><p class="note" style="margin:0">Quão rápido</p></div>
+      <div class="card card2 vbtn" data-v="2" style="cursor:pointer">
+        <h3 class="blk" style="color:var(--gold)">🔀 Variety</h3><p class="note" style="margin:0">Que tipos</p></div>
+      <div class="card card2 vbtn" data-v="3" style="cursor:pointer">
+        <h3 class="blk" style="color:var(--aqua)">✔ Veracity</h3><p class="note" style="margin:0">Confiável?</p></div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Detalhe</div>
+    <div class="widget" id="vDetail" style="min-height:220px">
+      <div class="wlabel" id="vTitle">Selecione um V ao lado</div>
+      <p class="body" id="vBody">Cada V é uma pressão diferente sobre a infraestrutura. Juntos, eles explicam por que um único banco de dados relacional não dá conta.</p>
+      <div id="vExtra" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 04 OLTP vs OLAP ---------- */
+{kick:"Fundamentos", title:"OLTP vs OLAP — dois mundos", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O conceito</div>
+    <p class="body"><span class="hl">OLTP</span> (Online Transaction Processing) e <span class="hl">OLAP</span> (Online Analytical Processing) são dois modos de usar dados: um <span class="hl">registra</span> cada operação no instante em que ela acontece; o outro <span class="hl">analisa</span> grandes volumes do histórico para gerar insight.</p>
+    <div class="col-label e" style="margin-top:8px">A analogia</div>
+    <div class="card"><h3 class="blk">🛒 OLTP = caixa do mercado</h3>
+      <p class="body">Atende <span class="hl">um cliente por vez</span>, rápido. "Quem comprou o quê agora." É o sistema que <span class="hl">roda</span> o negócio.</p></div>
+    <div class="card"><h3 class="blk">📊 OLAP = análise de vendas</h3>
+      <p class="body">Lê <span class="hl">milhões de transações de uma vez</span>. "Quantos fraudadores no trimestre." É o sistema que <span class="hl">entende</span> o negócio.</p></div>
+    <p class="note">O curso vive na ponte entre os dois: dados nascem no OLTP, são analisados no OLAP.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Comparação técnica</div>
+    <table class="cmp">
+      <tr><th>Dimensão</th><th>OLTP</th><th>OLAP</th></tr>
+      <tr><td>Otimizado p/</td><td>Escrita rápida</td><td>Leitura complexa</td></tr>
+      <tr><td>Operações</td><td>Muitas, pequenas</td><td>Poucas, enormes</td></tr>
+      <tr><td>Exemplo</td><td>MySQL do app</td><td>Hive no Hadoop</td></tr>
+      <tr><td>Latência</td><td>&lt; 1 segundo</td><td>Segundos a min</td></tr>
+      <tr><td>Volume</td><td>Registro a registro</td><td>Terabytes</td></tr>
+    </table>
+    <div class="flow" style="margin-top:6px">
+      <div class="node b"><div class="t">MySQL</div><div class="s">OLTP</div></div>
+      <span class="arrow">→</span>
+      <div class="node o"><div class="t">Sqoop</div><div class="s">ponte</div></div>
+      <span class="arrow">→</span>
+      <div class="node g"><div class="t">HDFS/Hive</div><div class="s">OLAP</div></div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 05 ECOSSISTEMA HADOOP ---------- */
+{kick:"Fundamentos", title:"O ecossistema Hadoop", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">A ideia central</div>
+    <p class="body">Hadoop resolve um problema simples de enunciar e difícil de executar: <span class="hl">guardar e processar mais dados do que cabe em uma máquina</span>. A resposta é sempre a mesma — dividir o trabalho entre muitas máquinas baratas.</p>
+    <div class="fact"><div class="ft">Projeto <span class="hl">open-source da Apache</span>, nascido de papers do Google (GFS e MapReduce). Roda em hardware comum, não em servidores caros.</div>${CITE("Google Research — MapReduce (2004)","https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/")}</div>
+    <figure class="viz">
+      <div class="vtitle">Como as peças se encaixam</div>
+      ${hadoopArch()}
+    </figure>
+  </div>
+  <div class="col">
+    <div class="col-label t">As 3 camadas que veremos hoje</div>
+    <div class="card"><h3 class="blk" style="color:var(--exec)">💾 HDFS — armazenamento</h3>
+      <p class="body">Onde os dados moram, distribuídos e replicados.</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--tech)">⚙️ MapReduce — processamento</h3>
+      <p class="body">Como o trabalho é dividido e executado em paralelo.</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--gold)">🔀 Sqoop — ingestão</h3>
+      <p class="body">Como os dados do banco SQL chegam ao HDFS.</p></div>
+  </div>
+</div>`},
+
+/* ---------- 05b FERRAMENTAS DO DIA 1 ---------- */
+{kick:"Ferramentas", title:"O que vamos usar hoje", badge:"tech", html:`
+<div style="display:flex;flex-direction:column;gap:12px;flex:1">
+  <p class="body full">Todo o stack de hoje é <span class="hl">open-source Apache</span>. Clique em qualquer card para abrir a documentação oficial.</p>
+  <div class="tool-grid">
+    <a class="tool" href="https://hadoop.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-hdfs">🐘</div>
+      <div class="ti-body"><div class="ti-name">Apache Hadoop / HDFS <span class="ext">↗</span></div>
+        <div class="ti-desc">Armazenamento distribuído com replicação. A base de tudo.</div>
+        <div class="ti-url">hadoop.apache.org</div></div>
+    </a>
+    <a class="tool" href="https://sqoop.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-sqoop">🔀</div>
+      <div class="ti-body"><div class="ti-name">Apache Sqoop <span class="ext">↗</span></div>
+        <div class="ti-desc">Transfere dados entre bancos SQL e o HDFS, em paralelo.</div>
+        <div class="ti-url">sqoop.apache.org</div></div>
+    </a>
+    <a class="tool" href="https://hive.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-hive">🗄️</div>
+      <div class="ti-body"><div class="ti-name">Apache Hive <span class="ext">↗</span></div>
+        <div class="ti-desc">SQL sobre o HDFS. Entra em cena amanhã (DIA 2).</div>
+        <div class="ti-url">hive.apache.org</div></div>
+    </a>
+    <a class="tool" href="https://www.mysql.com" target="_blank" rel="noopener">
+      <div class="ti-ico ico-aqua">💾</div>
+      <div class="ti-body"><div class="ti-name">MySQL <span class="ext">↗</span></div>
+        <div class="ti-desc">O banco OLTP de origem — de onde o Sqoop importa.</div>
+        <div class="ti-url">mysql.com</div></div>
+    </a>
+  </div>
+  <p class="note">Sqoop está em modo "attic" (arquivado) na Apache — no curso mostramos a técnica; em produção há alternativas modernas de ingestão. Comente isso com a turma.</p>
+</div>`},
+
+/* ==========================================================
+   BLOCO TUTORIAL — instalando o stack (Windows via WSL2 / Linux)
+   ========================================================== */
+
+/* ---------- INST 1 · Antes de instalar ---------- */
+{kick:"Instalação", title:"Antes de instalar — Windows ou Linux?", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">A decisão</div>
+    <p class="body">Todo o ecossistema Hadoop é <span class="hl">nativo de Linux</span>. No Windows, a rota confiável não é instalar "na unha" — é usar o <span class="hl">WSL2</span> (Windows Subsystem for Linux), que roda um Ubuntu real dentro do Windows.</p>
+    <ul class="list check">
+      <li>Mesmos comandos do Linux funcionam no WSL2</li>
+      <li>Sem dual-boot, sem máquina virtual pesada</li>
+      <li>Integra com VSCode e o terminal do Windows</li>
+    </ul>
+    <div class="winnote">A partir do próximo slide, todo comando "Linux" vale igual dentro do WSL2</div>
+    ${iconRow([{i:'block',label:'Hadoop/HDFS',color:VC.exec},{i:'transfer',label:'Sqoop',color:VC.gold},{i:'db',label:'MySQL',color:VC.aqua},{i:'hive',label:'Hive',color:VC.tech},{i:'spark',label:'Spark',color:VC.danger},{i:'python',label:'Python',color:VC.purple}])}
+  </div>
+  <div class="col">
+    <div class="col-label t">Requisitos mínimos</div>
+    <table class="cmp">
+      <tr><th>Item</th><th>Mínimo</th><th>Recomendado</th></tr>
+      <tr><td>RAM</td><td>8 GB</td><td>16 GB</td></tr>
+      <tr><td>Disco livre</td><td>20 GB</td><td>40 GB+</td></tr>
+      <tr><td>SO</td><td>Ubuntu 20.04+</td><td>Ubuntu 22.04 LTS</td></tr>
+      <tr><td>Java</td><td>JDK 8</td><td>JDK 11</td></tr>
+    </table>
+    <div class="widget" style="margin-top:4px">
+      <div class="oswrap term-cmds" style="margin:0 0 9px">
+        <button class="btn os-btn on" data-os="linux">🐧 Linux</button>
+        <button class="btn os-btn" data-os="windows">🪟 Windows</button>
+        <button class="btn os-btn" data-os="colab">🟠 Colab</button>
+      </div>
+      <div class="os-pane active" data-os="linux">
+        <p class="note" style="margin:0 0 6px">Nada a instalar aqui — o Hadoop é nativo. Confira sua distro e vá ao Passo 1:</p>
+        <pre class="code">lsb_release -a   <span class="cm"># Ubuntu 20.04+ recomendado</span></pre>
+      </div>
+      <div class="os-pane" data-os="windows">
+        <p class="note" style="margin:0 0 6px">PowerShell <span class="hl">como Administrador</span> — instala WSL2 + Ubuntu:</p>
+        <pre class="code">wsl --install -d Ubuntu-22.04
+<span class="cm"># reinicie quando pedido; crie usuário/senha do Ubuntu</span></pre>
+      </div>
+      <div class="os-pane" data-os="colab">
+        <p class="note" style="margin:0 0 6px">Sem instalar nada: abra <span class="hl">colab.research.google.com</span> → novo notebook. Roda no navegador, ótimo para PC fraco. Configure por célula:</p>
+        <pre class="code"><span class="nm">!</span>java -version      <span class="cm"># já vem no Colab</span>
+<span class="kw">import</span> os          <span class="cm"># env vars via os.environ</span></pre>
+      </div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- INST 2 · Java & SSH ---------- */
+{kick:"Instalação", title:"Passo 1 — Java e SSH", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Por que precisa disso</div>
+    <div class="step"><span class="step-num">1</span><div class="st-tx">Hadoop, Hive e Spark rodam sobre a <span class="hl">JVM</span> — sem Java, nada sobe.</div></div>
+    <div class="step"><span class="step-num">2</span><div class="st-tx">HDFS coordena seus próprios processos via <span class="hl">SSH local</span>, mesmo numa única máquina.</div></div>
+    <div class="step"><span class="step-num">3</span><div class="st-tx">Configurar SSH <span class="hl">sem senha</span> evita que o cluster peça login a cada comando.</div></div>
+    <div class="winnote">Dentro do WSL2 (Ubuntu), use exatamente os comandos ao lado</div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Terminal</div>
+    <div class="oswrap term-cmds" style="margin:0 0 9px">
+      <button class="btn os-btn on" data-os="linux">🐧 Linux</button>
+      <button class="btn os-btn" data-os="windows">🪟 Windows · WSL2</button>
+      <button class="btn os-btn" data-os="colab">🟠 Colab</button>
+    </div>
+    <div class="os-pane active" data-os="linux"><p class="note" style="margin:0 0 7px">Rode direto no seu terminal Linux (Ubuntu/Debian).</p></div>
+    <div class="os-pane" data-os="windows"><div class="winnote" style="margin:0 0 7px">Abra o <b>Ubuntu (WSL2)</b> — Iniciar → Ubuntu — e rode os mesmos comandos.</div></div>
+    <div class="os-pane active" data-os="linux windows"><pre class="code"><span class="cm"># Java 11 + servidor SSH</span>
+sudo apt update
+sudo apt install -y openjdk-11-jdk openssh-server
+java -version
+
+<span class="cm"># chave SSH sem senha, para localhost</span>
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+
+<span class="cm"># deve conectar sem pedir senha:</span>
+ssh localhost
+
+<span class="cm"># ── troubleshooting Java ──────────────────────</span>
+which java || echo "Java fora do PATH"   <span class="cm"># não achou? refaça o apt install</span>
+readlink -f $(which java)                <span class="cm"># caminho real; JAVA_HOME = isso menos /bin/java</span>
+sudo update-alternatives --config java   <span class="cm"># escolha a 11 se houver várias</span>
+<span class="cm"># corrige "JAVA_HOME is not set" (erro do Hadoop):</span>
+export JAVA_HOME=$(readlink -f $(which java) | sed 's:/bin/java::')</pre></div>
+    <div class="os-pane" data-os="colab"><p class="note" style="margin:0 0 7px">Numa célula do Colab (root, sem sudo; SSH não é preciso — o runtime é uma máquina só):</p><pre class="code"><span class="kw">import</span> os
+<span class="nm">!</span>apt-get -qq install -y openjdk-11-jdk-headless
+os.environ[<span class="st">"JAVA_HOME"</span>] = <span class="st">"/usr/lib/jvm/java-11-openjdk-amd64"</span>
+<span class="nm">!</span>java -version</pre></div>
+  </div>
+</div>`},
+
+/* ---------- INST 3 · Hadoop/HDFS ---------- */
+{kick:"Instalação", title:"Passo 2 — Hadoop / HDFS", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O que vamos configurar</div>
+    <p class="body">Instalação <span class="hl">pseudo-distribuída</span>: todos os papéis (NameNode, DataNode) rodam na mesma máquina — perfeito para aprender antes de ir a um cluster real.</p>
+    <ul class="list t">
+      <li>Baixar e extrair o binário oficial</li>
+      <li>Definir <kbd>HADOOP_HOME</kbd> no PATH</li>
+      <li>Editar <kbd>core-site.xml</kbd> e <kbd>hdfs-site.xml</kbd></li>
+      <li>Formatar o NameNode <span class="hl">uma única vez</span></li>
+    </ul>
+    <p class="note">⚠ Confira a versão mais recente em hadoop.apache.org/releases.html antes de baixar.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Terminal</div>
+    <div class="oswrap term-cmds" style="margin:0 0 9px">
+      <button class="btn os-btn on" data-os="linux">🐧 Linux</button>
+      <button class="btn os-btn" data-os="windows">🪟 Windows · WSL2</button>
+      <button class="btn os-btn" data-os="colab">🟠 Colab</button>
+    </div>
+    <div class="os-pane active" data-os="linux"><p class="note" style="margin:0 0 7px">Rode direto no seu terminal Linux (Ubuntu/Debian).</p></div>
+    <div class="os-pane" data-os="windows"><div class="winnote" style="margin:0 0 7px">Abra o <b>Ubuntu (WSL2)</b> — Iniciar → Ubuntu — e rode os mesmos comandos.</div></div>
+    <div class="os-pane active" data-os="linux windows"><pre class="code"><span class="cm"># 0) pré-requisitos: Java 8/11 + SSH + utilitários que o Hadoop usa</span>
+sudo apt update &amp;&amp; sudo apt install -y openjdk-11-jdk ssh
+sudo apt install -y hostname net-tools   <span class="cm"># start-dfs.sh/jps precisam de hostname e netstat</span>
+
+<span class="cm"># 1) baixar e instalar (archive = link estável p/ versão fixa)</span>
+wget https://archive.apache.org/dist/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+tar -xzf hadoop-3.3.6.tar.gz
+sudo mv hadoop-3.3.6 /opt/hadoop
+sudo chown -R $USER:$USER /opt/hadoop   <span class="cm"># senão o format falha por permissão</span>
+
+<span class="cm"># 2) variáveis de ambiente (~/.bashrc)</span>
+<span class="cm"># descubra onde o Java está — esse caminho é o seu JAVA_HOME:</span>
+readlink -f $(which java) | sed 's/\/bin\/java//'
+echo 'export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))' >> ~/.bashrc
+echo 'export HADOOP_HOME=/opt/hadoop' >> ~/.bashrc
+echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >> ~/.bashrc
+source ~/.bashrc
+
+<span class="cm"># 3) dizer ao Hadoop onde está o Java (senão: "JAVA_HOME is not set")</span>
+echo "export JAVA_HOME=$JAVA_HOME" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+
+<span class="cm"># 4) core-site.xml — endereço do HDFS</span>
+cat &gt; $HADOOP_HOME/etc/hadoop/core-site.xml &lt;&lt;'EOF'
+&lt;configuration&gt;
+  &lt;property&gt;&lt;name&gt;fs.defaultFS&lt;/name&gt;&lt;value&gt;hdfs://localhost:9000&lt;/value&gt;&lt;/property&gt;
+&lt;/configuration&gt;
+EOF
+
+<span class="cm"># 5) hdfs-site.xml — 1 réplica (máquina única) + diretórios</span>
+cat &gt; $HADOOP_HOME/etc/hadoop/hdfs-site.xml &lt;&lt;'EOF'
+&lt;configuration&gt;
+  &lt;property&gt;&lt;name&gt;dfs.replication&lt;/name&gt;&lt;value&gt;1&lt;/value&gt;&lt;/property&gt;
+  &lt;property&gt;&lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;&lt;value&gt;/opt/hadoop/data/nn&lt;/value&gt;&lt;/property&gt;
+  &lt;property&gt;&lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;&lt;value&gt;/opt/hadoop/data/dn&lt;/value&gt;&lt;/property&gt;
+&lt;/configuration&gt;
+EOF
+
+<span class="cm"># 6) SSH sem senha p/ localhost (start-dfs.sh exige)</span>
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa &lt;&lt;&lt; y
+cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+sudo service ssh start   <span class="cm"># no WSL2 o ssh não sobe sozinho</span>
+
+<span class="cm"># 7) formatar o NameNode (UMA vez só) e subir o HDFS</span>
+hdfs namenode -format
+start-dfs.sh
+jps   <span class="cm"># deve listar NameNode, DataNode e SecondaryNameNode</span></pre></div>
+    <div class="os-pane" data-os="colab"><p class="note" style="margin:0 0 7px">Numa célula do Colab (roda como root — sem sudo, e as variáveis vão em <kbd>os.environ</kbd>):</p><pre class="code"><span class="kw">import</span> os
+<span class="cm"># baixar e extrair</span>
+<span class="nm">!</span>wget -q -O hadoop-3.3.6.tar.gz https://archive.apache.org/dist/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+<span class="nm">!</span>tar -xzf hadoop-3.3.6.tar.gz -C /content/
+
+<span class="cm"># variáveis de ambiente (persistem na sessão)</span>
+os.environ[<span class="st">"HADOOP_HOME"</span>] = <span class="st">"/content/hadoop-3.3.6"</span>
+os.environ[<span class="st">"PATH"</span>] += <span class="st">f":{os.environ['HADOOP_HOME']}/bin"</span>
+<span class="nm">!</span>hadoop version</pre></div>
+  </div>
+</div>`},
+
+/* ---------- INST 4 · MySQL + Sqoop ---------- */
+{kick:"Instalação", title:"Passo 3 — MySQL e Sqoop", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">As duas peças</div>
+    <div class="card"><h3 class="blk">💾 MySQL</h3><p class="body">O banco OLTP de origem — onde vivem <kbd>customers</kbd> e <kbd>transactions</kbd> antes do Sqoop.</p></div>
+    <div class="card"><h3 class="blk">🔀 Sqoop</h3><p class="body">Precisa do <span class="hl">driver JDBC do MySQL</span> dentro de <kbd>$SQOOP_HOME/lib</kbd> para conseguir conectar.</p></div>
+    <p class="note">⚠ Confira a versão em sqoop.apache.org e o connector em dev.mysql.com/downloads/connector/j.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Terminal</div>
+    <div class="oswrap term-cmds" style="margin:0 0 9px">
+      <button class="btn os-btn on" data-os="linux">🐧 Linux</button>
+      <button class="btn os-btn" data-os="windows">🪟 Windows · WSL2</button>
+      <button class="btn os-btn" data-os="colab">🟠 Colab</button>
+    </div>
+    <div class="os-pane active" data-os="linux"><p class="note" style="margin:0 0 7px">Rode direto no seu terminal Linux (Ubuntu/Debian).</p></div>
+    <div class="os-pane" data-os="windows"><div class="winnote" style="margin:0 0 7px">Abra o <b>Ubuntu (WSL2)</b> — Iniciar → Ubuntu — e rode os mesmos comandos.</div></div>
+    <div class="os-pane active" data-os="linux windows"><pre class="code"><span class="cm"># MySQL server</span>
+sudo apt install -y mysql-server
+sudo mysql_secure_installation
+
+<span class="cm"># Sqoop</span>
+wget -O sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz https://archive.apache.org/dist/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
+tar -xzf sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
+sudo mv sqoop-1.4.7.bin__hadoop-2.6.0 /opt/sqoop
+echo 'export SQOOP_HOME=/opt/sqoop' >> ~/.bashrc
+echo 'export PATH=$PATH:$SQOOP_HOME/bin' >> ~/.bashrc
+source ~/.bashrc
+
+<span class="cm"># baixe o mysql-connector-j-*.jar e copie para:</span>
+<span class="cm"># $SQOOP_HOME/lib/</span>
+sqoop version</pre></div>
+    <div class="os-pane" data-os="colab"><p class="note" style="margin:0 0 7px">MySQL/Sqoop são pesados no Colab — use a rota leve do curso (SQLite + pandas); a ideia "banco relacional → arquivos" é a mesma:</p><pre class="code"><span class="kw">import</span> pandas <span class="kw">as</span> pd, sqlite3
+con = sqlite3.connect(<span class="st">"bigdata.db"</span>)
+pd.read_csv(<span class="st">"customers_synthetic.csv"</span>).to_sql(<span class="st">"customers"</span>, con, if_exists=<span class="st">"replace"</span>)
+pd.read_csv(<span class="st">"transactions_synthetic.csv"</span>).to_sql(<span class="st">"transactions"</span>, con, if_exists=<span class="st">"replace"</span>)
+<span class="fn">print</span>(<span class="st">"tabelas prontas em bigdata.db"</span>)</pre></div>
+  </div>
+</div>`},
+
+/* ---------- INST 5 · Hive + Spark ---------- */
+{kick:"Instalação", title:"Passo 4 — Hive e Spark (preview DIA 2-3)", badge:"tech", html:`
+<div style="display:flex;flex-direction:column;gap:11px;flex:1">
+  <div class="oswrap term-cmds" style="margin:0">
+    <button class="btn os-btn on" data-os="linux">🐧 Linux</button>
+    <button class="btn os-btn" data-os="windows">🪟 Windows · WSL2</button>
+    <button class="btn os-btn" data-os="colab">🟠 Colab</button>
+  </div>
+  <div class="os-pane active" data-os="linux"><p class="note" style="margin:0">Rode direto no terminal Linux.</p></div>
+  <div class="os-pane" data-os="windows"><div class="winnote" style="margin:0">Abra o Ubuntu (WSL2) e rode os mesmos comandos.</div></div>
+  <div class="os-pane active" data-os="linux windows">
+  <div class="cols" style="flex:1">
+  <div class="col">
+    <div class="col-label e">Apache Hive</div>
+    <pre class="code"><span class="cm"># SQL sobre o HDFS — usado no DIA 2</span>
+wget -O apache-hive-3.1.3-bin.tar.gz https://archive.apache.org/dist/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
+tar -xzf apache-hive-3.1.3-bin.tar.gz
+sudo mv apache-hive-3.1.3-bin /opt/hive
+echo 'export HIVE_HOME=/opt/hive' >> ~/.bashrc
+echo 'export PATH=$PATH:$HIVE_HOME/bin' >> ~/.bashrc
+source ~/.bashrc
+schematool -dbType derby -initSchema
+hive --version</pre>
+  </div>
+  <div class="col">
+    <div class="col-label t">Apache Spark</div>
+    <pre class="code"><span class="cm"># processamento em memória — usado no DIA 3</span>
+wget -O spark-3.5.0-bin-hadoop3.tgz https://archive.apache.org/dist/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
+tar -xzf spark-3.5.0-bin-hadoop3.tgz
+sudo mv spark-3.5.0-bin-hadoop3 /opt/spark
+echo 'export SPARK_HOME=/opt/spark' >> ~/.bashrc
+echo 'export PATH=$PATH:$SPARK_HOME/bin' >> ~/.bashrc
+source ~/.bashrc
+spark-shell --version</pre>
+    <p class="note">⚠ Confira as versões atuais em hive.apache.org e spark.apache.org/downloads.html.</p>
+  </div>
+  </div>
+  </div>
+  <div class="os-pane" data-os="colab"><p class="note" style="margin:0 0 7px">No Colab, Spark é trivial (pip) e o Hive vira <kbd>spark.sql(...)</kbd> — mesmo SQL, sem servidor:</p><pre class="code"><span class="nm">!</span>pip install -q pyspark
+<span class="kw">from</span> pyspark.sql <span class="kw">import</span> SparkSession
+spark = SparkSession.builder.master(<span class="st">"local[*]"</span>).getOrCreate()
+spark.sql(<span class="st">"SELECT 'ok' AS status"</span>).show()
+<span class="cm"># Hive: use spark.sql("...") no lugar do hive CLI</span></pre></div>
+</div>`},
+
+/* ---------- INST 6 · Python + BI ---------- */
+{kick:"Instalação", title:"Passo 5 — Python e ferramenta de BI", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Python (cola de tudo)</div>
+    <div class="oswrap term-cmds" style="margin:0 0 9px">
+      <button class="btn os-btn on" data-os="linux">🐧 Linux</button>
+      <button class="btn os-btn" data-os="windows">🪟 Windows · WSL2</button>
+      <button class="btn os-btn" data-os="colab">🟠 Colab</button>
+    </div>
+    <div class="os-pane active" data-os="linux windows"><pre class="code"><span class="cm"># interpretador + ambiente isolado</span>
+sudo apt install -y python3 python3-pip python3-venv
+python3 -m venv ~/bigdata-env
+source ~/bigdata-env/bin/activate
+pip install pandas pyspark faker</pre></div>
+    <div class="os-pane" data-os="colab"><pre class="code"><span class="cm"># Python já é nativo no Colab — sem venv</span>
+<span class="nm">!</span>pip install -q pandas pyspark faker</pre></div>
+    <p class="note">O gerador de datasets do curso (generate_datasets.py) roda neste ambiente.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">BI via Docker (mais simples)</div>
+    <div class="oswrap term-cmds" style="margin:0 0 9px">
+      <button class="btn os-btn on" data-os="linux">🐧 Linux</button>
+      <button class="btn os-btn" data-os="windows">🪟 Windows</button>
+      <button class="btn os-btn" data-os="colab">🟠 Colab</button>
+    </div>
+    <div class="os-pane active" data-os="linux">
+      <pre class="code"><span class="cm"># Docker, se ainda não tiver</span>
+sudo apt install -y docker.io
+
+<span class="cm"># Metabase — sobe em ~1 minuto</span>
+sudo docker run -d -p 3000:3000 \\
+  --name metabase metabase/metabase
+<span class="cm"># abra http://localhost:3000</span></pre>
+    </div>
+    <div class="os-pane" data-os="windows">
+      <pre class="code"><span class="cm"># instale o Docker Desktop (backend WSL2):</span>
+<span class="cm"># docker.com/products/docker-desktop</span>
+
+<span class="cm"># depois, no PowerShell ou no Ubuntu:</span>
+docker run -d -p 3000:3000 \\
+  --name metabase metabase/metabase
+<span class="cm"># abra http://localhost:3000</span></pre>
+    </div>
+    <div class="os-pane" data-os="colab">
+      <pre class="code"><span class="cm"># no Colab não há servidor persistente —</span>
+<span class="cm"># visualize no próprio notebook:</span>
+<span class="kw">import</span> plotly.express <span class="kw">as</span> px
+px.bar(df, x=<span class="st">"segment"</span>, y=<span class="st">"taxa_fraude"</span>).show()
+<span class="cm"># (ou exponha um app via pyngrok, se precisar)</span></pre>
+    </div>
+    <p class="note">Alternativa: Superset exige mais setup — Metabase é melhor para começar.</p>
+  </div>
+</div>`},
+
+/* ---------- INST 7 · Checklist de verificação ---------- */
+{kick:"Instalação", title:"Checklist — está tudo no ar?", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Rode cada comando</div>
+    <p class="body">Se todos responderem sem erro, seu ambiente está pronto para os labs de hoje (HDFS + Sqoop) e para os próximos dias.</p>
+    <div class="oswrap term-cmds" style="margin:0 0 9px">
+      <button class="btn os-btn on" data-os="linux">🐧 Linux</button>
+      <button class="btn os-btn" data-os="windows">🪟 Windows · WSL2</button>
+      <button class="btn os-btn" data-os="colab">🟠 Colab</button>
+    </div>
+    <div class="os-pane active" data-os="linux"><p class="note" style="margin:0 0 7px">No terminal Linux:</p></div>
+    <div class="os-pane" data-os="windows"><div class="winnote" style="margin:0 0 7px">No Ubuntu (WSL2) — mesmos comandos:</div></div>
+    <div class="os-pane active" data-os="linux windows"><pre class="code">java -version
+hadoop version
+jps                    <span class="cm"># NameNode, DataNode...</span>
+sqoop version
+hive --version         <span class="cm"># preview DIA 2</span>
+spark-shell --version  <span class="cm"># preview DIA 3</span>
+python3 --version
+sudo docker ps          <span class="cm"># metabase "Up"?</span></pre></div>
+    <div class="os-pane" data-os="colab"><p class="note" style="margin:0 0 7px">No Colab, verifique o que se aplica ao notebook:</p><pre class="code"><span class="nm">!</span>java -version
+<span class="nm">!</span>hadoop version
+<span class="kw">import</span> pyspark; <span class="fn">print</span>(<span class="st">"pyspark"</span>, pyspark.__version__)
+<span class="kw">import</span> pandas; <span class="fn">print</span>(<span class="st">"pandas ok"</span>)
+<span class="cm"># jps / sqoop / docker não se aplicam no Colab</span></pre></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">O que cada saída confirma</div>
+    <div class="widget">
+      <div class="verify-row"><code>java -version</code><span class="vok">JDK instalado ✓</span></div>
+      <div class="verify-row"><code>jps</code><span class="vok">HDFS de pé ✓</span></div>
+      <div class="verify-row"><code>sqoop version</code><span class="vok">ponte SQL→HDFS pronta ✓</span></div>
+      <div class="verify-row"><code>hive --version</code><span class="vok">pronto p/ DIA 2 ✓</span></div>
+      <div class="verify-row"><code>spark-shell --version</code><span class="vok">pronto p/ DIA 3 ✓</span></div>
+      <div class="verify-row"><code>docker ps</code><span class="vok">BI acessível ✓</span></div>
+    </div>
+    <p class="note">Problemas? Veja CHEATSHEET_HDFS.md e CHEATSHEET_SQOOP.md — seção Troubleshooting.</p>
+  </div>
+</div>`},
+
+
+/* ---------- 06 HDFS conceito ---------- */
+{kick:"HDFS", title:"Como guardar 100 GB sem perder o sono", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O problema</div>
+    <ul class="list cross">
+      <li>1 servidor grande: caro e continua sendo <span class="hl">um ponto único de falha</span></li>
+      <li>Backup manual: lento e sempre desatualizado</li>
+      <li>Disco falha às 3h da manhã: perda de dados</li>
+    </ul>
+    <div class="col-label e" style="margin-top:8px">A resposta do HDFS</div>
+    <ul class="list check">
+      <li>Muitos servidores comuns em vez de um caro</li>
+      <li>Cada arquivo é quebrado em <span class="hl">blocos</span></li>
+      <li>Cada bloco ganha <span class="hl">3 cópias</span> automáticas</li>
+      <li>Um servidor cai? Os dados continuam em outros dois</li>
+    </ul>
+  </div>
+  <div class="col">
+    <div class="col-label t">Replicação 3x na prática</div>
+    <div class="widget">
+      <div class="wlabel">Simulador de custo × segurança</div>
+      <p class="body" style="margin-bottom:4px">Arquivo original: <b id="hdFileSize">100</b> GB · Fator de replicação: <b id="hdRepVal" style="color:var(--exec)">3</b>×</p>
+      <input type="range" id="hdRep" min="1" max="5" value="3">
+      <div class="slider-out"><span>Espaço em disco usado</span><span class="big" id="hdUsed">300 GB</span></div>
+      <p class="note" id="hdMsg">Padrão do HDFS. Sobrevive à perda de 2 servidores simultâneos sem perder dados.</p>
+    </div>
+    <div class="fact"><div class="ft">O bloco padrão do HDFS é de <span class="hl">128 MB</span> (<kbd>dfs.blocksize</kbd>) — grande de propósito, para minimizar o custo de coordenação.</div>${CITE("Apache HDFS — hdfs-default.xml","https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml")}</div>
+  </div>
+</div>`},
+];
+/* SLIDES 7–20 serão anexados por deck_dia1_part2.js (injetado no build) */
+</script>
+<script>
+/* ========== SLIDES 7–20 (anexados ao array `slides`) ========== */
+
+slides.push(
+/* ---------- 07 HDFS arquitetura ---------- */
+{kick:"HDFS", title:"NameNode e DataNodes", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Quem faz o quê</div>
+    <div class="card"><h3 class="blk" style="color:var(--exec)">🧠 NameNode (mestre)</h3>
+      <p class="body">Guarda o <span class="hl">mapa</span>: quais blocos existem e onde. Não guarda o dado em si. É o índice do livro.</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--tech)">💽 DataNode (trabalhador)</h3>
+      <p class="body">Guarda os <span class="hl">blocos reais</span> e reporta ao mestre: "tenho os blocos A, C, F". São as páginas do livro.</p></div>
+    <div class="fact"><div class="ft"><span class="hl">Rack-awareness:</span> 2 cópias no mesmo rack (rápido), 1 em rack diferente (sobrevive à queda de um rack inteiro).</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Fluxo de um bloco</div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+      <div class="node b" style="min-width:160px"><div class="t">NameNode</div><div class="s">metadados · localização</div></div>
+      <div class="arrow">↓ coordena</div>
+      <div class="flow">
+        <div class="node g"><div class="t">DataNode 1</div><div class="s">bloco A,B</div></div>
+        <div class="node g"><div class="t">DataNode 2</div><div class="s">bloco B,C</div></div>
+      </div>
+      <div class="flow">
+        <div class="node g"><div class="t">DataNode 3</div><div class="s">bloco A,C</div></div>
+        <div class="node g"><div class="t">DataNode 4</div><div class="s">bloco C,A</div></div>
+      </div>
+    </div>
+    <p class="note">Bloco A vive em 3 nós. Perca qualquer um: ainda restam 2 cópias. Zero perda, zero downtime.</p>
+  </div>
+</div>`},
+
+/* ---------- 08 LAB HDFS terminal ---------- */
+{kick:"HDFS · Lab", title:"Terminal HDFS (simulado)", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O que você vai fazer</div>
+    <p class="body">Este é um <span class="hl">terminal simulado</span> — clique nos comandos e veja a saída, sem precisar de cluster. No lab real, os mesmos comandos rodam contra o HDFS de verdade.</p>
+    <ul class="list t">
+      <li><kbd>ls</kbd> — listar diretórios</li>
+      <li><kbd>put</kbd> — enviar arquivo ao HDFS</li>
+      <li><kbd>fsck</kbd> — verificar réplicas de um arquivo</li>
+      <li><kbd>du</kbd> — ver espaço usado</li>
+    </ul>
+    <p class="note">Referência completa no CHEATSHEET_HDFS.md entregue com o curso.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">hdfs · sandbox</div>
+    <div class="term">
+      <div class="term-bar"><span class="term-dot" style="background:#e5484d"></span>
+        <span class="term-dot" style="background:#f5a623"></span>
+        <span class="term-dot" style="background:#2ecc71"></span>
+        <span class="term-title">bigdata@cluster:~</span></div>
+      <div class="term-body" id="termOut"><span class="dim">Clique em um comando abaixo ↓</span></div>
+    </div>
+    <div class="term-cmds">
+      <button class="btn" data-cmd="ls">hadoop fs -ls</button>
+      <button class="btn" data-cmd="put">hadoop fs -put</button>
+      <button class="btn" data-cmd="fsck">hdfs fsck</button>
+      <button class="btn" data-cmd="du">hadoop fs -du</button>
+      <button class="btn" data-cmd="clear">clear</button>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 09 MapReduce conceito ---------- */
+{kick:"MapReduce", title:"Dividir para conquistar", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O desafio</div>
+    <p class="body">Contar fraudes por tipo em 100 mil transações. Uma máquina lendo tudo: <span class="hl">lento</span>. A ideia do MapReduce: <span class="hl">cada máquina conta sua parte</span>, depois somamos.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="n" style="color:var(--danger)">~10min</div><div class="l">1 máquina, sequencial</div></div>
+      <div class="stat g"><div class="n">~30s</div><div class="l">distribuído em paralelo</div></div>
+    </div>
+    ${SRC2("Tempos ilustrativos — variam com cluster e dados")}
+    <div class="fact"><div class="ft">Analogia: contar votos de uma eleição. Uma pessoa leva meses; mil apuradores, cada um numa urna, levam horas — e no fim somam os totais.</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Simulador Map → Shuffle → Reduce</div>
+    <div class="widget">
+      <div class="wlabel">Clique para executar cada fase</div>
+      <div id="mrStage" style="min-height:150px;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#c9d6e5">
+        <span class="dim">Pronto. Clique em "1 · Map" para começar.</span>
+      </div>
+      <div class="term-cmds">
+        <button class="btn" id="mr1">1 · Map</button>
+        <button class="btn" id="mr2">2 · Shuffle</button>
+        <button class="btn" id="mr3">3 · Reduce</button>
+        <button class="btn" id="mrReset">↺ reset</button>
+      </div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 10 MapReduce quando usar ---------- */
+{kick:"MapReduce", title:"Quando usar (e quando não)", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">✓ Bom para</div>
+    <ul class="list check">
+      <li>Contar, somar, agregar sobre <span class="hl">volumes enormes</span></li>
+      <li>Processamento <span class="hl">batch</span> (jobs noturnos)</li>
+      <li>Transformações de dados históricos</li>
+      <li>Trabalho que cabe no modelo map→reduce</li>
+    </ul>
+    <div class="col-label e" style="margin-top:8px">✕ Ruim para</div>
+    <ul class="list cross">
+      <li>Consultas <span class="hl">interativas</span> (espera longa)</li>
+      <li>Real-time (&lt; 100 ms)</li>
+      <li>Iterações repetidas (ML) — aí entra Spark</li>
+    </ul>
+  </div>
+  <div class="col">
+    <div class="col-label t">A evolução para o DIA 2 e 3</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:10px">
+      <div class="node"><div class="t">MapReduce (código Java verboso)</div><div class="s">o motor bruto — hoje</div></div>
+      <div class="arrow" style="text-align:center">↓ abstração</div>
+      <div class="node g"><div class="t">Hive: SQL vira MapReduce</div><div class="s">DIA 2 — você escreve SELECT</div></div>
+      <div class="arrow" style="text-align:center">↓ velocidade</div>
+      <div class="node o"><div class="t">Spark: 10–100× em memória</div><div class="s">DIA 3 — interativo + ML</div></div>
+    </div>
+    ${SRC2("Ganho Spark×MapReduce: ordem de grandeza citada pela Apache Spark")}
+  </div>
+</div>`},
+
+/* ---------- 11 QUIZ 1 ---------- */
+{kick:"Checkpoint", title:"Quiz — Fundamentos & HDFS", badge:"mix", html:`
+<div style="margin-bottom:16px">${iconRow([{i:'block',label:'HDFS · blocos & réplicas',color:VC.exec},{i:'cluster',label:'MapReduce · Map→Shuffle→Reduce',color:VC.tech}])}</div>
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Pergunta 1</div>
+    <p class="body" style="margin-bottom:10px">No HDFS com replicação padrão, um arquivo de 1 bloco fica seguro se <span class="hl">quantos</span> DataNodes falharem ao mesmo tempo?</p>
+    <div id="q1">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> Nenhum — 1 falha já perde o dado</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">B</span> 1 DataNode</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">C</span> 2 DataNodes (restam 3 cópias − 2)</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Qualquer número</div>
+    </div>
+    <div class="quiz-fb" id="q1fb"></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Pergunta 2</div>
+    <p class="body" style="margin-bottom:10px">Qual fase do MapReduce <span class="hl">agrupa</span> os pares pela chave, entre o Map e o Reduce?</p>
+    <div id="q2">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> Combine</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">B</span> Shuffle</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> Split</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Merge</div>
+    </div>
+    <div class="quiz-fb" id="q2fb"></div>
+  </div>
+</div>`},
+
+/* ---------- PAUSA · LAB 1 (HDFS) ---------- */
+{kick:"Laboratório", title:"Laboratório 1", badge:"lab", html:labBreak({
+  title:"Lab 1 — HDFS: estrutura, upload e replicação",
+  time:"45 min", file:"labs/lab01 - hdfs.md",
+  rotas:"cluster real ou sem admin (local)", prereq:"datasets sintéticos já gerados",
+  goal:"Criar a estrutura de camadas <span class='hl'>raw / bronze / silver / gold</span> no HDFS, subir os 3 datasets do caso-guia e confirmar a replicação <span class='hl'>3×</span> que acabamos de estudar.",
+  deliver:[
+    "Os 6 diretórios da arquitetura Medallion criados",
+    "3 datasets (customers, transactions, fraud_labels) em <kbd>/raw</kbd>",
+    "Replicação 3× confirmada com <kbd>hdfs fsck</kbd>"],
+  steps:[
+    "<kbd>jps</kbd> — conferir NameNode e DataNode de pé",
+    "<kbd>hadoop fs -mkdir -p</kbd> — criar raw/bronze/silver/gold",
+    "<kbd>hadoop fs -put</kbd> — subir os CSVs para <kbd>/raw</kbd>",
+    "<kbd>hdfs fsck</kbd> — verificar blocos e réplicas"]
+})},
+
+/* ---------- 12 SQOOP conceito ---------- */
+{kick:"Sqoop", title:"A ponte SQL → Hadoop", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O problema do trabalho manual</div>
+    <ul class="list">
+      <li>Baixar do banco, transformar no Excel, subir ao HDFS, validar na mão</li>
+      <li>Horas por dia · propenso a erro · não reproduzível</li>
+    </ul>
+    <div class="col-label e" style="margin-top:8px">Com Sqoop</div>
+    <pre class="code"><span class="fn">sqoop</span> import <span class="kw">--table</span> <span class="nm">customers</span></pre>
+    <div class="stat g"><div class="n">min, não horas</div><div class="l">ingestão automatizada e repetível</div></div>
+    <p class="note">"Sqoop" = <b>SQ</b>L + Had<b>oop</b>. Um trabalhador que importa dados sem reclamar e sem errar digitação.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Pipeline</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:9px">
+      <div class="node b"><div class="t">MySQL (OLTP)</div><div class="s">customers · transactions</div></div>
+      <div class="arrow" style="text-align:center">↓ Sqoop · 4 mappers paralelos</div>
+      <div class="flow">
+        <div class="node o"><div class="t">m1</div><div class="s">id 1–2.5k</div></div>
+        <div class="node o"><div class="t">m2</div><div class="s">2.5–5k</div></div>
+        <div class="node o"><div class="t">m3</div><div class="s">5–7.5k</div></div>
+        <div class="node o"><div class="t">m4</div><div class="s">7.5–10k</div></div>
+      </div>
+      <div class="arrow" style="text-align:center">↓ escreve em paralelo</div>
+      <div class="node g"><div class="t">HDFS /raw/</div><div class="s">part-m-00000 … 00003</div></div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 13 SQOOP comando montável ---------- */
+{kick:"Sqoop · Lab", title:"Monte seu comando Sqoop", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Ligue/desligue as opções</div>
+    <div class="widget">
+      <div class="wlabel">Parâmetros</div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="sq" data-k="parallel" checked style="accent-color:var(--tech)"> Paralelismo <kbd>-m 4</kbd> (4 mappers)</label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="sq" data-k="incr" style="accent-color:var(--tech)"> Incremental <kbd>lastmodified</kbd></label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="sq" data-k="nulls" checked style="accent-color:var(--tech)"> Tratar nulos <kbd>--null-string</kbd></label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="sq" data-k="parquet" style="accent-color:var(--tech)"> Formato <kbd>--as-parquetfile</kbd></label>
+      </div>
+    </div>
+    <p class="note" id="sqNote">Incremental só importa o que mudou desde a última carga — economia enorme em execuções diárias.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Comando gerado</div>
+    <pre class="code" id="sqOut"></pre>
+    <button class="btn run" id="sqCopy">⧉ copiar comando</button>
+  </div>
+</div>`},
+
+/* ---------- 14 SQOOP incrementalidade ---------- */
+{kick:"Sqoop", title:"Incrementalidade — só o que mudou", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Por que importa</div>
+    <p class="body">Reimportar 100 mil linhas todo dia é desperdício. A carga incremental traz <span class="hl">apenas os registros novos ou alterados</span>.</p>
+    <div class="two">
+      <div class="stat b"><div class="n">1ª carga</div><div class="l">10.000 registros (full)</div></div>
+      <div class="stat g"><div class="n">2ª carga</div><div class="l">~500 novos (incremental)</div></div>
+    </div>
+    ${SRC2("Volumes ilustrativos do caso-guia")}
+  </div>
+  <div class="col">
+    <div class="col-label t">Dois modos</div>
+    <div class="card"><h3 class="blk">➕ append</h3>
+      <p class="body">Para tabelas que só <span class="hl">crescem</span> (log de transações). Usa uma coluna crescente, ex. <kbd>transaction_id</kbd>.</p></div>
+    <div class="card"><h3 class="blk">🕓 lastmodified</h3>
+      <p class="body">Para tabelas que <span class="hl">mudam</span> (cadastro de clientes). Usa uma coluna de data, ex. <kbd>updated_at</kbd>, + <kbd>--merge-key</kbd>.</p></div>
+  </div>
+</div>`},
+
+/* ---------- 15 Medallion preview ---------- */
+{kick:"Ponte p/ DIA 2", title:"Onde os dados vão morar", badge:"mix", html:`
+<div style="display:flex;flex-direction:column;gap:16px;flex:1">
+  <p class="body full">Depois da ingestão, os dados brutos sobem por camadas de qualidade — a <span class="hl">arquitetura Medallion</span>. Hoje entregamos a camada Raw; o DIA 2 constrói Bronze, Silver e Gold.</p>
+  <div class="medal">
+    <div class="layer raw"><div class="ln">RAW</div><div class="ld">Como veio do Sqoop. Intocado. <b>← hoje</b></div></div>
+    <div class="layer brz"><div class="ln">BRONZE</div><div class="ld">Limpo: tipos, nulos, duplicatas removidas</div></div>
+    <div class="layer slv"><div class="ln">SILVER</div><div class="ld">Enriquecido: joins entre clientes e transações</div></div>
+    <div class="layer gld"><div class="ln">GOLD</div><div class="ld">Agregado: KPIs prontos para BI</div></div>
+  </div>
+  <div class="cols" style="flex:0">
+    <div class="fact"><div class="ft">Cada camada é <span class="hl">reprodutível</span>: se algo der errado no Silver, você reconstrói a partir do Bronze sem tocar no dado original.</div></div>
+    <div class="card"><h3 class="blk" style="color:var(--gold)">Por que separar?</h3>
+      <p class="body">Rastreabilidade, reprocessamento barato e uma única fonte de verdade em cada nível de refino.</p></div>
+  </div>
+</div>`},
+
+/* ---------- 16 Segurança & governança ---------- */
+{kick:"Governança", title:"Dado sensível pede cuidado", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">No contexto financeiro/público</div>
+    <ul class="list">
+      <li><span class="hl">LGPD:</span> CPF, nome e e-mail são dados pessoais — exigem base legal e proteção</li>
+      <li>Anonimização/pseudonimização antes de análises amplas</li>
+      <li>Trilha de auditoria: quem acessou o quê, quando</li>
+    </ul>
+    <div class="fact"><div class="ft">A LGPD (Lei 13.709/2018, art. 52) prevê <span class="hl">sanções administrativas</span> — de advertência a multa de até 2% do faturamento, limitada a R$ 50 mi por infração.</div>${CITE("Lei 13.709/2018 — Planalto","https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm")}</div>
+    ${iconRow([{i:'shield',label:'Autorização',color:VC.exec},{i:'block',label:'Criptografia',color:VC.tech},{i:'transfer',label:'TLS em trânsito',color:VC.gold},{i:'db',label:'Masking de PII',color:VC.purple}])}
+  </div>
+  <div class="col">
+    <div class="col-label t">Controles no stack Hadoop</div>
+    <table class="cmp">
+      <tr><th>Risco</th><th>Controle</th></tr>
+      <tr><td>Acesso indevido</td><td>Kerberos + Ranger (autorização)</td></tr>
+      <tr><td>Dado em repouso</td><td>Criptografia HDFS (zones)</td></tr>
+      <tr><td>Dado em trânsito</td><td>TLS entre nós</td></tr>
+      <tr><td>Exposição de PII</td><td>Masking na camada Silver/Gold</td></tr>
+    </table>
+    <p class="note">No dataset do curso os dados são <span class="hl">sintéticos</span> — CPFs e nomes são gerados, não reais.</p>
+  </div>
+</div>`},
+
+/* ---------- 17 Erros comuns ---------- */
+{kick:"Prática", title:"Armadilhas comuns (e como evitar)", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Ingestão</div>
+    <div class="card"><h3 class="blk">🕳️ Nulos viram texto "null"</h3>
+      <p class="body">Sem <kbd>--null-string</kbd>, o Sqoop grava a palavra literal. Depois seu <kbd>WHERE campo IS NULL</kbd> não acha nada.</p></div>
+    <div class="card"><h3 class="blk">🔑 "Cannot determine split column"</h3>
+      <p class="body">Query custom sem PK: informe <kbd>--split-by</kbd> com coluna numérica.</p></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">HDFS & Mappers</div>
+    <div class="card"><h3 class="blk">📦 Muitos arquivos pequenos</h3>
+      <p class="body">Milhares de arquivinhos afogam o NameNode. Prefira poucos arquivos grandes; compacte quando possível.</p></div>
+    <div class="card"><h3 class="blk">⚙️ Mappers demais</h3>
+      <p class="body"><kbd>-m 50</kbd> num banco pequeno vira 50 conexões e sobrecarga. Comece com 4 e meça.</p></div>
+  </div>
+</div>`},
+
+/* ---------- 18 QUIZ 2 ---------- */
+{kick:"Checkpoint", title:"Quiz — Sqoop & Ingestão", badge:"mix", html:`
+<div style="margin-bottom:16px">${iconRow([{i:'transfer',label:'Sqoop · carga incremental',color:VC.gold},{i:'db',label:'Ingestão SQL → HDFS',color:VC.exec}])}</div>
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Pergunta 3</div>
+    <p class="body" style="margin-bottom:10px">Você importa o <span class="hl">cadastro de clientes</span>, que é <span class="hl">atualizado</span> com frequência. Qual modo incremental usar?</p>
+    <div id="q3">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> append (coluna crescente)</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">B</span> lastmodified + merge-key</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> Nenhum — sempre full</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> --split-by apenas</div>
+    </div>
+    <div class="quiz-fb" id="q3fb"></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Pergunta 4</div>
+    <p class="body" style="margin-bottom:10px">O parâmetro <kbd>-m 4</kbd> no Sqoop controla o quê?</p>
+    <div id="q4">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> Megabytes por arquivo</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">B</span> Número de mappers paralelos</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> Minutos de timeout</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Máximo de linhas</div>
+    </div>
+    <div class="quiz-fb" id="q4fb"></div>
+  </div>
+</div>`},
+
+/* ---------- PAUSA · LAB 2 (Sqoop) ---------- */
+{kick:"Laboratório", title:"Laboratório 2", badge:"lab", html:labBreak({
+  title:"Lab 2 — Sqoop: importar clientes e transações",
+  time:"45 min", file:"labs/lab02 - sqoop.md",
+  rotas:"cluster (Sqoop + MySQL) ou sem admin (SQLite)", prereq:"Lab 1 concluído",
+  goal:"Trazer <span class='hl'>customers</span> e <span class='hl'>transactions</span> de um banco MySQL para o HDFS com o Sqoop — a ponte SQL → Hadoop na prática (ou a mesma lógica com SQLite na rota local).",
+  deliver:[
+    "Banco <kbd>bigdata_course</kbd> carregado com os CSVs",
+    "Importação com <kbd>-m 4</kbd> mappers paralelos",
+    "Dados em <kbd>/raw/customers</kbd> e <kbd>/raw/transactions</kbd> no HDFS"],
+  steps:[
+    "Criar banco e tabelas no MySQL",
+    "<kbd>LOAD DATA</kbd> — carregar os CSVs no MySQL",
+    "<kbd>sqoop import</kbd> — importar para o HDFS em paralelo",
+    "Conferir os arquivos <kbd>part-m-0000*</kbd> gerados em <kbd>/raw</kbd>"]
+})},
+
+/* ---------- FERRAMENTAS · VISÃO DOS 3 DIAS ---------- */
+{kick:"Ferramentas", title:"O stack completo dos 3 dias", badge:"mix", html:`
+<div style="display:flex;flex-direction:column;gap:11px;flex:1">
+  <p class="body full">Cada dia acrescenta uma camada de ferramenta. Links oficiais — clique para explorar.</p>
+  <div class="tool-grid">
+    <a class="tool" href="https://spark.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-spark">⚡</div>
+      <div class="ti-body"><div class="ti-name">Apache Spark <span class="ext">↗</span></div>
+        <div class="ti-desc">Processamento em memória, 10–100× mais rápido. SQL + ML no DIA 3.</div>
+        <div class="ti-url">spark.apache.org</div></div>
+    </a>
+    <a class="tool" href="https://superset.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-bi">📊</div>
+      <div class="ti-body"><div class="ti-name">Apache Superset <span class="ext">↗</span></div>
+        <div class="ti-desc">BI open-source: dashboards e exploração visual. DIA 3.</div>
+        <div class="ti-url">superset.apache.org</div></div>
+    </a>
+    <a class="tool" href="https://www.metabase.com" target="_blank" rel="noopener">
+      <div class="ti-ico ico-hive">📈</div>
+      <div class="ti-body"><div class="ti-name">Metabase <span class="ext">↗</span></div>
+        <div class="ti-desc">Alternativa de BI simples de subir. Opção para o DIA 3.</div>
+        <div class="ti-url">metabase.com</div></div>
+    </a>
+    <a class="tool" href="https://www.python.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-hdfs">🐍</div>
+      <div class="ti-body"><div class="ti-name">Python <span class="ext">↗</span></div>
+        <div class="ti-desc">Cola de tudo: geração de dados, PySpark, ML.</div>
+        <div class="ti-url">python.org</div></div>
+    </a>
+  </div>
+  <div class="two" style="margin-top:2px">
+    <div class="card card2" style="padding:11px 13px"><span class="tag" style="border-color:var(--exec);color:var(--exec)">DIA 1</span> <span class="body" style="font-size:13px">HDFS · Sqoop · MySQL</span></div>
+    <div class="card card2" style="padding:11px 13px"><span class="tag" style="border-color:var(--tech);color:var(--tech)">DIA 2</span> <span class="body" style="font-size:13px">Hive · Parquet</span></div>
+  </div>
+  <div class="card card2" style="padding:11px 13px"><span class="tag" style="border-color:var(--gold);color:var(--gold)">DIA 3</span> <span class="body" style="font-size:13px">Spark · Superset/Metabase · Python (ML)</span></div>
+</div>`},
+
+/* ---------- 19 Resumo ---------- */
+{kick:"Fechamento", title:"O que você domina agora", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Os 4 pilares do DIA 1</div>
+    <ul class="list check">
+      <li><span class="hl">Por que Big Data:</span> os 4 Vs e o limite de uma máquina só</li>
+      <li><span class="hl">HDFS:</span> blocos + replicação 3x = zero perda</li>
+      <li><span class="hl">MapReduce:</span> dividir para conquistar em paralelo</li>
+      <li><span class="hl">Sqoop:</span> ponte automática SQL → HDFS</li>
+    </ul>
+    <div class="fact"><div class="ft">Resultado concreto do dia: os três datasets do caso-guia estão no HDFS, replicados e prontos para o DIA 2.</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Entregue no HDFS</div>
+    <div class="stat-row">
+      <div class="stat b"><div class="n">9.993</div><div class="l">clientes em /raw</div></div>
+      <div class="stat g"><div class="n">100k</div><div class="l">transações em /raw</div></div>
+    </div>
+    <div class="stat a"><div class="n">3×</div><div class="l">replicação validada por hdfs fsck</div></div>
+    <div class="card card2"><h3 class="blk">🏠 A analogia da casa</h3>
+      <p class="body">Hoje construímos a <span class="hl">fundação</span> (invisível, crítica). DIA 2 ergue as paredes (Hive). DIA 3 faz o acabamento (BI).</p></div>
+  </div>
+</div>`},
+
+/* ---------- 20 Preview DIA 2 ---------- */
+{kick:"Próximo", title:"Amanhã: transformação com Hive", badge:"mix", html:`
+<div style="display:flex;flex-direction:column;gap:14px;flex:1">
+  <p class="body full">No DIA 2 os dados brutos viram <span class="hl">informação</span>. Você escreve SQL; o Hive traduz em MapReduce por baixo.</p>
+  <div class="cols" style="flex:1">
+    <div class="col">
+      <div class="col-label e">Labs do DIA 2</div>
+      <ul class="list t">
+        <li>Lab 3 — tabelas Hive (managed vs external)</li>
+        <li>Lab 4 — particionamento + <kbd>MSCK REPAIR</kbd></li>
+        <li>Lab 5 — Bronze: limpeza</li>
+        <li>Lab 6 — Silver: joins e enriquecimento</li>
+        <li>Lab 7 — Gold: KPIs agregados</li>
+        <li>Lab 8 — 5 análises exploratórias (EDA)</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="col-label t">Pergunta que abriremos amanhã</div>
+      <div class="card card2" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <pre class="code"><span class="cm">-- em vez de código Java...</span>
+<span class="kw">SELECT</span> transaction_type,
+       <span class="fn">COUNT</span>(*) <span class="kw">AS</span> fraudes
+<span class="kw">FROM</span> silver_transactions
+<span class="kw">WHERE</span> is_fraud = <span class="nm">true</span>
+<span class="kw">GROUP BY</span> transaction_type;</pre>
+        <p class="note" style="margin-top:10px">Uma linha de SQL que o Hive transforma no MapReduce que você viu hoje. Até amanhã! 🚀</p>
+      </div>
+    </div>
+  </div>
+</div>`}
+);
+
+/* ========== WIDGETS DOS SLIDES 7–20 ========== */
+function runWidgetsPart2(i){
+  // ---- Terminal HDFS (slide 7 index) ----
+  const out=document.getElementById('termOut');
+  if(out){
+    const responses={
+      ls:`<div><span class="pr">$</span> <span class="out">hadoop fs -ls /user/bigdata/raw</span></div>
+<div class="dim">Found 3 items</div>
+<div class="out">drwxr-xr-x   - bigdata sup  /user/bigdata/raw/customers</div>
+<div class="out">drwxr-xr-x   - bigdata sup  /user/bigdata/raw/transactions</div>
+<div class="out">drwxr-xr-x   - bigdata sup  /user/bigdata/raw/fraud_labels</div>`,
+      put:`<div><span class="pr">$</span> <span class="out">hadoop fs -put transactions.csv /user/bigdata/raw/</span></div>
+<div class="dim">...enviando 7.8 MB</div>
+<div class="out">✓ upload completo · split em 1 bloco · replicado 3×</div>`,
+      fsck:`<div><span class="pr">$</span> <span class="out">hdfs fsck /user/bigdata/raw/transactions -files -blocks</span></div>
+<div class="out">Total size:    7.8 MB</div>
+<div class="out">Total blocks:  1</div>
+<div class="out">Replication:   <span class="warn">3</span>  ✓</div>
+<div class="dim">Status: HEALTHY</div>`,
+      du:`<div><span class="pr">$</span> <span class="out">hadoop fs -du -s -h /user/bigdata/raw</span></div>
+<div class="out">8.8 M   26.4 M   /user/bigdata/raw</div>
+<div class="dim">(tamanho lógico | com replicação 3×)</div>`,
+      clear:`<span class="dim">Clique em um comando abaixo ↓</span>`
+    };
+    document.querySelectorAll('.btn[data-cmd]').forEach(b=>{
+      b.onclick=()=>{ out.innerHTML=responses[b.dataset.cmd]; out.scrollTop=out.scrollHeight; };
+    });
+  }
+
+  // ---- MapReduce stages (slide 8 index) ----
+  const mrStage=document.getElementById('mrStage');
+  if(mrStage){
+    const stages={
+      map:`<div class="warn" style="margin-bottom:6px">FASE 1 · MAP (paralelo)</div>
+tx(compra, fraude=Y) → <span style="color:#7ee787">emit("compra",1)</span><br>
+tx(saque,&nbsp; fraude=Y) → <span style="color:#7ee787">emit("saque",1)</span><br>
+tx(compra, fraude=N) → <span class="dim">skip</span><br>
+tx(compra, fraude=Y) → <span style="color:#7ee787">emit("compra",1)</span>`,
+      shuffle:`<div class="warn" style="margin-bottom:6px">FASE 2 · SHUFFLE (agrupa por chave)</div>
+"compra" → [1, 1]<br>
+"saque"&nbsp; → [1]<br>
+"transferencia" → [1, 1, 1]`,
+      reduce:`<div class="warn" style="margin-bottom:6px">FASE 3 · REDUCE (soma)</div>
+"compra"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span style="color:#f5a623">2</span><br>
+"saque"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span style="color:#f5a623">1</span><br>
+"transferencia" = <span style="color:#f5a623">3</span>
+<div class="dim" style="margin-top:6px">— total: 6 fraudes contadas —</div>`
+    };
+    const g=(id,s)=>{const b=document.getElementById(id); if(b)b.onclick=()=>{mrStage.innerHTML=s;};};
+    g('mr1',stages.map); g('mr2',stages.shuffle); g('mr3',stages.reduce);
+    const r=document.getElementById('mrReset');
+    if(r)r.onclick=()=>{mrStage.innerHTML='<span class="dim">Pronto. Clique em "1 · Map" para começar.</span>';};
+  }
+
+  // ---- Quizzes (slides 10 & 17 index) ----
+  function wireQuiz(qid,fbid,okMsg,noMsg){
+    const box=document.getElementById(qid); if(!box)return;
+    const fb=document.getElementById(fbid);
+    box.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.onclick=()=>{
+        if(box.dataset.done)return;
+        box.dataset.done='1';
+        const ok=opt.dataset.ok==='1';
+        opt.classList.add(ok?'correct':'wrong');
+        if(!ok){ box.querySelector('[data-ok="1"]').classList.add('correct'); }
+        fb.className='quiz-fb show '+(ok?'ok':'no');
+        fb.innerHTML=ok?okMsg:noMsg;
+      };
+    });
+  }
+  wireQuiz('q1','q1fb','✓ Isso. Com 3 cópias, você sobrevive à perda de 2 nós simultâneos.',
+    '✕ Com replicação 3×, restam cópias mesmo perdendo 2 DataNodes ao mesmo tempo.');
+  wireQuiz('q2','q2fb','✓ Exato. O Shuffle agrupa todos os valores de cada chave antes do Reduce.',
+    '✕ É o Shuffle — ele junta por chave entre o Map e o Reduce.');
+  wireQuiz('q3','q3fb','✓ Correto. Cadastro muda, então lastmodified + merge-key mantém a versão certa.',
+    '✕ Como o cadastro é atualizado, use lastmodified + merge-key (append só serve p/ tabelas que crescem).');
+  wireQuiz('q4','q4fb','✓ Isso. -m define quantos mappers rodam em paralelo.',
+    '✕ -m é o número de mappers paralelos, não tamanho nem tempo.');
+
+  // ---- Sqoop builder (slide 12 index) ----
+  const sqOut=document.getElementById('sqOut');
+  if(sqOut){
+    const build=()=>{
+      const on=k=>document.querySelector(`.sq[data-k="${k}"]`)?.checked;
+      let L=[`<span class="fn">sqoop</span> import \\`,
+        `  <span class="kw">--connect</span> <span class="st">jdbc:mysql://localhost:3306/bigdata</span> \\`,
+        `  <span class="kw">--username</span> <span class="nm">root</span> <span class="kw">--password</span> <span class="nm">****</span> \\`,
+        `  <span class="kw">--table</span> <span class="nm">customers</span> \\`,
+        `  <span class="kw">--target-dir</span> <span class="st">/user/bigdata/raw/customers</span> \\`];
+      if(on('incr')) L.push(`  <span class="kw">--incremental</span> lastmodified <span class="kw">--check-column</span> updated_at \\`);
+      if(on('nulls')) L.push(`  <span class="kw">--null-string</span> <span class="st">'\\\\N'</span> <span class="kw">--null-non-string</span> <span class="st">'\\\\N'</span> \\`);
+      if(on('parquet')) L.push(`  <span class="kw">--as-parquetfile</span> \\`);
+      L.push(`  <span class="kw">-m</span> <span class="nm">${on('parallel')?4:1}</span>`);
+      sqOut.innerHTML=L.join('\n');
+    };
+    document.querySelectorAll('.sq').forEach(c=>c.onchange=build);
+    build();
+    const cp=document.getElementById('sqCopy');
+    if(cp)cp.onclick=()=>{
+      navigator.clipboard?.writeText(sqOut.innerText).then(()=>{
+        cp.textContent='✓ copiado!'; setTimeout(()=>cp.textContent='⧉ copiar comando',1500);
+      }).catch(()=>{cp.textContent='selecione e copie manualmente';});
+    };
+  }
+}
+</script>
+
+<script>
+/* =========================================================================
+   RENDER + NAVEGAÇÃO
+   ========================================================================= */
+let cur=0;
+const wrap=document.getElementById('slideWrap');
+const tocGrid=document.getElementById('tocGrid');
+
+function badgeLabel(b){return b==='exec'?'EXEC':b==='tech'?'TECH':b==='lab'?'LAB':'MIX';}
+
+function buildSlides(){
+  slides.forEach((s,i)=>{
+    const el=document.createElement('section');
+    el.className='slide'; el.id='slide'+i;
+    el.innerHTML=`<div class="sfit">${s.cover?'':`
+      <div class="shead">
+        <div class="badge ${s.badge}">${String(i+1).padStart(2,'0')}</div>
+        <div><div class="kick">${s.kick} · ${badgeLabel(s.badge)}</div><h2>${s.title}</h2></div>
+      </div>`}${s.html}</div>`;
+    wrap.appendChild(el);
+
+    const t=document.createElement('div');
+    t.className='toc-item';
+    t.innerHTML=`<span class="tn">${String(i+1).padStart(2,'0')}</span><span class="tt">${s.title}</span>`;
+    t.onclick=()=>{show(i);toggleToc();};
+    tocGrid.appendChild(t);
+  });
+}
+
+function show(i){
+  document.getElementById('slide'+cur)?.classList.remove('active');
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  document.getElementById('slide'+cur).classList.add('active');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('counter').innerHTML=`<b>${cur+1}</b> / ${slides.length}`;
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+  wireWidgets(cur);
+}
+function go(d){show(cur+d);}
+function toggleToc(){document.getElementById('toc').classList.toggle('open');}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')go(1);
+  if(e.key==='ArrowLeft')go(-1);
+  if(e.key==='Escape')document.getElementById('toc').classList.remove('open');
+});
+
+/* toggle genérico Windows/Linux (delegado — funciona em qualquer slide) */
+wrap.addEventListener('click',e=>{
+  const b=e.target.closest('.os-btn');
+  if(!b)return;
+  const group=b.closest('.oswrap')||b.parentElement;
+  group.querySelectorAll('.os-btn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  const pane=group.parentElement.querySelectorAll('.os-pane');
+  pane.forEach(p=>p.classList.toggle('active',(' '+p.dataset.os+' ').includes(' '+b.dataset.os+' ')));
+});
+
+/* =========================================================================
+   WIDGET WIRING — reconecta interações cada vez que o slide aparece
+   ========================================================================= */
+function wireWidgets(i){
+  // --- 4 Vs (slide index 2) ---
+  const vData=[
+    {t:'📦 Volume — quanto',c:'var(--exec)',b:'100 mil transações por dia viram mais de 36 milhões por ano. Um laço em uma máquina levaria horas; distribuído, minutos.',e:'<div class="stat b"><div class="n">36M+</div><div class="l">transações/ano no caso-guia</div></div>'},
+    {t:'⚡ Velocity — quão rápido',c:'var(--tech)',b:'O dado perde valor com o tempo. Fraude detectada em 2 dias é prejuízo; em 2 segundos, é bloqueio.',e:'<div class="stat g"><div class="n">&lt;1s</div><div class="l">meta de latência para alerta</div></div>'},
+    {t:'🔀 Variety — que tipos',c:'var(--gold)',b:'Transações estruturadas (SQL), logs semiestruturados (JSON), documentos não estruturados (imagens/OCR). Tudo precisa conviver.',e:'<div class="two"><span class="tag">SQL</span><span class="tag">JSON</span><span class="tag">CSV</span><span class="tag">Imagem</span></div>'},
+    {t:'✔ Veracity — confiável?',c:'var(--aqua)',b:'Dado sujo gera decisão errada. Nulos, duplicatas e inconsistências precisam de um pipeline de qualidade — é o que faremos no DIA 2 (camada Bronze).',e:'<div class="stat a"><div class="n">"lixo→lixo"</div><div class="l">garbage in, garbage out</div></div>'},
+  ];
+  document.querySelectorAll('.vbtn').forEach(btn=>{
+    btn.onclick=()=>{
+      const d=vData[+btn.dataset.v];
+      document.getElementById('vTitle').textContent=d.t;
+      document.getElementById('vTitle').style.color=d.c;
+      document.getElementById('vBody').textContent=d.b;
+      document.getElementById('vExtra').innerHTML=d.e;
+      document.querySelectorAll('.vbtn').forEach(x=>x.style.borderColor='var(--line)');
+      btn.style.borderColor=d.c;
+    };
+  });
+
+  // --- HDFS replication slider (slide index 5) ---
+  const rep=document.getElementById('hdRep');
+  if(rep){
+    const upd=()=>{
+      const r=+rep.value, size=100;
+      document.getElementById('hdRepVal').textContent=r;
+      document.getElementById('hdUsed').textContent=(size*r)+' GB';
+      const msgs={
+        1:'Sem redundância. Um disco falha e o dado some. Nunca use em produção.',
+        2:'Sobrevive a 1 falha. Economiza espaço, mas margem apertada.',
+        3:'Padrão do HDFS. Sobrevive à perda de 2 servidores simultâneos sem perder dados.',
+        4:'Extra-seguro. Custa 33% mais espaço que o padrão, ganho marginal.',
+        5:'Raro. Só para dados críticos e clusters muito grandes.'};
+      document.getElementById('hdMsg').textContent=msgs[r];
+      document.getElementById('hdRepVal').style.color=r<2?'var(--danger)':r===3?'var(--exec)':'var(--gold)';
+    };
+    rep.oninput=upd; upd();
+  }
+
+  runWidgetsPart2 && runWidgetsPart2(i);
+}
+
+buildSlides();
+document.getElementById('tocTitle').textContent='DIA 1 — Fundamentos & Ingestão · '+slides.length+' slides';
+show(0);
+</script>
+
+<!-- copy-to-clipboard nos blocos de código -->
+<style>
+.code-wrap{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;display:inline-flex;align-items:center;gap:5px;
+  padding:4px 8px;font:600 11px/1 var(--mono,monospace);color:#c9d6e5;
+  background:rgba(255,255,255,.06);border:1px solid var(--line,#2a3441);border-radius:7px;
+  cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s;z-index:2}
+.code-wrap:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:rgba(255,255,255,.12)}
+.copy-btn.ok{color:#7ee787;border-color:#2ea04366}
+</style>
+<script>
+(function(){
+  function label(b,txt,cls){b.querySelector('span').textContent=txt;b.className='copy-btn'+(cls?' '+cls:'');}
+  function addBtns(root){
+    (root||document).querySelectorAll('pre.code').forEach(function(pre){
+      if(pre.parentElement.classList.contains('code-wrap'))return;
+      var wrap=document.createElement('div');wrap.className='code-wrap';
+      pre.parentNode.insertBefore(wrap,pre);wrap.appendChild(pre);
+      var b=document.createElement('button');b.className='copy-btn';b.type='button';
+      b.innerHTML='<span>📋 copiar</span>';
+      b.addEventListener('click',function(){
+        var t=pre.innerText.replace(/\s+$/,'');
+        navigator.clipboard.writeText(t).then(function(){
+          label(b,'✓ copiado','ok');setTimeout(function(){label(b,'📋 copiar');},1400);
+        }).catch(function(){label(b,'erro');setTimeout(function(){label(b,'📋 copiar');},1400);});
+      });
+      wrap.appendChild(b);
+    });
+  }
+  addBtns();
+  new MutationObserver(function(m){m.forEach(function(x){if(x.addedNodes.length)addBtns();});})
+    .observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<!-- alternador de tema claro/escuro -->
+<script>
+function toggleTheme(){
+  var l=document.body.classList.toggle('light');
+  try{localStorage.setItem('deckTheme',l?'light':'dark');}catch(e){}
+  var b=document.getElementById('themeBtn'); if(b)b.textContent=l?'☀️':'🌙';
+}
+(function(){try{
+  if(localStorage.getItem('deckTheme')==='light'){
+    document.body.classList.add('light');
+    var b=document.getElementById('themeBtn'); if(b)b.textContent='☀️';
+  }
+}catch(e){}})();
+</script>
+
+
+<!-- auto-fit de conteúdo + barra inferior com auto-hide -->
+<script>
+function fitSlide(){
+  var s=document.querySelector('.slide.active'); if(!s) return;
+  var f=s.querySelector('.sfit'); if(!f) return;
+  f.style.transform='none'; f.style.width='';
+  var availH=f.clientHeight, availW=f.clientWidth;
+  var needH=f.scrollHeight, needW=f.scrollWidth, sc=1;
+  if(needH>availH+1) sc=Math.min(sc, availH/needH);
+  if(needW>availW+1) sc=Math.min(sc, availW/needW);
+  if(sc<1){ sc=Math.max(0.5, sc);
+    f.style.width=(100/sc)+'%'; f.style.transform='scale('+sc+')'; }
+}
+(function(){
+  var wrap=document.getElementById('slideWrap');
+  if(wrap){
+    new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        var t=muts[i].target;
+        if(t.classList && t.classList.contains('active')){ requestAnimationFrame(fitSlide); break; }
+      }
+    }).observe(wrap,{attributes:true,attributeFilter:['class'],subtree:true});
+    wrap.addEventListener('click',function(){ requestAnimationFrame(fitSlide); });
+  }
+  window.addEventListener('resize',function(){ requestAnimationFrame(fitSlide); });
+  window.addEventListener('load',function(){ requestAnimationFrame(fitSlide); });
+  requestAnimationFrame(fitSlide);
+  var foot=document.getElementById('foot');
+  if(foot) document.addEventListener('mousemove',function(e){
+    foot.classList.toggle('show', e.clientY > window.innerHeight-72);
+  });
+})();
+</script>
+
+</body>
+</html>

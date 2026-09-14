@@ -1,0 +1,1591 @@
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introdução Big Data - MBA/UFC — DIA 3</title>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#2b3444;
+  --ink:#e6edf3; --ink2:#9fb0c3; --ink3:#6b7c91;
+  --exec:#4a90e2; --tech:#2ecc71; --gold:#f5a623; --danger:#e5484d;
+  --aqua:#50e3c2; --purple:#a371f7; --dot:rgba(255,255,255,.028);
+  --mono:'SF Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
+  --sans:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+/* ---------- TEMA CLARO ---------- */
+body.light{
+  --bg:#f7f9fb; --panel:#ffffff; --panel2:#eaeef3; --line:#c4ccd6;
+  --ink:#0b0e12; --ink2:#3a424c; --ink3:#616a75;
+  --dot:rgba(12,24,44,.055);
+}
+#themeBtn{background:none;border:1px solid var(--line);color:var(--ink2);
+  padding:7px 11px;border-radius:8px;cursor:pointer;font-size:14px;line-height:1}
+#themeBtn:hover{background:var(--panel2)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background-color:var(--bg);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:22px 22px;background-position:-1px -1px;color:var(--ink);font-family:var(--sans);overflow:hidden}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ---- stage ---- */
+#stage{height:100vh;display:flex;flex-direction:column}
+#slideWrap{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;padding:48px 60px 30px;display:none;flex-direction:column;
+  animation:fade .45s ease;overflow:hidden}
+.sfit{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;transform-origin:top left}
+.cover{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 24px;max-width:1040px}
+.cover-kicker{font:700 13px/1 var(--sans);letter-spacing:3px;text-transform:uppercase;color:var(--exec);margin-bottom:20px}
+.cover-title{font-size:74px;line-height:1.02;font-weight:700;letter-spacing:-1.5px;
+  background:linear-gradient(120deg,var(--ink) 30%,var(--exec));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover-rule{width:118px;height:5px;border-radius:3px;margin:26px 0 18px;background:linear-gradient(90deg,var(--exec),var(--tech))}
+.cover-sub{font-size:22px;font-weight:600;color:var(--ink2)}
+.cover-meta{display:flex;gap:56px;margin-top:42px;flex-wrap:wrap}
+.cover-meta .cm-l{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.cover-meta .cm-v{font-size:18px;font-weight:600;color:var(--ink)}
+.cover-days{margin-top:38px;font-size:13px;letter-spacing:1px;color:var(--ink3);font-family:var(--mono)}
+.slide.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide{animation:none}}
+
+/* ---- header ---- */
+.shead{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-shrink:0}
+.badge{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;
+  font-weight:700;font-size:19px;flex-shrink:0}
+.badge.exec{background:rgba(74,144,226,.15);color:var(--exec);border:1px solid rgba(74,144,226,.4)}
+.badge.tech{background:rgba(46,204,113,.14);color:var(--tech);border:1px solid rgba(46,204,113,.4)}
+.badge.mix{background:rgba(163,113,247,.14);color:var(--purple);border:1px solid rgba(163,113,247,.4)}
+.shead h2{font-size:26px;font-weight:600;letter-spacing:-.3px}
+.shead .kick{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink3);font-weight:600}
+
+/* ---- 2-col ---- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:14px}
+.col-label{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;font-weight:700;
+  padding-bottom:6px;border-bottom:1px solid var(--line)}
+.col-label.e{color:var(--exec)} .col-label.t{color:var(--tech)}
+.full{grid-column:1/-1}
+
+/* ---- content atoms ---- */
+h3.blk{font-size:16px;font-weight:600;margin-top:4px;display:flex;align-items:center;gap:8px}
+p.body{font-size:14.5px;line-height:1.6;color:var(--ink2)}
+ul.list{list-style:none;display:flex;flex-direction:column;gap:7px}
+ul.list li{font-size:14px;line-height:1.5;color:var(--ink2);padding-left:22px;position:relative}
+ul.list li::before{content:'▸';position:absolute;left:0;color:var(--exec);font-weight:700}
+ul.list.t li::before{content:'▸';color:var(--tech)}
+ul.list.check li::before{content:'✓';color:var(--aqua)}
+ul.list.cross li::before{content:'✕';color:var(--danger)}
+.hl{color:var(--ink);font-weight:600}
+
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.stat .n{font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1}
+.stat .l{font-size:12.5px;color:var(--ink3);margin-top:5px}
+.stat.g .n{color:var(--tech)} .stat.b .n{color:var(--exec)}
+.stat.o .n{color:var(--gold)} .stat.a .n{color:var(--aqua)}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card2{background:var(--panel2)}
+
+/* ---- code / terminal ---- */
+pre.code{background:#0a0e14;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  font-family:var(--mono);font-size:12.5px;line-height:1.5;color:#c9d6e5;white-space:pre-wrap;word-break:break-word;overflow-x:hidden}
+.code .cm{color:#6b7c91} .code .kw{color:#a371f7} .code .st{color:#7ee787}
+.code .nm{color:#f5a623} .code .fn{color:#4a90e2}
+
+/* ---- source / verify chip ---- */
+.src{display:inline-flex;align-items:center;gap:6px;font-size:11px;
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.35);color:var(--gold);
+  padding:3px 9px;border-radius:20px;margin-top:6px;cursor:help}
+.src::before{content:'⚠';font-size:11px}
+.fact{border-left:3px solid var(--exec);padding:8px 0 8px 14px;margin:2px 0}
+.fact .ft{font-size:14.5px;color:var(--ink);line-height:1.5}
+
+/* ---- footer nav ---- */
+#foot{position:fixed;left:0;right:0;bottom:0;z-index:60;height:56px;border-top:1px solid var(--line);background:var(--panel);transform:translateY(105%);transition:transform .28s ease;
+  display:flex;align-items:center;padding:0 22px;gap:16px}
+#foot:hover,#foot.show{transform:none}
+#progress{flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+#bar{height:100%;width:5%;background:linear-gradient(90deg,var(--exec),var(--tech));
+  border-radius:3px;transition:width .35s}
+.nbtn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+  width:38px;height:38px;border-radius:9px;font-size:16px;cursor:pointer;transition:.15s}
+.nbtn:hover{border-color:var(--exec);color:var(--exec)}
+.nbtn:disabled{opacity:.3;cursor:default}
+#counter{font-size:13px;color:var(--ink2);min-width:96px;text-align:center;font-variant-numeric:tabular-nums}
+#counter b{color:var(--ink)}
+.brand{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:.5px}
+#tocBtn{background:none;border:1px solid var(--line);color:var(--ink2);padding:7px 12px;
+  border-radius:8px;font-size:12px;cursor:pointer}
+#tocBtn:hover{border-color:var(--exec);color:var(--exec)}
+
+/* ---- TOC overlay ---- */
+#toc{position:absolute;inset:0;background:rgba(6,9,14,.96);z-index:40;display:none;
+  padding:44px 60px;overflow-y:auto}
+#toc.open{display:block}
+#toc h2{font-size:22px;margin-bottom:22px;color:var(--ink)}
+.toc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.toc-item{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:11px 13px;
+  cursor:pointer;transition:.15s;display:flex;gap:10px;align-items:flex-start}
+.toc-item:hover{border-color:var(--exec);transform:translateY(-2px)}
+.toc-item .tn{font-size:11px;font-weight:700;color:var(--ink3);flex-shrink:0}
+.toc-item .tt{font-size:12.5px;line-height:1.35;color:var(--ink2)}
+.toc-close{position:absolute;top:22px;right:26px;background:none;border:none;color:var(--ink2);
+  font-size:26px;cursor:pointer}
+
+/* ---- interactive widgets ---- */
+.widget{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.wlabel{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--tech);
+  font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.wlabel::before{content:'●';font-size:9px;color:var(--tech)}
+
+/* slider */
+input[type=range]{width:100%;accent-color:var(--exec);height:6px;cursor:pointer;margin:8px 0}
+.slider-out{display:flex;justify-content:space-between;font-family:var(--mono);font-size:13px}
+.slider-out .big{font-size:22px;font-weight:700;color:var(--exec)}
+
+/* buttons */
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 15px;
+  border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:.15s}
+.btn:hover{border-color:var(--tech);color:var(--tech)}
+.btn.run{background:rgba(46,204,113,.12);border-color:rgba(46,204,113,.4);color:var(--tech)}
+.btn.on{background:var(--exec);border-color:var(--exec);color:#fff}
+
+/* quiz */
+.quiz-opt{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:12px 15px;
+  margin-bottom:9px;cursor:pointer;transition:.15s;font-size:14px;display:flex;gap:11px;align-items:center}
+.quiz-opt:hover{border-color:var(--exec)}
+.quiz-opt .k{width:24px;height:24px;border-radius:6px;background:var(--panel);border:1px solid var(--line);
+  display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0}
+.quiz-opt.correct{border-color:var(--tech);background:rgba(46,204,113,.12)}
+.quiz-opt.correct .k{background:var(--tech);color:#04150b;border-color:var(--tech)}
+.quiz-opt.wrong{border-color:var(--danger);background:rgba(229,72,77,.1)}
+.quiz-opt.wrong .k{background:var(--danger);color:#fff;border-color:var(--danger)}
+.quiz-fb{font-size:13px;line-height:1.55;padding:11px 14px;border-radius:8px;margin-top:6px;display:none}
+.quiz-fb.show{display:block}
+.quiz-fb.ok{background:rgba(46,204,113,.1);color:#7ee0b0;border:1px solid rgba(46,204,113,.3)}
+.quiz-fb.no{background:rgba(229,72,77,.1);color:#f0a0a2;border:1px solid rgba(229,72,77,.3)}
+
+/* terminal */
+.term{background:#05080d;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-family:var(--mono)}
+.term-bar{background:var(--panel2);padding:8px 13px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)}
+.term-dot{width:11px;height:11px;border-radius:50%}
+.term-title{font-size:12px;color:var(--ink3);margin-left:8px}
+.term-body{padding:14px 16px;font-size:12.5px;line-height:1.7;min-height:150px;max-height:230px;overflow-y:auto}
+.term-body .pr{color:var(--tech)} .term-body .out{color:#c9d6e5}
+.term-body .dim{color:var(--ink3)} .term-body .warn{color:var(--gold)}
+.term-cmds{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+
+/* pipeline / diagram */
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.node{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 14px;
+  text-align:center;min-width:92px}
+.node .t{font-size:13px;font-weight:600;color:var(--ink)}
+.node .s{font-size:11px;color:var(--ink3);margin-top:2px}
+.node.b{border-color:rgba(74,144,226,.5)} .node.g{border-color:rgba(46,204,113,.5)}
+.node.o{border-color:rgba(245,166,35,.5)} .node.a{border-color:rgba(80,227,194,.5)}
+.arrow{color:var(--ink3);font-size:18px}
+
+/* medallion */
+.medal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.layer{border-radius:10px;padding:13px;text-align:center;border:1px solid}
+.layer .ln{font-size:14px;font-weight:700}
+.layer .ld{font-size:11.5px;color:var(--ink2);margin-top:5px;line-height:1.4}
+.layer.raw{background:rgba(107,124,145,.1);border-color:var(--ink3)}
+.layer.raw .ln{color:var(--ink2)}
+.layer.brz{background:rgba(205,127,80,.1);border-color:#cd7f50}
+.layer.brz .ln{color:#e0955f}
+.layer.slv{background:rgba(158,178,196,.12);border-color:#9eb2c4}
+.layer.slv .ln{color:#b8c8d8}
+.layer.gld{background:rgba(245,166,35,.12);border-color:var(--gold)}
+.layer.gld .ln{color:var(--gold)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:5px;font-weight:600;
+  background:var(--panel2);border:1px solid var(--line);color:var(--ink2)}
+
+table.cmp{width:100%;border-collapse:collapse;font-size:13px}
+table.cmp th{text-align:left;padding:9px 11px;background:var(--panel2);color:var(--ink);
+  font-weight:600;border:1px solid var(--line)}
+table.cmp td{padding:8px 11px;border:1px solid var(--line);color:var(--ink2);vertical-align:top}
+table.cmp td:first-child{color:var(--ink3);font-size:12px}
+
+.note{font-size:12px;color:var(--ink3);font-style:italic;margin-top:6px}
+
+/* ---- case study ---- */
+.case-hero{border-radius:12px;padding:16px 18px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(74,144,226,.08),rgba(46,204,113,.05))}
+.case-hero.fail{background:linear-gradient(135deg,rgba(229,72,77,.1),rgba(245,166,35,.05));border-color:rgba(229,72,77,.35)}
+.case-hero.win{background:linear-gradient(135deg,rgba(46,204,113,.1),rgba(80,227,194,.05));border-color:rgba(46,204,113,.35)}
+.case-hero.fraud{background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(229,72,77,.06));border-color:rgba(245,166,35,.35)}
+.case-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.case-tag.fail{background:rgba(229,72,77,.18);color:#f0a0a2}
+.case-tag.win{background:rgba(46,204,113,.18);color:#7ee0b0}
+.case-tag.fraud{background:rgba(245,166,35,.18);color:var(--gold)}
+.case-hero .ch-t{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.case-hero .ch-s{font-size:13px;color:var(--ink2);margin-top:3px}
+.discuss{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--purple);
+  border-radius:0 10px 10px 0;padding:12px 15px}
+.discuss .dq{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--purple);font-weight:700;margin-bottom:8px}
+.discuss ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.discuss li{font-size:13.5px;line-height:1.5;color:var(--ink2);padding-left:20px;position:relative}
+.discuss li::before{content:'?';position:absolute;left:0;color:var(--purple);font-weight:700}
+.upd{display:inline-flex;align-items:center;gap:6px;font-size:11px;
+  background:rgba(163,113,247,.12);border:1px dashed rgba(163,113,247,.5);color:#c4a5f7;
+  padding:4px 10px;border-radius:7px;margin-top:8px}
+.upd::before{content:'✎';font-size:11px}
+.lesson{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px}
+.lesson .li-ico{font-size:18px;flex-shrink:0}
+.lesson .li-tx{font-size:13px;line-height:1.5;color:var(--ink2)}
+.lesson .li-tx b{color:var(--ink)}
+
+/* ---- tool cards ---- */
+.tool{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);
+  border-radius:11px;padding:13px 15px;text-decoration:none;transition:.15s}
+.tool:hover{border-color:var(--exec);transform:translateY(-2px);background:var(--panel2)}
+.tool .ti-ico{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.tool .ti-body{flex:1;min-width:0}
+.tool .ti-name{font-size:15px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:7px}
+.tool .ti-name .ext{font-size:11px;color:var(--ink3)}
+.tool:hover .ti-name{color:var(--exec)}
+.tool .ti-desc{font-size:12.5px;color:var(--ink2);margin-top:3px;line-height:1.45}
+.tool .ti-url{font-size:11px;color:var(--exec);font-family:var(--mono);margin-top:5px;word-break:break-all}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ico-hdfs{background:rgba(74,144,226,.15);color:var(--exec)}
+.ico-sqoop{background:rgba(245,166,35,.15);color:var(--gold)}
+.ico-hive{background:rgba(46,204,113,.15);color:var(--tech)}
+.ico-spark{background:rgba(229,72,77,.15);color:var(--danger)}
+.ico-bi{background:rgba(163,113,247,.15);color:var(--purple)}
+.ico-aqua{background:rgba(80,227,194,.15);color:var(--aqua)}
+a.srclink{color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(245,166,35,.5)}
+a.srclink:hover{color:#ffc95c;border-bottom-style:solid}
+
+/* ---- install tutorial ---- */
+.winnote{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;background:rgba(74,144,226,.1);
+  border:1px solid rgba(74,144,226,.35);color:var(--exec);padding:5px 11px;border-radius:7px;margin-top:8px}
+.winnote::before{content:'🪟';font-size:12px}
+.oswrap .os-btn{opacity:.6}
+.oswrap .os-btn.on{opacity:1;background:var(--exec);border-color:var(--exec);color:#fff}
+.os-pane{display:none}
+.os-pane.active{display:block}
+.step-num{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--panel2);
+  border:1px solid var(--line);color:var(--ink2);font-size:11px;font-weight:700;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px}
+.step{display:flex;gap:9px;align-items:flex-start;margin-bottom:9px}
+.step .st-tx{font-size:13px;color:var(--ink2);line-height:1.5}
+.verify-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;
+  border-bottom:1px solid var(--line);font-size:13px}
+.verify-row:last-child{border-bottom:none}
+.verify-row code{font-family:var(--mono);color:var(--tech);font-size:12px}
+.verify-row .vok{color:var(--ink3);font-size:11.5px}
+kbd{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 7px;
+  font-family:var(--mono);font-size:12px;color:var(--ink2)}
+
+/* ---- dashboard mockup ---- */
+.dash-mock{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.dash-tile{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:12px;
+  min-height:64px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.dash-tile .dt-n{font-size:19px;font-weight:800;color:var(--exec)}
+.dash-tile .dt-l{font-size:10.5px;color:var(--ink3);margin-top:3px}
+.dash-empty{border:1px dashed var(--line);border-radius:9px;padding:18px;text-align:center;color:var(--ink3);font-size:12px}
+
+/* ---- feature bars ---- */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;cursor:pointer}
+.bar-row .br-label{width:118px;font-size:12.5px;color:var(--ink2);flex-shrink:0}
+.bar-track{flex:1;height:18px;background:var(--panel2);border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--exec),var(--tech));border-radius:5px;
+  transition:width .5s ease;width:0}
+.bar-val{font-size:11px;color:var(--ink3);width:32px;text-align:right;flex-shrink:0}
+.bar-row.on .br-label{color:var(--ink)}
+
+/* ---- criteria / timeline reuse node styles ---- */
+.ico-aws{background:rgba(245,166,35,.15);color:var(--gold)}
+.ico-gcp{background:rgba(74,144,226,.15);color:var(--exec)}
+.ico-azure{background:rgba(80,227,194,.15);color:var(--aqua)}
+.crit-card{cursor:pointer;transition:.15s}
+.crit-card.on{border-color:var(--exec) !important;background:var(--panel2)}
+
+/* ---- SVG visuals (offline) ---- */
+.viz{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:9px}
+.viz.plain{background:none;border:none;padding:0}
+.viz svg{width:100%;height:auto;display:block;overflow:visible}
+.viz.compact svg{max-width:168px;margin:0 auto}
+.viz figcaption{font-size:11px;color:var(--ink3);text-align:center;line-height:1.4}
+.viz .vtitle{font-size:11px;text-transform:uppercase;letter-spacing:1.1px;font-weight:700;color:var(--ink3)}
+.iconrow{display:flex;flex-wrap:wrap;gap:10px}
+.ichip{display:flex;align-items:center;gap:9px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.ichip svg{width:22px;height:22px;flex-shrink:0}
+.ichip .il{font-size:12.5px;font-weight:600;color:var(--ink2)}
+.viz .grow{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0)}
+.slide.active .viz .grow{animation:vgrow .55s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes vgrow{to{transform:scaleY(1)}}
+.viz .ring{stroke-dasharray:var(--circ);stroke-dashoffset:var(--circ)}
+.slide.active .viz .ring{animation:vring .7s ease forwards}
+@keyframes vring{to{stroke-dashoffset:var(--off)}}
+@media (prefers-reduced-motion:reduce){
+  .viz .grow{transform:none;animation:none}
+  .viz .ring{stroke-dashoffset:var(--off);animation:none}}
+.cite{display:inline-flex;align-items:center;gap:6px;font-size:11px;line-height:1.35;
+  background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.35);color:#7ee0b0;
+  padding:3px 9px;border-radius:20px;margin-top:6px;text-decoration:none;cursor:pointer}
+.cite::before{content:'✓';font-weight:700}
+.cite:hover{border-color:var(--tech);color:#a5f0c8}
+/* ---- slide de PAUSA / HORA DO LAB ---- */
+.badge.lab{background:rgba(245,166,35,.15);color:var(--gold);border:1px solid rgba(245,166,35,.45)}
+.labstop{flex:1;display:flex;flex-direction:column;gap:14px;border-radius:14px;padding:22px 26px;
+  background:linear-gradient(135deg,rgba(163,113,247,.12),rgba(245,166,35,.07));
+  border:1px solid rgba(163,113,247,.4)}
+.ls-badge{display:inline-flex;align-self:flex-start;gap:9px;align-items:center;
+  font-size:12px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#c4a5f7;
+  background:rgba(163,113,247,.15);border:1px solid rgba(163,113,247,.5);padding:7px 14px;border-radius:22px}
+.ls-badge::before{content:'⏸';font-size:13px}
+.ls-title{font-size:25px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.ls-meta{display:flex;flex-wrap:wrap;gap:10px}
+.ls-meta span{font-size:12.5px;color:var(--ink2);background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;padding:6px 11px;display:inline-flex;gap:6px;align-items:center}
+.ls-meta code{font-family:var(--mono);color:var(--gold);font-size:12px}
+.ls-cta{margin-top:auto;font-size:14px;line-height:1.5;color:var(--ink);
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);border-left:3px solid var(--gold);
+  border-radius:0 9px 9px 0;padding:12px 15px}
+.ls-cta b{color:var(--gold)}
+.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lab-card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+.lc-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px}
+.lc-n{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold)}
+.lc-top code{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.lc-title{font-size:14.5px;font-weight:600;color:var(--ink)}
+.lc-goal{font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:4px}
+</style>
+</head><body>
+<div id="stage">
+  <div id="slideWrap"></div>
+  <div id="toc">
+    <button class="toc-close" onclick="toggleToc()">✕</button>
+    <h2 id="tocTitle">DIA 3 — Insights &amp; BI</h2>
+    <div class="toc-grid" id="tocGrid"></div>
+  </div>
+  <div id="foot">
+    <span class="brand">INTRODUÇÃO BIG DATA · FEAAC/UFC · Alexandre Moreira</span>
+    <button id="tocBtn" onclick="toggleToc()">☰ Índice</button>
+    <button id="themeBtn" onclick="toggleTheme()" title="Alternar tema claro/escuro">🌙</button>
+    <button class="nbtn" id="prev" onclick="go(-1)">‹</button>
+    <div id="progress"><div id="bar"></div></div>
+    <button class="nbtn" id="next" onclick="go(1)">›</button>
+    <span id="counter"><b>1</b> / 1</span>
+  </div>
+</div>
+<script>
+const SRC = (txt) => `<span class="src" title="Número plausível para ensino — confirme na fonte antes de apresentar">${txt}</span>`;
+function CITE(txt,url){return url
+  ? `<a class="cite" href="${url}" target="_blank" rel="noopener" title="Fonte verificada">${txt} ↗</a>`
+  : `<span class="cite" title="Fonte verificada">${txt}</span>`;}
+
+/* ===== MOTOR VISUAL — SVG inline, offline, tema escuro ===== */
+var VC={exec:'#4a90e2',tech:'#2ecc71',gold:'#f5a623',aqua:'#50e3c2',purple:'#a371f7',
+  danger:'#e5484d',ink:'#e6edf3',ink2:'#9fb0c3',ink3:'#6b7c91',line:'#2b3444',panel:'#161b22',panel2:'#1c2230'};
+var ICON={
+  db:'<ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6"/>',
+  cluster:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  spark:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  transfer:'<path d="M4 8h13m0 0-3.5-3.5M17 8l-3.5 3.5"/><path d="M20 16H7m0 0 3.5-3.5M7 16l3.5 3.5"/>',
+  hive:'<path d="M8 3h8l4 7-4 7H8l-4-7z"/><path d="M9.5 8.5h5l2.2 3.5-2.2 3.5h-5L7.3 12z" opacity=".45"/>',
+  chart:'<path d="M4 20V4"/><path d="M4 20h16"/><rect x="7" y="12" width="3" height="5" rx=".6"/><rect x="12" y="8" width="3" height="9" rx=".6"/><rect x="17" y="5" width="3" height="12" rx=".6"/>',
+  gauge:'<path d="M4 15a8 8 0 0 1 16 0"/><path d="M12 15l4-4"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/>',
+  brain:'<path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8V15a3 3 0 0 0 4 2.8M15 3a3 3 0 0 1 3 3 3 3 0 0 1 1 5.8V15a3 3 0 0 1-4 2.8M12 4v16"/>',
+  cloud:'<path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1.3A3.5 3.5 0 0 1 17 18z"/>',
+  layers:'<path d="M12 3 3 8l9 5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 16l9 5 9-5"/>',
+  dash:'<rect x="3" y="3" width="8" height="9" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="14" width="8" height="7" rx="1.5"/>',
+  python:'<path d="M12 3c-3 0-4 1.5-4 3.5V9h4.5M12 3c2.2 0 3.5.7 3.5 2.5V11c0 2-1.3 3-3.5 3H9c-2.2 0-3.5 1-3.5 3v2C5.5 20.5 7 21 9 21"/>'
+};
+function icon(n,c,s){c=c||'currentColor';s=s||22;
+  return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]||''}</svg>`;}
+function iconRow(items){return `<div class="iconrow">${items.map(t=>`<span class="ichip">${icon(t.i,t.color||VC.ink2)}<span class="il">${t.label}</span></span>`).join('')}</div>`;}
+function barsV(data,opt){opt=opt||{};var W=opt.w||360,H=opt.h||156,pl=30,pb=24,pt=22;
+  var max=opt.max||Math.max.apply(null,data.map(function(d){return d.value;}));
+  var iw=W-pl-8,gap=iw/data.length,bw=Math.min(opt.bw||46,gap*0.6);
+  var g='<line x1="'+pl+'" y1="'+(H-pb)+'" x2="'+W+'" y2="'+(H-pb)+'" stroke="'+VC.line+'"/>';
+  data.forEach(function(d,i){var h=Math.max(2,(d.value/max)*(H-pb-pt));
+    var x=pl+i*gap+(gap-bw)/2,y=H-pb-h,c=d.color||VC.exec;
+    g+='<rect class="grow" x="'+x+'" y="'+y+'" width="'+bw+'" height="'+h+'" rx="4" fill="'+c+'" style="animation-delay:'+(i*0.08)+'s"/>';
+    g+='<text x="'+(x+bw/2)+'" y="'+(y-6)+'" fill="'+VC.ink+'" font-size="12.5" font-weight="700" text-anchor="middle">'+(d.top!=null?d.top:d.value)+'</text>';
+    g+='<text x="'+(x+bw/2)+'" y="'+(H-pb+15)+'" fill="'+VC.ink3+'" font-size="11" text-anchor="middle">'+d.label+'</text>';});
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(opt.aria||'gráfico de barras')+'">'+g+'</svg>';}
+function donut(frac,label,sub,color){color=color||VC.exec;
+  var r=46,circ=2*Math.PI*r,off=circ*(1-Math.max(0,Math.min(1,frac)));
+  return '<svg viewBox="0 0 120 120" role="img" aria-label="'+(label||'')+' '+(sub||'')+'">'
+    +'<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="'+VC.line+'" stroke-width="11"/>'
+    +'<circle class="ring" cx="60" cy="60" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="11" stroke-linecap="round" transform="rotate(-90 60 60)" style="--circ:'+circ.toFixed(1)+'px;--off:'+off.toFixed(1)+'px"/>'
+    +'<text x="60" y="58" fill="'+VC.ink+'" font-size="24" font-weight="800" text-anchor="middle">'+label+'</text>'
+    +'<text x="60" y="76" fill="'+VC.ink3+'" font-size="10.5" text-anchor="middle">'+(sub||'')+'</text></svg>';}
+
+/* ---- pausas de laboratório ---- */
+function labBreak(c){return `<div class="labstop">
+  <div class="ls-badge">Hora do lab · pare a apresentação</div>
+  <h2 class="ls-title">${c.title}</h2>
+  <div class="ls-meta"><span>⏱ ${c.time}</span><span>📄 <code>${c.file}</code></span><span>🔀 ${c.rotas}</span>${c.prereq?`<span>🔗 ${c.prereq}</span>`:''}</div>
+  <div class="cols" style="flex:1">
+    <div class="col"><div class="col-label e">🎯 Objetivo</div><p class="body">${c.goal}</p>
+      <div class="col-label e" style="margin-top:8px">O que você vai entregar</div>
+      <ul class="list check">${c.deliver.map(function(d){return '<li>'+d+'</li>';}).join('')}</ul></div>
+    <div class="col"><div class="col-label t">Passos principais</div>
+      <ul class="list t">${c.steps.map(function(s){return '<li>'+s+'</li>';}).join('')}</ul>
+      <div class="ls-cta"><b>Abram o arquivo do lab e sigam juntos.</b> Retomo a apresentação quando todos concluírem o checklist do lab.</div></div>
+  </div></div>`;}
+function labBreakSet(c){return `<div class="labstop">
+  <div class="ls-badge">Hora dos labs · pare a apresentação</div>
+  <h2 class="ls-title">${c.heading}</h2>
+  <div class="ls-meta"><span>⏱ ${c.time}</span><span>🔀 ${c.rotas}</span>${c.prereq?`<span>🔗 ${c.prereq}</span>`:''}</div>
+  <div class="lab-grid" style="flex:1;align-content:start">
+    ${c.labs.map(function(l){return '<div class="lab-card"><div class="lc-top"><span class="lc-n">Lab '+l.n+'</span><code>'+l.file+'</code></div><div class="lc-title">'+l.title+'</div><div class="lc-goal">'+l.goal+'</div></div>';}).join('')}
+  </div>
+  <div class="ls-cta"><b>Façam os labs na ordem, seguindo o roteiro de cada arquivo.</b> Retomo a apresentação quando a turma concluir o bloco.</div></div>`;}
+
+const slides = [
+{kick:"Capa", title:"Introdução Big Data", badge:"mix", cover:true, html:`
+<div class="cover">
+  <div class="cover-kicker">Big Data</div>
+  <h1 class="cover-title">Introdução<br>Big Data</h1>
+  <div class="cover-rule"></div>
+  <div class="cover-sub">MBA · FEAAC/UFC</div>
+  <div class="cover-meta">
+    <div><span class="cm-l">Facilitador</span><span class="cm-v">Alexandre Moreira</span></div>
+    <div><span class="cm-l">Módulo</span><span class="cm-v">DIA 3 · Insights &amp; BI</span></div>
+  </div>
+  <div class="cover-days">HDFS · MapReduce · Sqoop · Hive · Spark · BI</div>
+</div>`},
+/* ---------- 01 CAPA ---------- */
+{kick:"Abertura · DIA 3", title:"Insights, BI & Storytelling", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Onde paramos</div>
+    <p class="body">Ontem a <span class="hl">Gold layer</span> ficou pronta: 5 perguntas de negócio já respondidas em SQL. Hoje isso vira <span class="hl">dashboard, modelo e apresentação</span> — o dado finalmente encontra quem decide.</p>
+    <div class="stat-row">
+      <div class="stat b"><div class="n">9</div><div class="l">módulos · 8 horas</div></div>
+      <div class="stat g"><div class="n">1</div><div class="l">apresentação final de 15-20min</div></div>
+    </div>
+    <div class="fact"><div class="ft">Meta do dia: sair daqui com um <span class="hl">dashboard funcionando</span> e um <span class="hl">discurso pronto</span> para defender ele.</div></div>
+    ${iconRow([{i:'spark',label:'Spark',color:VC.danger},{i:'dash',label:'Dashboard',color:VC.exec},{i:'brain',label:'ML',color:VC.purple},{i:'chart',label:'Storytelling',color:VC.aqua}])}
+  </div>
+  <div class="col">
+    <div class="col-label t">A jornada de hoje</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:9px">
+      <div class="node b"><div class="t">Export & Spark</div><div class="s">Gold layer → memória</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node g"><div class="t">Dashboard & BI</div><div class="s">visualizar para decidir</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node o"><div class="t">ML Preview</div><div class="s">prever, não só descrever</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node a"><div class="t">Storytelling</div><div class="s">apresentar e convencer</div></div>
+    </div>
+    <p class="note">Mesma navegação: ← → ou ☰ Índice.</p>
+  </div>
+</div>`},
+
+/* ---------- 02 DO INSIGHT À AÇÃO ---------- */
+{kick:"Framework", title:"Do número à decisão", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O erro mais comum</div>
+    <p class="body">Entregar uma tabela com "taxa de fraude: 1,83%" e achar que o trabalho terminou. <span class="hl">Número sozinho não move ninguém.</span></p>
+    <div class="fact"><div class="ft">A distância entre "descobrimos algo" e "fizemos algo" é o trabalho que falta em 90% dos projetos de dados.</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">O framework de 3 passos</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div class="node b"><div class="t">1 · Raw Finding</div><div class="s">"High-Risk tem 5% de fraude"</div></div>
+      <div class="arrow" style="text-align:center">↓ então...</div>
+      <div class="node o"><div class="t">2 · Business Insight</div><div class="s">"10× mais que Premium — o filtro atual não pega isso"</div></div>
+      <div class="arrow" style="text-align:center">↓ logo...</div>
+      <div class="node g"><div class="t">3 · Ação</div><div class="s">"Adicionar verificação extra para High-Risk acima de R$500"</div></div>
+    </div>
+    <p class="note">Toda análise de hoje em diante passa pelos 3 degraus antes de virar slide.</p>
+  </div>
+</div>`},
+
+/* ---------- 03 EXPORT DA GOLD LAYER ---------- */
+{kick:"Export", title:"Tirar os dados do Hive — 3 caminhos", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Escolha o método</div>
+    <div class="widget">
+      <div class="term-cmds">
+        <button class="btn on expbtn" data-e="sqoop">Sqoop export</button>
+        <button class="btn expbtn" data-e="csv">CSV export</button>
+        <button class="btn expbtn" data-e="spark">Spark JDBC</button>
+      </div>
+      <div id="expBody" style="margin-top:14px">
+        <div class="fact" id="expDesc"><div class="ft">Reaproveita o Sqoop de ontem, agora de <span class="hl">HDFS → MySQL</span>. Ideal quando o BI já lê direto do banco relacional.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Comando / código</div>
+    <pre class="code" id="expCode">sqoop export \\
+  --connect jdbc:mysql://localhost/bi_db \\
+  --table gold_fraud_risk \\
+  --export-dir /user/bigdata/gold/fraud_risk \\
+  -m 4</pre>
+    <p class="note" id="expNote">Recomendado quando a ferramenta de BI já está conectada ao MySQL de produção.</p>
+  </div>
+</div>`},
+
+/* ---------- 04 FERRAMENTAS DO DIA ---------- */
+{kick:"Ferramentas", title:"O que vamos usar hoje", badge:"tech", html:`
+<div style="display:flex;flex-direction:column;gap:12px;flex:1">
+  <p class="body full">Do processamento em memória à visualização. Clique para abrir a documentação oficial.</p>
+  <div class="tool-grid">
+    <a class="tool" href="https://spark.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-spark">⚡</div>
+      <div class="ti-body"><div class="ti-name">Apache Spark <span class="ext">↗</span></div>
+        <div class="ti-desc">Processamento em memória — o motor de hoje.</div>
+        <div class="ti-url">spark.apache.org</div></div>
+    </a>
+    <a class="tool" href="https://superset.apache.org" target="_blank" rel="noopener">
+      <div class="ti-ico ico-bi">📊</div>
+      <div class="ti-body"><div class="ti-name">Apache Superset <span class="ext">↗</span></div>
+        <div class="ti-desc">BI open-source completo para o dashboard final.</div>
+        <div class="ti-url">superset.apache.org</div></div>
+    </a>
+    <a class="tool" href="https://www.metabase.com" target="_blank" rel="noopener">
+      <div class="ti-ico ico-hive">📈</div>
+      <div class="ti-body"><div class="ti-name">Metabase <span class="ext">↗</span></div>
+        <div class="ti-desc">Alternativa simples de subir — boa para começar.</div>
+        <div class="ti-url">metabase.com</div></div>
+    </a>
+    <a class="tool" href="https://spark.apache.org/docs/latest/ml-guide.html" target="_blank" rel="noopener">
+      <div class="ti-ico ico-aqua">🤖</div>
+      <div class="ti-body"><div class="ti-name">Spark MLlib <span class="ext">↗</span></div>
+        <div class="ti-desc">Biblioteca de ML nativa do Spark — usada no preview.</div>
+        <div class="ti-url">spark.apache.org/docs/.../ml-guide</div></div>
+    </a>
+  </div>
+  <p class="note">🔓 Sem admin? O mesmo PySpark local (<kbd>pip install pyspark --user</kbd>) roda os exemplos de hoje numa máquina só — sem cluster.</p>
+</div>`},
+
+/* ---------- 05 POR QUE SPARK ---------- */
+{kick:"Spark", title:"Por que Spark, se o Hive já funciona", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O limite do Hive</div>
+    <p class="body">Cada query do Hive é um job <span class="hl">MapReduce novo</span>: lê do disco, processa, grava no disco. Ótimo para batch noturno, <span class="hl">lento para exploração</span> — você espera minutos por cada pergunta.</p>
+    <div class="col-label e" style="margin-top:6px">A resposta do Spark</div>
+    <ul class="list check">
+      <li>Mantém dados <span class="hl">em memória</span> entre operações</li>
+      <li>Reaproveita resultados intermediários, sem regravar disco</li>
+      <li>Mesma sintaxe SQL que você já sabe do Hive</li>
+    </ul>
+    <figure class="viz">
+      <div class="vtitle">Velocidade relativa (em memória, ilustrativo)</div>
+      ${barsV([{label:'Hive (disco)',value:1,color:VC.ink3,top:'1×'},{label:'Spark (memória)',value:100,color:VC.tech,top:'até 100×'}],{aria:'Hive baseline 1x contra Spark até 100x em memória',bw:70})}
+      <figcaption>${CITE("Apache Spark — \"run workloads 100x faster\"","https://spark.apache.org")}</figcaption>
+    </figure>
+  </div>
+  <div class="col">
+    <div class="col-label t">Hive vs Spark</div>
+    <table class="cmp">
+      <tr><th>Dimensão</th><th>Hive</th><th>Spark</th></tr>
+      <tr><td>Execução</td><td>disco a cada etapa</td><td>memória entre etapas</td></tr>
+      <tr><td>Melhor para</td><td>batch, ETL noturno</td><td>exploração, iteração</td></tr>
+      <tr><td>Velocidade típica</td><td>baseline</td><td>ordens de grandeza mais rápido</td></tr>
+      <tr><td>ML nativo</td><td>não</td><td>MLlib embutido</td></tr>
+    </table>
+    <p class="note">O ganho exato varia com o workload — meça no seu caso.</p>
+  </div>
+</div>`},
+
+/* ---------- 06 ARQUITETURA SPARK ---------- */
+{kick:"Spark", title:"Driver, Executors, Cluster Manager", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">As 3 peças</div>
+    <div class="card"><h3 class="blk" style="color:var(--exec)">🧭 Driver</h3>
+      <p class="body">Onde seu código roda. Planeja o trabalho e distribui tarefas.</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--tech)">⚙️ Executors</h3>
+      <p class="body">Processos nos nós do cluster que efetivamente <span class="hl">calculam</span> e guardam dados em memória.</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--gold)">🗂️ Cluster Manager</h3>
+      <p class="body">Aloca recursos (YARN, o mesmo do Hadoop, ou o gerenciador próprio do Spark).</p></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">DataFrame — a estrutura central</div>
+    <p class="body">Uma tabela distribuída em memória, particionada entre os Executors. Parece um DataFrame do pandas, mas <span class="hl">roda em paralelo</span>.</p>
+    <pre class="code">df = spark.read.parquet(<span class="st">"/gold/fraud_risk"</span>)
+df.printSchema()
+<span class="cm"># DataFrame espalhado pelos executors,
+# cada um com uma fatia dos dados</span></pre>
+    <div class="flow">
+      <div class="node b"><div class="t">Driver</div><div class="s">planeja</div></div>
+      <span class="arrow">→</span>
+      <div class="node g"><div class="t">Executor 1</div><div class="s">partição A</div></div>
+      <div class="node g"><div class="t">Executor 2</div><div class="s">partição B</div></div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 07 TERMINAL SPARK SQL ---------- */
+{kick:"Spark · Lab", title:"Spark SQL (simulado)", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Mesmo SQL, motor diferente</div>
+    <p class="body">A sintaxe é praticamente idêntica ao Hive — a diferença está <span class="hl">por baixo</span>: em memória, não em disco.</p>
+    <ul class="list t">
+      <li><kbd>spark.read.parquet()</kbd> — carrega a Gold layer</li>
+      <li><kbd>createOrReplaceTempView()</kbd> — vira "tabela" para SQL</li>
+      <li><kbd>spark.sql()</kbd> — roda a query</li>
+      <li><kbd>.show()</kbd> — mostra o resultado</li>
+    </ul>
+  </div>
+  <div class="col">
+    <div class="col-label t">pyspark · sandbox</div>
+    <div class="term">
+      <div class="term-bar"><span class="term-dot" style="background:#e5484d"></span>
+        <span class="term-dot" style="background:#f5a623"></span>
+        <span class="term-dot" style="background:#2ecc71"></span>
+        <span class="term-title">bigdata@cluster:~ (pyspark)</span></div>
+      <div class="term-body" id="termOut3"><span class="dim">Clique em um comando abaixo ↓</span></div>
+    </div>
+    <div class="term-cmds">
+      <button class="btn" data-cmd="read">spark.read.parquet</button>
+      <button class="btn" data-cmd="view">createTempView</button>
+      <button class="btn" data-cmd="sql">spark.sql(...)</button>
+      <button class="btn" data-cmd="cache">df.cache()</button>
+      <button class="btn" data-cmd="clear">clear</button>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 08 DATAFRAME VS SQL ---------- */
+{kick:"Spark", title:"Duas sintaxes, um motor", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Você escolhe o estilo</div>
+    <p class="body">Quem vem do SQL (Hive) usa <kbd>spark.sql()</kbd>. Quem vem do Python/pandas prefere a <span class="hl">API de DataFrame</span>. O motor por trás é o mesmo — e dá para misturar os dois.</p>
+    <div class="oswrap" style="margin-top:8px">
+      <button class="btn os-btn on" data-os="sql">🗣️ SQL</button>
+      <button class="btn os-btn" data-os="df">🐍 DataFrame API</button>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-label t">O mesmo resultado, dois jeitos</div>
+    <div class="os-pane active" data-os="sql">
+      <pre class="code">spark.sql(<span class="st">"""</span>
+<span class="kw">SELECT</span> segment, <span class="fn">AVG</span>(amount) <span class="kw">AS</span> ticket_medio
+<span class="kw">FROM</span> gold_fraud_risk
+<span class="kw">GROUP BY</span> segment
+<span class="st">"""</span>).show()</pre>
+    </div>
+    <div class="os-pane" data-os="df">
+      <pre class="code">(df.groupBy(<span class="st">"segment"</span>)
+   .agg(F.avg(<span class="st">"amount"</span>).alias(<span class="st">"ticket_medio"</span>))
+   .show())</pre>
+    </div>
+    <p class="note">Ambos geram o mesmo plano de execução — Spark otimiza os dois igual.</p>
+  </div>
+</div>`},
+
+/* ---------- 09 QUIZ 1 ---------- */
+{kick:"Checkpoint", title:"Quiz — Spark & Export", badge:"mix", html:`
+<div style="margin-bottom:16px">${iconRow([{i:'spark',label:'Spark · memória vs disco',color:VC.danger},{i:'transfer',label:'Export da Gold',color:VC.gold}])}</div>
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Pergunta 1</div>
+    <p class="body" style="margin-bottom:10px">A principal razão do Spark ser mais rápido que MapReduce/Hive puro em exploração é...</p>
+    <div id="q1">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> Usa uma linguagem diferente</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">B</span> Mantém dados em memória entre operações</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> Não precisa de cluster</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Só funciona com Parquet</div>
+    </div>
+    <div class="quiz-fb" id="q1fb"></div>
+  </div>
+  <div class="col">
+    <div class="col-label e">Pergunta 2</div>
+    <p class="body" style="margin-bottom:10px">Qual opção de export é mais indicada quando o BI já consome <span class="hl">direto do MySQL</span> de produção?</p>
+    <div id="q2">
+      <div class="quiz-opt" data-ok="1"><span class="k">A</span> Sqoop export</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">B</span> CSV manual</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> Screenshot da query</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Nenhuma — sempre usar Spark</div>
+    </div>
+    <div class="quiz-fb" id="q2fb"></div>
+  </div>
+</div>`},
+
+/* ---------- PAUSA · LABS 9 e 10 ---------- */
+{kick:"Laboratório", title:"Mão na massa — Labs 9 e 10", badge:"lab", html:labBreakSet({
+  heading:"Labs 9 e 10 — Export e Spark",
+  time:"30 + 40 min", rotas:"cluster (Spark) ou sem admin (PySpark/DuckDB local)", prereq:"Lab 7 (Gold) concluído",
+  labs:[
+    {n:9,title:"Export — tirar a Gold do Hive",file:"labs/lab09 - export.md",goal:"Levar a gold_fraud_risk para fora do Hive pelos 3 caminhos vistos e escolher qual usar no dashboard."},
+    {n:10,title:"Spark SQL — queries interativas",file:"labs/lab10 - spark.md",goal:"Rodar as mesmas perguntas do Lab 8 agora em Spark e sentir a exploração interativa em memória."}]
+})},
+];
+slides.push(
+/* ---------- 10 ANATOMIA DO DASHBOARD ---------- */
+{kick:"Dashboard", title:"Anatomia de um bom dashboard", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O template de 4 seções</div>
+    <div class="card"><h3 class="blk" style="color:var(--exec)">1️⃣ KPIs no topo</h3>
+      <p class="body">3-4 números grandes: o que importa em 3 segundos de olhar.</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--tech)">2️⃣ Tendência temporal</h3>
+      <p class="body">Um gráfico de linha: "está melhorando ou piorando?"</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--gold)">3️⃣ Composição/segmento</h3>
+      <p class="body">Barras ou pizza: "onde está concentrado o problema?"</p></div>
+    <div class="card"><h3 class="blk" style="color:var(--aqua)">4️⃣ Detalhe navegável</h3>
+      <p class="body">Tabela com filtro: para quem quer investigar caso a caso.</p></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Erro comum: dashboard sem hierarquia</div>
+    <div class="fact"><div class="ft">15 gráficos do mesmo tamanho na tela = <span class="hl">zero prioridade visual</span>. O olho não sabe onde começar.</div></div>
+    <ul class="list check">
+      <li>KPI maior que gráfico secundário</li>
+      <li>Cor de alerta (vermelho/laranja) só para exceção real</li>
+      <li>Máximo 1 pergunta por gráfico</li>
+    </ul>
+    <p class="note">Regra prática: se você não consegue explicar o gráfico em 1 frase, ele está fazendo perguntas demais de uma vez.</p>
+  </div>
+</div>`},
+
+/* ---------- 11 INTERATIVIDADE ---------- */
+{kick:"Dashboard", title:"Filtros, drill-down e tooltips", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">3 níveis de interação</div>
+    <div class="card"><h3 class="blk">🎚️ Filtro</h3>
+      <p class="body">Selecionar segmento/período muda <span class="hl">todo</span> o dashboard de uma vez.</p></div>
+    <div class="card"><h3 class="blk">🔎 Drill-down</h3>
+      <p class="body">Clicar numa barra do agregado leva à <span class="hl">tabela detalhada</span> daquele grupo.</p></div>
+    <div class="card"><h3 class="blk">💬 Tooltip</h3>
+      <p class="body">Passar o mouse mostra o número exato sem poluir o gráfico.</p></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Onde isso vem do Gold layer</div>
+    <p class="body">O <kbd>GROUP BY segment</kbd> de ontem alimenta o filtro. O <kbd>customer_id</kbd> guardado na Silver alimenta o drill-down. <span class="hl">Nada disso funciona</span> se a camada de dados não preservou o nível de detalhe certo.</p>
+    <div class="fact"><div class="ft">Lição prática: pense na interatividade <span class="hl">antes</span> de desenhar a Gold layer, não depois.</div></div>
+  </div>
+</div>`},
+
+/* ---------- 12 FERRAMENTAS DE BI COMPARADAS ---------- */
+{kick:"Dashboard", title:"Qual ferramenta de BI usar", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Critério de escolha</div>
+    <p class="body">Para o curso, <span class="hl">Metabase</span> é o caminho mais rápido (Docker, sobe em minutos). Em produção institucional, considere o ecossistema já existente.</p>
+    <ul class="list t">
+      <li>Open-source e já conectado? → Superset/Metabase</li>
+      <li>Licença corporativa disponível? → Tableau/Power BI</li>
+      <li>Precisa embutir em outro sistema? → API do Superset</li>
+    </ul>
+  </div>
+  <div class="col">
+    <div class="col-label t">Comparação rápida</div>
+    <table class="cmp">
+      <tr><th>Ferramenta</th><th>Custo</th><th>Curva</th></tr>
+      <tr><td>Metabase</td><td>Grátis (self-host)</td><td>Muito baixa</td></tr>
+      <tr><td>Superset</td><td>Grátis (self-host)</td><td>Média</td></tr>
+      <tr><td>Tableau</td><td>Licença paga</td><td>Média</td></tr>
+      <tr><td>Power BI</td><td>Licença paga (MS)</td><td>Baixa p/ quem usa Excel</td></tr>
+    </table>
+    <p class="note">Todas conseguem consumir a mesma Gold layer — a escolha é institucional, não técnica.</p>
+  </div>
+</div>`},
+
+/* ---------- 13 DASHBOARD BUILDER ---------- */
+{kick:"Dashboard · Lab", title:"Monte seu dashboard", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Escolha os KPIs</div>
+    <div class="widget">
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="dbk" data-k="vol" checked style="accent-color:var(--tech)"> Volume de transações</label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="dbk" data-k="fraud" checked style="accent-color:var(--tech)"> Taxa de fraude</label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="dbk" data-k="ticket" style="accent-color:var(--tech)"> Ticket médio</label>
+        <label style="display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2);cursor:pointer">
+          <input type="checkbox" class="dbk" data-k="segment" style="accent-color:var(--tech)"> Clientes por segmento</label>
+      </div>
+    </div>
+    <p class="note">Isso é literalmente o slide de anatomia (10) virando protótipo.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">Prévia do dashboard</div>
+    <div class="dash-mock" id="dbMock"></div>
+  </div>
+</div>`},
+
+/* ---------- 14 ML PREVIEW OVERVIEW ---------- */
+{kick:"ML Preview", title:"De descrever para prever", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">A próxima pergunta natural</div>
+    <p class="body">Depois de descrever ("High-Risk tem 5% de fraude"), a pergunta óbvia é: <span class="hl">dá para prever, transação por transação, antes de aprovar?</span></p>
+    <div class="fact"><div class="ft">Isso é <span class="hl">classificação binária</span>: aprovar ou recusar, com base no histórico de fraude/não-fraude que já está na Gold layer.</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">O pipeline (visão de 30 mil pés)</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div class="node b"><div class="t">Features</div><div class="s">amount, segment, hora, tipo</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node g"><div class="t">Modelo (Spark MLlib)</div><div class="s">treina com is_fraud como rótulo</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node o"><div class="t">Predição</div><div class="s">probabilidade de fraude 0-100%</div></div>
+    </div>
+    <p class="note">Hoje é um preview conceitual — ML de verdade merece um curso à parte.</p>
+  </div>
+</div>`},
+
+/* ---------- 15 FEATURE IMPORTANCE ---------- */
+{kick:"ML Preview", title:"Quais variáveis o modelo mais usa", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Clique numa barra</div>
+    <div class="widget">
+      <div class="bar-row featbar" data-f="0"><span class="br-label">risk_score</span><div class="bar-track"><div class="bar-fill" data-w="88"></div></div><span class="bar-val">0.88</span></div>
+      <div class="bar-row featbar" data-f="1"><span class="br-label">segment</span><div class="bar-track"><div class="bar-fill" data-w="64"></div></div><span class="bar-val">0.64</span></div>
+      <div class="bar-row featbar" data-f="2"><span class="br-label">amount</span><div class="bar-track"><div class="bar-fill" data-w="41"></div></div><span class="bar-val">0.41</span></div>
+      <div class="bar-row featbar" data-f="3"><span class="br-label">transaction_type</span><div class="bar-track"><div class="bar-fill" data-w="27"></div></div><span class="bar-val">0.27</span></div>
+      <div class="bar-row featbar" data-f="4"><span class="br-label">hora do dia</span><div class="bar-track"><div class="bar-fill" data-w="15"></div></div><span class="bar-val">0.15</span></div>
+    </div>
+    ${SRC("Valores ilustrativos — importância real sai do modelo treinado nos seus dados")}
+  </div>
+  <div class="col">
+    <div class="col-label t">Por que isso importa</div>
+    <div class="fact" id="featDetail"><div class="ft">Clique numa variável ao lado para ver por que ela pesa no modelo.</div></div>
+    <p class="note" style="margin-top:10px">Feature importance não é só técnico — é o que você explica ao auditor perguntando <span class="hl">"por que o modelo recusou este cliente?"</span></p>
+  </div>
+</div>`},
+
+/* ---------- 16 DEPLOYMENT ---------- */
+{kick:"ML Preview", title:"Do notebook para produção", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O caminho até virar decisão real</div>
+    <ul class="list t">
+      <li>Modelo treinado e validado offline (Spark MLlib)</li>
+      <li>Exportado e servido via <span class="hl">API</span> que recebe a transação</li>
+      <li>API responde em <span class="hl">milissegundos</span> com a probabilidade</li>
+      <li>Sistema de pagamento decide: aprovar, recusar ou verificar</li>
+    </ul>
+    <div class="fact"><div class="ft">Modelo parado num notebook não gera valor — o deployment é o que fecha o ciclo do curso.</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">Fluxo</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div class="node b"><div class="t">Transação chega</div><div class="s">Pix, cartão, etc.</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node o"><div class="t">API do modelo</div><div class="s">calcula score em ms</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node g"><div class="t">Decisão automática</div><div class="s">aprova / recusa / verifica</div></div>
+      <div class="arrow" style="text-align:center">↓</div>
+      <div class="node a"><div class="t">Feedback loop</div><div class="s">resultado retreina o modelo</div></div>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 17 QUIZ 2 ---------- */
+{kick:"Checkpoint", title:"Quiz — Dashboard & ML", badge:"mix", html:`
+<div style="margin-bottom:16px">${iconRow([{i:'dash',label:'Dashboard · anatomia',color:VC.exec},{i:'brain',label:'ML · prever is_fraud',color:VC.purple}])}</div>
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Pergunta 3</div>
+    <p class="body" style="margin-bottom:10px">Num dashboard, qual elemento deve ocupar mais destaque visual?</p>
+    <div id="q3">
+      <div class="quiz-opt" data-ok="1"><span class="k">A</span> KPIs principais no topo</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">B</span> Todos os gráficos do mesmo tamanho</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">C</span> A tabela detalhada</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> O logo da empresa</div>
+    </div>
+    <div class="quiz-fb" id="q3fb"></div>
+  </div>
+  <div class="col">
+    <div class="col-label e">Pergunta 4</div>
+    <p class="body" style="margin-bottom:10px">Um modelo de fraude treinado só é útil de verdade quando...</p>
+    <div id="q4">
+      <div class="quiz-opt" data-ok="0"><span class="k">A</span> Tem 100% de acurácia</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">B</span> Roda num notebook do cientista de dados</div>
+      <div class="quiz-opt" data-ok="1"><span class="k">C</span> Está em produção, decidindo em tempo real</div>
+      <div class="quiz-opt" data-ok="0"><span class="k">D</span> Usa todas as colunas disponíveis</div>
+    </div>
+    <div class="quiz-fb" id="q4fb"></div>
+  </div>
+</div>`},
+
+/* ---------- PAUSA · LABS 11 e 12 ---------- */
+{kick:"Laboratório", title:"Mão na massa — Labs 11 e 12", badge:"lab", html:labBreakSet({
+  heading:"Labs 11 e 12 — Dashboard e ML",
+  time:"45 + 40 min", rotas:"Metabase/Superset (BI) + Python (ML)", prereq:"Labs 9 e 10 concluídos",
+  labs:[
+    {n:11,title:"Dashboard — visualizar para decidir",file:"labs/lab11 - dashboard.md",goal:"Montar um painel com os 4 blocos da Anatomia: KPIs, tendência, composição e detalhe."},
+    {n:12,title:"ML Preview — modelo de fraude",file:"labs/lab12 - fraud_detection.md",goal:"Treinar uma Regressão Logística que prevê is_fraud e ler a importância das variáveis — fechando o pipeline do curso."}]
+})},
+);
+slides.push(
+/* ---------- 18 STORYTELLING ESTRUTURA ---------- */
+{kick:"Storytelling", title:"15-20 minutos que decidem o projeto", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Clique em cada etapa</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn stbtn on" data-s="0" style="text-align:left">1️⃣ Contexto — 2 min</button>
+      <button class="btn stbtn" data-s="1" style="text-align:left">2️⃣ Arquitetura — 3 min</button>
+      <button class="btn stbtn" data-s="2" style="text-align:left">3️⃣ Análises — 5 min</button>
+      <button class="btn stbtn" data-s="3" style="text-align:left">4️⃣ Insights — 5 min</button>
+      <button class="btn stbtn" data-s="4" style="text-align:left">5️⃣ Ações — 3 min</button>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-label t">O que entra em cada bloco</div>
+    <div class="widget" id="stBox" style="min-height:200px">
+      <div class="wlabel" id="stTitle">1 · Contexto (2 min)</div>
+      <p class="body" id="stBody">Por que este projeto existe: o problema de negócio em 1-2 frases, sem jargão técnico. "Fraude custava X por mês, decisão levava Y dias."</p>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 19 DICAS DE APRESENTAÇÃO ---------- */
+{kick:"Storytelling", title:"O que funciona (e o que afunda a apresentação)", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">✓ Faça</div>
+    <ul class="list check">
+      <li>Abra com o <span class="hl">número que dói</span> (custo da fraude, tempo perdido)</li>
+      <li>Um gráfico, uma mensagem — nunca dois insights no mesmo slide</li>
+      <li>Fale em <span class="hl">linguagem de negócio</span>: "economiza R$X", não "reduzimos RMSE"</li>
+      <li>Termine com a <span class="hl">próxima ação concreta</span>, não "obrigado"</li>
+    </ul>
+  </div>
+  <div class="col">
+    <div class="col-label e" style="color:var(--danger);border-color:rgba(229,72,77,.4)">✕ Evite</div>
+    <ul class="list cross">
+      <li>Mostrar código ou HQL na apresentação executiva</li>
+      <li>Slide com 6 gráficos "porque deu tempo de fazer"</li>
+      <li>Jargão sem tradução ("vetorização", "bucketing") pro público leigo</li>
+      <li>Terminar sem dizer <span class="hl">quem faz o quê a seguir</span></li>
+    </ul>
+  </div>
+</div>`},
+
+/* ---------- 20 AVALIAÇÃO & CERTIFICAÇÃO ---------- */
+{kick:"Avaliação", title:"Os 5 critérios — clique para ver o rubric", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">20% cada critério</div>
+    <div class="tool-grid">
+      <div class="card crit-card on" data-c="0"><h3 class="blk">🏗️ Arquitetura</h3></div>
+      <div class="card crit-card" data-c="1"><h3 class="blk">✅ Dados</h3></div>
+      <div class="card crit-card" data-c="2"><h3 class="blk">🔍 Análises</h3></div>
+      <div class="card crit-card" data-c="3"><h3 class="blk">📊 BI</h3></div>
+      <div class="card crit-card" data-c="4"><h3 class="blk">🎤 Apresentação</h3></div>
+    </div>
+    <p class="note">Bônus (+5% cada): Spark ML aplicado, pipeline Kafka, camada de segurança extra.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">O que é avaliado</div>
+    <div class="widget" id="critBox" style="min-height:170px">
+      <div class="wlabel" id="critTitle">Arquitetura & Infraestrutura</div>
+      <ul class="list check" id="critList">
+        <li>HDFS com replicação 3× validada</li>
+        <li>Sqoop import sem erros</li>
+        <li>Bronze/Silver/Gold organizados</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 21 CASO — dashboard sem decisão ---------- */
+{kick:"Caso", title:"O dashboard bonito que ninguém usa", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <span class="case-tag fail">Padrão da indústria</span>
+    <div class="case-hero fail">
+      <div class="ch-t">"Vanity dashboard"</div>
+      <div class="ch-s">Um padrão bem documentado no setor: dashboards <span class="hl">visualmente impressionantes</span> que nunca mudam uma decisão, porque ninguém sabe qual ação tomar ao olhar para eles.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">🎨</span><div class="li-tx">Muito investimento em <b>design</b>, pouco em "o que fazer quando o número está ruim".</div></div>
+    <div class="lesson"><span class="li-ico">🚪</span><div class="li-tx">Sem dono, sem gatilho de ação, o dashboard vira <b>enfeite</b> — visitado uma vez e esquecido.</div></div>
+    <span class="upd">[ATUALIZAR] troque por um exemplo real de dashboard subutilizado que você conhece</span>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho com o DIA 3</div>
+    <ul class="list t">
+      <li>É exatamente o que o framework de “Do número à decisão” evita: <span class="hl">Finding → Insight → Ação</span></li>
+      <li>Todo painel devia responder: "e se este número mudar, quem faz o quê?"</li>
+      <li>Dono do dashboard = pré-requisito, não detalhe</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Que painel da sua organização tem dono claro e gatilho de ação?</li>
+        <li>Como medir se um dashboard está sendo usado de verdade?</li>
+        <li>Vale o esforço de design se a ação não está definida?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 22 CASO LOCAL — painel de indicadores ---------- */
+{kick:"Caso · Ceará", title:"Painel de indicadores no setor público", badge:"mix", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Âncora sólida (fato estável)</div>
+    <div class="case-hero win">
+      <div class="ch-t">Gestão orientada a indicadores</div>
+      <div class="ch-s">Órgãos públicos cada vez mais adotam <span class="hl">painéis de acompanhamento</span> para metas, prazos processuais e indicadores de saúde/fiscais.</div>
+    </div>
+    <div class="lesson"><span class="li-ico">📌</span><div class="li-tx">Um painel só sustenta decisão se tiver <b>dono institucional</b> e reunião periódica que o usa.</div></div>
+    <div class="lesson"><span class="li-ico">🔄</span><div class="li-tx">A Gold layer de ontem (indicadores) é literalmente a fonte desse painel.</div></div>
+    <span class="upd">[PREENCHER] um painel real em uso na sua organização</span>
+  </div>
+  <div class="col">
+    <div class="col-label t">Gancho técnico com hoje</div>
+    <ul class="list t">
+      <li>Gold layer → export → Metabase/Superset (de “Tirar os dados do Hive” ao BI)</li>
+      <li>KPI no topo = indicador que a gestão realmente acompanha</li>
+      <li>Storytelling (em “15-20 minutos que decidem o projeto”) = como apresentar isso à direção</li>
+    </ul>
+    <div class="discuss">
+      <div class="dq">Perguntas para a turma</div>
+      <ul>
+        <li>Que decisão institucional dependeria de um painel assim?</li>
+        <li>Quem seria o "dono" natural desse painel na sua organização?</li>
+        <li>Com que frequência ele precisaria ser revisado?</li>
+      </ul>
+    </div>
+  </div>
+</div>`},
+
+/* ---------- 23 RESUMO EXECUTIVO — JORNADA 3 DIAS ---------- */
+{kick:"Fechamento", title:"A jornada completa: 3 dias, 1 pipeline", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O que você construiu</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div class="node b"><div class="t">DIA 1 — Fundamentos</div><div class="s">HDFS + Sqoop: dados seguros e ingeridos</div></div>
+      <div class="node g"><div class="t">DIA 2 — Transformação</div><div class="s">Hive: Bronze → Silver → Gold</div></div>
+      <div class="node o"><div class="t">DIA 3 — Ação</div><div class="s">Spark + BI + ML: decisão de verdade</div></div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-label t">O ROI do caso-guia</div>
+    <div class="stat-row">
+      <div class="stat g"><div class="n">10×</div><div class="l">mais rápido para gerar insight</div></div>
+      <div class="stat b"><div class="n">-60%</div><div class="l">custo de processamento estimado</div></div>
+    </div>
+    <div class="stat a"><div class="n">R$ 50M+</div><div class="l">oportunidade identificada no caso-guia</div></div>
+    <p class="note">Números do cenário fictício do curso — ao aplicar em dados reais, recalcule com seus próprios volumes.</p>
+  </div>
+</div>`},
+
+/* ---------- 24 ROADMAP PRÓXIMOS PASSOS ---------- */
+{kick:"Fechamento", title:"Depois do curso: para onde ir", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Aprofundar o técnico</div>
+    <ul class="list t">
+      <li>Spark Structured Streaming — fraude em tempo real de verdade</li>
+      <li>Apache Kafka — ingestão contínua, não só batch</li>
+      <li>Airflow — orquestrar o pipeline Bronze→Silver→Gold sozinho</li>
+      <li>MLflow — versionar e monitorar modelos em produção</li>
+    </ul>
+  </div>
+  <div class="col">
+    <div class="col-label t">Aprofundar o institucional</div>
+    <ul class="list check">
+      <li>Levar 1 caso real da sua organização pelo pipeline completo</li>
+      <li>Formalizar governança de dados (LGPD) para o projeto</li>
+      <li>Definir dono e cadência do primeiro dashboard oficial</li>
+      <li>Repetir a apresentação de hoje para a liderança</li>
+    </ul>
+    <p class="note">O material do curso (labs, cheatsheets, datasets) fica disponível para consulta contínua.</p>
+  </div>
+</div>`},
+
+/* ==========================================================
+   BLOCO BÔNUS — Big Data na Nuvem (AWS · GCP · Azure)
+   ========================================================== */
+
+/* ---------- CLOUD 1 · Panorama ---------- */
+{kick:"Bônus · Nuvem", title:"Por que Big Data migra para a nuvem", badge:"exec", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">O que muda</div>
+    <p class="body">Tudo que você montou nos 3 dias — HDFS, Hive, Spark — tem um <span class="hl">equivalente gerenciado</span> nas nuvens. Você para de administrar servidor e passa a <span class="hl">pagar pelo que usa</span>.</p>
+    <ul class="list check">
+      <li>Sem servidor para atualizar ou corrigir de madrugada</li>
+      <li>Escala automática — de 1 GB a 1 PB sem trocar de ferramenta</li>
+      <li>Paga por consulta/armazenamento, não por servidor ocioso</li>
+    </ul>
+    <div class="fact"><div class="ft">O trade-off: você troca controle total por <span class="hl">velocidade de entrega</span> — depende do que a instituição precisa.</div></div>
+  </div>
+  <div class="col">
+    <div class="col-label t">O mesmo pipeline, hospedado</div>
+    <div class="flow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div class="node b"><div class="t">HDFS</div><div class="s">→ Object Storage (S3 / GCS / ADLS)</div></div>
+      <div class="node g"><div class="t">Hive</div><div class="s">→ SQL serverless (Athena / BigQuery / Synapse)</div></div>
+      <div class="node o"><div class="t">Spark on-prem</div><div class="s">→ Spark gerenciado (EMR / Dataproc / HDInsight)</div></div>
+      <div class="node a"><div class="t">Sqoop</div><div class="s">→ serviços de ingestão gerenciados</div></div>
+    </div>
+    <p class="note">Nos próximos 3 slides: mapeamento completo + simulação passo a passo nas 3 nuvens.</p>
+  </div>
+</div>`},
+
+/* ---------- CLOUD 2 · Mapeamento de arquitetura ---------- */
+{kick:"Bônus · Nuvem", title:"De on-premises para AWS, GCP e Azure", badge:"tech", html:`
+<div style="display:flex;flex-direction:column;gap:12px;flex:1">
+  <p class="body full">A mesma peça do curso, com o nome que ela ganha em cada nuvem. Guarde esta tabela — é o "tradutor" entre o que você aprendeu e o que vai encontrar no mercado.</p>
+  <table class="cmp">
+    <tr><th>Camada (curso)</th><th>🟧 AWS</th><th>🔵 GCP</th><th>🔷 Azure</th></tr>
+    <tr><td>Armazenamento (HDFS)</td><td>S3</td><td>Cloud Storage (GCS)</td><td>ADLS Gen2</td></tr>
+    <tr><td>SQL sobre arquivo (Hive)</td><td>Athena</td><td>BigQuery</td><td>Synapse (SQL serverless)</td></tr>
+    <tr><td>Cluster Spark gerenciado</td><td>EMR</td><td>Dataproc</td><td>HDInsight</td></tr>
+    <tr><td>Ingestão (Sqoop)</td><td>DMS / Glue</td><td>Dataflow / Transfer Service</td><td>Data Factory</td></tr>
+    <tr><td>Orquestração (o "cron" do pipeline)</td><td>MWAA (Airflow)</td><td>Cloud Composer (Airflow)</td><td>Data Factory Pipelines</td></tr>
+    <tr><td>BI / Dashboard</td><td>QuickSight</td><td>Looker Studio</td><td>Power BI</td></tr>
+  </table>
+  <div class="fact"><div class="ft">Detalhe bonito: a sintaxe do <span class="hl">Athena (AWS)</span> é compatível com Hive — o <kbd>CREATE EXTERNAL TABLE</kbd> que você aprendeu no DIA 2 funciona quase sem alterar.</div></div>
+  ${SRC("Nomes e escopo de serviços mudam com frequência — confirme no site de cada provedor antes de apresentar")}
+</div>`},
+
+/* ---------- CLOUD 3 · Simulador Storage ---------- */
+{kick:"Bônus · Nuvem · Lab", title:"Simulador — subir dados para a nuvem", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Escolha a nuvem</div>
+    <div class="widget">
+      <div class="term-cmds">
+        <button class="btn on cloudbtn" data-c="aws">🟧 AWS</button>
+        <button class="btn cloudbtn" data-c="gcp">🔵 GCP</button>
+        <button class="btn cloudbtn" data-c="azure">🔷 Azure</button>
+      </div>
+      <div style="margin-top:14px" id="cloudDesc">
+        <div class="fact"><div class="ft"><span class="hl">S3</span> é o object storage da AWS — o equivalente direto do HDFS, sem precisar gerenciar réplica ou bloco.</div></div>
+      </div>
+    </div>
+    <p class="note">Mesmo raciocínio do Lab 1 (HDFS) — criar espaço, depois subir o arquivo.</p>
+  </div>
+  <div class="col">
+    <div class="col-label t">CLI equivalente</div>
+    <pre class="code" id="cloudCode">aws s3 mb s3://bigdata-curso-2026
+
+aws s3 cp transactions_synthetic.csv \\
+  s3://bigdata-curso-2026/raw/transactions/
+
+aws s3 ls s3://bigdata-curso-2026/raw/ --recursive</pre>
+  </div>
+</div>`},
+
+/* ---------- CLOUD 4 · Simulador Query ---------- */
+{kick:"Bônus · Nuvem · Lab", title:"Simulador — consultar sem servidor", badge:"tech", html:`
+<div class="cols">
+  <div class="col">
+    <div class="col-label e">Mesma nuvem, agora a query</div>
+    <div class="widget">
+      <div class="term-cmds">
+        <button class="btn on cloudbtn2" data-c="aws">🟧 Athena</button>
+        <button class="btn cloudbtn2" data-c="gcp">🔵 BigQuery</button>
+        <button class="btn cloudbtn2" data-c="azure">🔷 Synapse</button>
+      </div>
+      <div style="margin-top:14px" id="cloudDesc2">
+        <div class="fact"><div class="ft">Athena roda SQL <span class="hl">direto sobre o S3</span>, sem precisar subir nenhum cluster — você paga por dado escaneado, não por hora de servidor.</div></div>
+      </div>
+    </div>
+    ${SRC("Modelo de precificação (por consulta, por segundo, etc.) varia e muda — confirme antes de citar valor")}
+  </div>
+  <div class="col">
+    <div class="col-label t">SQL equivalente ao Hive de ontem</div>
+    <pre class="code" id="cloudCode2"><span class="cm">-- Athena: sintaxe quase idêntica ao Hive do DIA 2</span>
+<span class="kw">CREATE EXTERNAL TABLE</span> transactions (
+  transaction_id <span class="nm">int</span>, customer_id <span class="nm">int</span>,
+  amount <span class="nm">float</span>, is_fraud <span class="nm">boolean</span>
+)
+<span class="kw">ROW FORMAT DELIMITED FIELDS TERMINATED BY</span> <span class="st">','</span>
+<span class="kw">LOCATION</span> <span class="st">'s3://bigdata-curso-2026/raw/transactions/'</span>;
+
+<span class="kw">SELECT</span> transaction_type, <span class="fn">COUNT</span>(*)
+<span class="kw">FROM</span> transactions <span class="kw">WHERE</span> is_fraud <span class="kw">GROUP BY</span> <span class="nm">1</span>;</pre>
+  </div>
+</div>`},
+
+/* ---------- 25 Q&A E FECHAMENTO ---------- */
+{kick:"Encerramento", title:"Perguntas & discussão de casos reais", badge:"mix", html:`
+<div style="display:flex;flex-direction:column;gap:14px;flex:1;justify-content:center;align-items:center;text-align:center">
+
+  <h3 class="blk" style="font-size:24px">🎓 Obrigado pelos 3 dias!</h3>
+  <p class="body" style="max-width:560px">De blocos e réplicas no HDFS a um dashboard defendido em 15 minutos — vocês percorreram o pipeline inteiro de Big Data.</p>
+  <div class="stat-row" style="max-width:480px;width:100%">
+    <div class="stat b"><div class="n">24h</div><div class="l">de conteúdo + labs</div></div>
+    <div class="stat g"><div class="n">3</div><div class="l">camadas de dados dominadas</div></div>
+  </div>
+  <div class="discuss" style="max-width:560px;text-align:left">
+    <div class="dq">Para abrir a discussão final</div>
+    <ul>
+      <li>Qual parte do pipeline você aplicaria primeiro no seu trabalho?</li>
+      <li>Que dado da sua organização mereceria virar um Gold layer?</li>
+      <li>O que faltou — o que vocês querem no próximo módulo?</li>
+    </ul>
+  </div>
+  <p class="note">Feedback do curso, dúvidas técnicas e casos reais — o espaço agora é de vocês.</p>
+</div>`}
+);
+
+/* =========================================================================
+   RENDER + NAVEGAÇÃO
+   ========================================================================= */
+let cur=0;
+const wrap=document.getElementById('slideWrap');
+const tocGrid=document.getElementById('tocGrid');
+
+function badgeLabel(b){return b==='exec'?'EXEC':b==='tech'?'TECH':b==='lab'?'LAB':'MIX';}
+
+function buildSlides(){
+  slides.forEach((s,i)=>{
+    const el=document.createElement('section');
+    el.className='slide'; el.id='slide'+i;
+    el.innerHTML=`<div class="sfit">${s.cover?'':`
+      <div class="shead">
+        <div class="badge ${s.badge}">${String(i+1).padStart(2,'0')}</div>
+        <div><div class="kick">${s.kick} · ${badgeLabel(s.badge)}</div><h2>${s.title}</h2></div>
+      </div>`}${s.html}</div>`;
+    wrap.appendChild(el);
+
+    const t=document.createElement('div');
+    t.className='toc-item';
+    t.innerHTML=`<span class="tn">${String(i+1).padStart(2,'0')}</span><span class="tt">${s.title}</span>`;
+    t.onclick=()=>{show(i);toggleToc();};
+    tocGrid.appendChild(t);
+  });
+}
+
+function show(i){
+  document.getElementById('slide'+cur)?.classList.remove('active');
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  document.getElementById('slide'+cur).classList.add('active');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('counter').innerHTML=`<b>${cur+1}</b> / ${slides.length}`;
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+  wireWidgets();
+}
+function go(d){show(cur+d);}
+function toggleToc(){document.getElementById('toc').classList.toggle('open');}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')go(1);
+  if(e.key==='ArrowLeft')go(-1);
+  if(e.key==='Escape')document.getElementById('toc').classList.remove('open');
+});
+
+wrap.addEventListener('click',e=>{
+  const b=e.target.closest('.os-btn');
+  if(!b)return;
+  const group=b.closest('.oswrap')||b.parentElement;
+  group.querySelectorAll('.os-btn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  const pane=group.parentElement.querySelectorAll('.os-pane');
+  pane.forEach(p=>p.classList.toggle('active',p.dataset.os===b.dataset.os));
+});
+
+/* =========================================================================
+   WIDGETS DO DIA 3 — seletores globais por classe (não dependem de índice)
+   ========================================================================= */
+function wireWidgets(){
+  // ---- Export 3-way toggle ----
+  const expData={
+    sqoop:{d:'Reaproveita o Sqoop de ontem, agora de <span class="hl">HDFS → MySQL</span>. Ideal quando o BI já lê direto do banco relacional.',
+      code:`sqoop export \\\n  --connect jdbc:mysql://localhost/bi_db \\\n  --table gold_fraud_risk \\\n  --export-dir /user/bigdata/gold/fraud_risk \\\n  -m 4`,
+      note:'Recomendado quando a ferramenta de BI já está conectada ao MySQL de produção.'},
+    csv:{d:'O caminho mais simples: <span class="hl">um arquivo</span> que qualquer ferramenta abre — inclusive Excel.',
+      code:`hive -e "SELECT * FROM gold_fraud_risk" \\\n  | sed 's/[\\t]/,/g' > fraud_risk.csv`,
+      note:'Bom para prototipagem rápida ou relatório pontual — não para pipeline recorrente.'},
+    spark:{d:'<span class="hl">Sem passar por disco intermediário</span>: Spark lê o Parquet e grava direto via JDBC.',
+      code:`df = spark.read.parquet("/gold/fraud_risk")\ndf.write.jdbc(\n  url="jdbc:mysql://localhost/bi_db",\n  table="fraud_risk",\n  mode="overwrite")`,
+      note:'Recomendado quando o mesmo job já está processando em Spark — evita um passo extra.'}
+  };
+  document.querySelectorAll('.expbtn').forEach(btn=>{
+    btn.onclick=()=>{
+      document.querySelectorAll('.expbtn').forEach(x=>x.classList.remove('on'));
+      btn.classList.add('on');
+      const d=expData[btn.dataset.e];
+      document.getElementById('expDesc').innerHTML=`<div class="ft">${d.d}</div>`;
+      document.getElementById('expCode').textContent=d.code;
+      document.getElementById('expNote').textContent=d.note;
+    };
+  });
+
+  // ---- Cloud: simulador de storage (S3 / GCS / ADLS) ----
+  const cloudData={
+    aws:{d:'<span class="hl">S3</span> é o object storage da AWS — o equivalente direto do HDFS, sem precisar gerenciar réplica ou bloco.',
+      code:`aws s3 mb s3://bigdata-curso-2026
+
+aws s3 cp transactions_synthetic.csv \\\n  s3://bigdata-curso-2026/raw/transactions/
+
+aws s3 ls s3://bigdata-curso-2026/raw/ --recursive`},
+    gcp:{d:'<span class="hl">Cloud Storage (GCS)</span> é o equivalente no Google — buckets globais, sem conceito de região única obrigatória.',
+      code:`gcloud storage buckets create gs://bigdata-curso-2026 \\\n  --location=US
+
+gcloud storage cp transactions_synthetic.csv \\\n  gs://bigdata-curso-2026/raw/transactions/
+
+gcloud storage ls gs://bigdata-curso-2026/raw/ --recursive`},
+    azure:{d:'<span class="hl">ADLS Gen2</span> é o Data Lake da Azure — Blob Storage com um verniz hierárquico de pastas, pensado para Big Data.',
+      code:`az storage container create \\\n  --name raw --account-name bigdatacurso2026
+
+az storage blob upload \\\n  --container-name raw --file transactions_synthetic.csv \\\n  --name transactions/transactions_synthetic.csv \\\n  --account-name bigdatacurso2026
+
+az storage blob list --container-name raw \\\n  --account-name bigdatacurso2026 --output table`}
+  };
+  document.querySelectorAll('.cloudbtn').forEach(btn=>{
+    btn.onclick=()=>{
+      document.querySelectorAll('.cloudbtn').forEach(x=>x.classList.remove('on'));
+      btn.classList.add('on');
+      const d=cloudData[btn.dataset.c];
+      document.getElementById('cloudDesc').innerHTML=`<div class="ft">${d.d}</div>`;
+      document.getElementById('cloudCode').textContent=d.code;
+    };
+  });
+
+  // ---- Cloud: simulador de query (Athena / BigQuery / Synapse) ----
+  const cloudData2={
+    aws:{d:'Athena roda SQL <span class="hl">direto sobre o S3</span>, sem precisar subir nenhum cluster — você paga por dado escaneado, não por hora de servidor.',
+      code:`<span class="cm">-- Athena: sintaxe quase idêntica ao Hive do DIA 2</span>\n<span class="kw">CREATE EXTERNAL TABLE</span> transactions (\n  transaction_id <span class="nm">int</span>, customer_id <span class="nm">int</span>,\n  amount <span class="nm">float</span>, is_fraud <span class="nm">boolean</span>\n)\n<span class="kw">ROW FORMAT DELIMITED FIELDS TERMINATED BY</span> <span class="st">','</span>\n<span class="kw">LOCATION</span> <span class="st">'s3://bigdata-curso-2026/raw/transactions/'</span>;\n\n<span class="kw">SELECT</span> transaction_type, <span class="fn">COUNT</span>(*)\n<span class="kw">FROM</span> transactions <span class="kw">WHERE</span> is_fraud <span class="kw">GROUP BY</span> <span class="nm">1</span>;`},
+    gcp:{d:'BigQuery é <span class="hl">serverless por natureza</span> — carrega o dado (ou lê externo) e distribui a query automaticamente entre milhares de nós.',
+      code:`<span class="cm">-- BigQuery: tabela externa sobre o GCS</span>\n<span class="kw">CREATE EXTERNAL TABLE</span> curso.transactions\n<span class="kw">OPTIONS</span> (\n  format = <span class="st">'CSV'</span>,\n  uris = [<span class="st">'gs://bigdata-curso-2026/raw/transactions/*'</span>]\n);\n\n<span class="kw">SELECT</span> transaction_type, <span class="fn">COUNT</span>(*)\n<span class="kw">FROM</span> curso.transactions <span class="kw">WHERE</span> is_fraud <span class="kw">GROUP BY</span> <span class="nm">1</span>;`},
+    azure:{d:'O SQL Pool Serverless do Synapse consulta o ADLS com <span class="hl">T-SQL</span> — familiar para quem já usa SQL Server.',
+      code:`<span class="cm">-- Synapse SQL Serverless</span>\n<span class="kw">SELECT</span> transaction_type, <span class="fn">COUNT</span>(*) <span class="kw">AS</span> total\n<span class="kw">FROM</span> <span class="fn">OPENROWSET</span>(\n  <span class="kw">BULK</span> <span class="st">'https://bigdatacurso2026.dfs.core.windows.net/raw/transactions/*.csv'</span>,\n  <span class="kw">FORMAT</span> = <span class="st">'CSV'</span>, <span class="kw">PARSER_VERSION</span>=<span class="st">'2.0'</span>\n) <span class="kw">AS</span> t\n<span class="kw">WHERE</span> is_fraud = <span class="nm">1</span>\n<span class="kw">GROUP BY</span> transaction_type;`}
+  };
+  document.querySelectorAll('.cloudbtn2').forEach(btn=>{
+    btn.onclick=()=>{
+      document.querySelectorAll('.cloudbtn2').forEach(x=>x.classList.remove('on'));
+      btn.classList.add('on');
+      const d=cloudData2[btn.dataset.c];
+      document.getElementById('cloudDesc2').innerHTML=`<div class="ft">${d.d}</div>`;
+      document.getElementById('cloudCode2').innerHTML=d.code;
+    };
+  });
+
+  // ---- Terminal Spark SQL ----
+  const out=document.getElementById('termOut3');
+  if(out){
+    const responses={
+      read:`<div><span class="pr">&gt;&gt;&gt;</span> <span class="out">df = spark.read.parquet("/gold/fraud_risk")</span></div>
+<div class="dim">DataFrame carregado — particionado entre os executors</div>`,
+      view:`<div><span class="pr">&gt;&gt;&gt;</span> <span class="out">df.createOrReplaceTempView("gold_fraud_risk")</span></div>
+<div class="dim">agora "gold_fraud_risk" pode ser usado em spark.sql()</div>`,
+      sql:`<div><span class="pr">&gt;&gt;&gt;</span> <span class="out">spark.sql("SELECT segment, COUNT(*) FROM gold_fraud_risk GROUP BY segment").show()</span></div>
+<div class="out">+----------+-----+</div>
+<div class="out">|  segment |  qtd|</div>
+<div class="out">+----------+-----+</div>
+<div class="out">|  Premium |  850|</div>
+<div class="out">| Standard |  420|</div>
+<div class="out">|High-Risk |  360|</div>
+<div class="out">+----------+-----+</div>`,
+      cache:`<div><span class="pr">&gt;&gt;&gt;</span> <span class="out">df.cache()</span></div>
+<div class="dim">próximas queries neste DataFrame não voltam ao disco</div>`,
+      clear:`<span class="dim">Clique em um comando abaixo ↓</span>`
+    };
+    document.querySelectorAll('[data-cmd]').forEach(b=>{
+      if(!responses[b.dataset.cmd])return;
+      b.onclick=()=>{ out.innerHTML=responses[b.dataset.cmd]; out.scrollTop=out.scrollHeight; };
+    });
+  }
+
+  // ---- Quizzes ----
+  function wireQuiz(qid,fbid,okMsg,noMsg){
+    const box=document.getElementById(qid); if(!box)return;
+    const fb=document.getElementById(fbid);
+    box.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.onclick=()=>{
+        if(box.dataset.done)return;
+        box.dataset.done='1';
+        const ok=opt.dataset.ok==='1';
+        opt.classList.add(ok?'correct':'wrong');
+        if(!ok){ box.querySelector('[data-ok="1"]').classList.add('correct'); }
+        fb.className='quiz-fb show '+(ok?'ok':'no');
+        fb.innerHTML=ok?okMsg:noMsg;
+      };
+    });
+  }
+  wireQuiz('q1','q1fb','✓ Isso. Memória entre operações é o que elimina idas e vindas ao disco.',
+    '✕ O ganho vem de manter dados em memória entre etapas, evitando releitura de disco.');
+  wireQuiz('q2','q2fb','✓ Sqoop export é feito exatamente para HDFS → banco relacional.',
+    '✕ Sqoop export é o caminho certo quando o destino é um banco relacional já em uso pelo BI.');
+  wireQuiz('q3','q3fb','✓ KPIs no topo — é o que o olho vê primeiro, e deve ser o mais importante.',
+    '✕ Os KPIs principais merecem o maior destaque visual — o resto é apoio.');
+  wireQuiz('q4','q4fb','✓ Um modelo só gera valor quando decide algo em produção, não parado num notebook.',
+    '✕ Acurácia e notebook não bastam — o valor nasce quando o modelo decide algo em tempo real.');
+
+  // ---- Dashboard builder mockup ----
+  const dbMock=document.getElementById('dbMock');
+  if(dbMock){
+    const tiles={
+      vol:{n:'100k',l:'transações processadas'},
+      fraud:{n:'1,83%',l:'taxa de fraude'},
+      ticket:{n:'R$ 183,79',l:'ticket médio'},
+      segment:{n:'3',l:'segmentos de cliente'}
+    };
+    const render=()=>{
+      const active=[...document.querySelectorAll('.dbk')].filter(c=>c.checked).map(c=>c.dataset.k);
+      if(active.length===0){ dbMock.innerHTML='<div class="dash-empty" style="grid-column:1/-1">Marque ao menos um KPI</div>'; return; }
+      dbMock.innerHTML=active.map(k=>`<div class="dash-tile"><div class="dt-n">${tiles[k].n}</div><div class="dt-l">${tiles[k].l}</div></div>`).join('');
+    };
+    document.querySelectorAll('.dbk').forEach(c=>c.onchange=render);
+    render();
+  }
+
+  // ---- Feature importance bars ----
+  const featData=[
+    'risk_score é literalmente o campo que o dataset já traz calculado — o modelo aprende a confiar nele mais que em qualquer outro.',
+    'segment carrega histórico acumulado (High-Risk teve 5% de fraude vs 0,5% em Premium) — forte poder preditivo.',
+    'amount importa porque valores muito altos ou atípicos para aquele cliente aumentam o risco.',
+    'transaction_type ajuda porque saques/transferências historicamente concentram mais fraude que compras.',
+    'hora do dia pesa menos aqui, mas em cenários reais horários atípicos (madrugada) costumam ser sinal relevante.'
+  ];
+  const bars=document.querySelectorAll('.featbar');
+  if(bars.length){
+    // anima largura das barras na entrada
+    bars.forEach(row=>{
+      const fill=row.querySelector('.bar-fill');
+      const w=fill.dataset.w;
+      requestAnimationFrame(()=>{ fill.style.width=w+'%'; });
+      row.onclick=()=>{
+        bars.forEach(x=>x.classList.remove('on'));
+        row.classList.add('on');
+        document.getElementById('featDetail').innerHTML=`<div class="ft">💡 ${featData[+row.dataset.f]}</div>`;
+      };
+    });
+  }
+
+  // ---- Storytelling timeline ----
+  const stData=[
+    {t:'1 · Contexto (2 min)', b:'Por que este projeto existe: o problema de negócio em 1-2 frases, sem jargão técnico. "Fraude custava X por mês, decisão levava Y dias."'},
+    {t:'2 · Arquitetura (3 min)', b:'Uma imagem só: HDFS → Hive → Spark → BI. Sem entrar em código — é para dar confiança de que existe engenharia séria por trás.'},
+    {t:'3 · Análises (5 min)', b:'As 5 perguntas de EDA do DIA 2, resumidas em 2-3 gráficos. Mostre o achado, não a query.'},
+    {t:'4 · Insights (5 min)', b:'Aqui entra o framework Finding → Insight: "por que isso importa para o negócio", não só "o que encontramos".'},
+    {t:'5 · Ações (3 min)', b:'Termine com 2-3 recomendações concretas e quem é responsável por cada uma. É o slide que as pessoas lembram.'}
+  ];
+  document.querySelectorAll('.stbtn').forEach(btn=>{
+    btn.onclick=()=>{
+      document.querySelectorAll('.stbtn').forEach(x=>x.classList.remove('on'));
+      btn.classList.add('on');
+      const d=stData[+btn.dataset.s];
+      document.getElementById('stTitle').textContent=d.t;
+      document.getElementById('stBody').textContent=d.b;
+    };
+  });
+
+  // ---- Critérios de avaliação ----
+  const critData=[
+    {t:'Arquitetura & Infraestrutura', li:['HDFS com replicação 3× validada','Sqoop import sem erros','Bronze/Silver/Gold organizados']},
+    {t:'Qualidade & Integridade de Dados', li:['Tipos e ranges validados','Sem duplicatas nem nulos ocultos','Schema documentado']},
+    {t:'Análises & Insights', li:['5+ queries EDA executadas','Achados traduzidos em insight de negócio','Correlações e anomalias documentadas']},
+    {t:'Visualização & BI', li:['Dashboard com 4+ visualizações','Filtro e drill-down funcionando','Métricas alinhadas ao negócio']},
+    {t:'Apresentação & Storytelling', li:['Estrutura de 15-20 min seguida','ROI quantificado','Recomendações com dono definido']}
+  ];
+  document.querySelectorAll('.crit-card').forEach(card=>{
+    card.onclick=()=>{
+      document.querySelectorAll('.crit-card').forEach(x=>x.classList.remove('on'));
+      card.classList.add('on');
+      const d=critData[+card.dataset.c];
+      document.getElementById('critTitle').textContent=d.t;
+      document.getElementById('critList').innerHTML=d.li.map(x=>`<li>${x}</li>`).join('');
+    };
+  });
+}
+
+buildSlides();
+document.getElementById('tocTitle').textContent='DIA 3 — Insights & BI · '+slides.length+' slides';
+show(0);
+</script>
+
+<!-- copy-to-clipboard nos blocos de código -->
+<style>
+.code-wrap{position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;display:inline-flex;align-items:center;gap:5px;
+  padding:4px 8px;font:600 11px/1 var(--mono,monospace);color:#c9d6e5;
+  background:rgba(255,255,255,.06);border:1px solid var(--line,#2a3441);border-radius:7px;
+  cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s;z-index:2}
+.code-wrap:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:rgba(255,255,255,.12)}
+.copy-btn.ok{color:#7ee787;border-color:#2ea04366}
+</style>
+<script>
+(function(){
+  function label(b,txt,cls){b.querySelector('span').textContent=txt;b.className='copy-btn'+(cls?' '+cls:'');}
+  function addBtns(root){
+    (root||document).querySelectorAll('pre.code').forEach(function(pre){
+      if(pre.parentElement.classList.contains('code-wrap'))return;
+      var wrap=document.createElement('div');wrap.className='code-wrap';
+      pre.parentNode.insertBefore(wrap,pre);wrap.appendChild(pre);
+      var b=document.createElement('button');b.className='copy-btn';b.type='button';
+      b.innerHTML='<span>📋 copiar</span>';
+      b.addEventListener('click',function(){
+        var t=pre.innerText.replace(/\s+$/,'');
+        navigator.clipboard.writeText(t).then(function(){
+          label(b,'✓ copiado','ok');setTimeout(function(){label(b,'📋 copiar');},1400);
+        }).catch(function(){label(b,'erro');setTimeout(function(){label(b,'📋 copiar');},1400);});
+      });
+      wrap.appendChild(b);
+    });
+  }
+  addBtns();
+  new MutationObserver(function(m){m.forEach(function(x){if(x.addedNodes.length)addBtns();});})
+    .observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+
+<!-- alternador de tema claro/escuro -->
+<script>
+function toggleTheme(){
+  var l=document.body.classList.toggle('light');
+  try{localStorage.setItem('deckTheme',l?'light':'dark');}catch(e){}
+  var b=document.getElementById('themeBtn'); if(b)b.textContent=l?'☀️':'🌙';
+}
+(function(){try{
+  if(localStorage.getItem('deckTheme')==='light'){
+    document.body.classList.add('light');
+    var b=document.getElementById('themeBtn'); if(b)b.textContent='☀️';
+  }
+}catch(e){}})();
+</script>
+
+
+<!-- auto-fit de conteúdo + barra inferior com auto-hide -->
+<script>
+function fitSlide(){
+  var s=document.querySelector('.slide.active'); if(!s) return;
+  var f=s.querySelector('.sfit'); if(!f) return;
+  f.style.transform='none'; f.style.width='';
+  var availH=f.clientHeight, availW=f.clientWidth;
+  var needH=f.scrollHeight, needW=f.scrollWidth, sc=1;
+  if(needH>availH+1) sc=Math.min(sc, availH/needH);
+  if(needW>availW+1) sc=Math.min(sc, availW/needW);
+  if(sc<1){ sc=Math.max(0.5, sc);
+    f.style.width=(100/sc)+'%'; f.style.transform='scale('+sc+')'; }
+}
+(function(){
+  var wrap=document.getElementById('slideWrap');
+  if(wrap){
+    new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        var t=muts[i].target;
+        if(t.classList && t.classList.contains('active')){ requestAnimationFrame(fitSlide); break; }
+      }
+    }).observe(wrap,{attributes:true,attributeFilter:['class'],subtree:true});
+    wrap.addEventListener('click',function(){ requestAnimationFrame(fitSlide); });
+  }
+  window.addEventListener('resize',function(){ requestAnimationFrame(fitSlide); });
+  window.addEventListener('load',function(){ requestAnimationFrame(fitSlide); });
+  requestAnimationFrame(fitSlide);
+  var foot=document.getElementById('foot');
+  if(foot) document.addEventListener('mousemove',function(e){
+    foot.classList.toggle('show', e.clientY > window.innerHeight-72);
+  });
+})();
+</script>
+
+</body>
+</html>

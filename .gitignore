@@ -1,0 +1,30 @@
+# datasets grandes — quem for rodar já tem os CSVs do curso, não precisa duplicar
+*.csv
+*.parquet
+
+# metastore local do Hive (se você rodou fora de /opt/hive, isso aparece na sua pasta)
+metastore_db/
+derby.log
+
+# DuckDB / SQLite temporarios
+*.duckdb
+*.sqlite
+*.db
+
+# cache Python & R
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.Rhistory
+.Rproj.user/
+.quarto/
+_site/
+
+# ambientes virtuais
+venv/
+env/
+bigdata-env/
+
+# pastas de teste e instrucoes de laboratorio excluidas do repositorio de entrega
+test/
+labs/
